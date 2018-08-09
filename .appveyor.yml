@@ -1,4 +1,4 @@
-version: 10.0.{build}
+version: 1.0.{build}
 image: Visual Studio 2017
 configuration: Release
 
@@ -7,22 +7,18 @@ branches:
     - master
 
 build_script:
-  - cmd: dotnet restore src\Alimer.sln
-  - cmd: dotnet pack -c Release src\Alimer.Primitives\Alimer.Primitives.csproj
-  - cmd: msbuild /t:Pack /p:Configuration=Release src\Alimer\Alimer.csproj /m
-  - cmd: msbuild /t:Pack /p:Configuration=Release src\Alimer.Gpu\Alimer.Gpu.csproj /m
-  - cmd: msbuild /t:Pack /p:Configuration=Release src\Alimer.Application\Alimer.Application.csproj /m
-  - cmd: msbuild /t:Pack /p:Configuration=Release src\Alimer.Assets\Alimer.Assets.csproj /m
+  - cmd: dotnet restore src\Vortice.sln
+  - cmd: msbuild /t:Pack /p:Configuration=Release src\Vortice\Vortice.csproj /m
 
 artifacts:
 - path: bin\Packages\Release\*.nupkg
-  name: Alimer Nugets
+  name: Vortice Nugets
 
 deploy:
 - provider: NuGet
-  server: https://www.myget.org/F/alimer/api/v2/package
+  server: https://www.myget.org/F/vortice/api/v2/package
   api_key:
     secure: rVfu/HYGH96xeQfy+gRBC/ovHCheQKTjwIeNIE9HlpkN6e4/YtPUqn5f036pSlmi
   skip_symbols: false
-  symbol_server: https://www.myget.org/F/alimer/api/v2/package
-  artifact: Alimer Nugets
+  symbol_server: https://www.myget.org/F/vortice/api/v2/package
+  artifact: Vortice Nugets
