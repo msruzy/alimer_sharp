@@ -32,28 +32,34 @@
 
   <!-- Detect platform -->
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <VorticePlatform>Windows</VorticePlatform>
     <DefineConstants>$(DefineConstants);__DESKTOP__;VORTICE_DESKTOP</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <VorticePlatform>NetStandard</VorticePlatform>
     <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
+    <VorticePlatform>UAP</VorticePlatform>
     <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">
+    <VorticePlatform>Android</VorticePlatform>
     <DefineConstants>$(DefineConstants);VORTICE_ANDROID</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('xamarinios'))">
+    <VorticePlatform>iOS</VorticePlatform>
     <DefineConstants>$(DefineConstants);VORTICE_IOS</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('xamarinmac'))">
+    <VorticePlatform>macOS</VorticePlatform>
     <DefineConstants>$(DefineConstants);__MACOS__;VORTICE_MACOS</DefineConstants>
   </PropertyGroup>
   
