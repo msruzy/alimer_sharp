@@ -1,0 +1,32 @@
+﻿// Copyright (c) Amer Koleci and contributors.
+// Distributed under the MIT license. See the LICENSE file in the project root for more information.
+
+using System.Runtime.InteropServices;
+
+namespace Vortice
+{
+    public static partial class Platform
+    {
+        static Platform()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                PlatformType = PlatformType.Windows;
+                PlatformFamily = PlatformFamily.Desktop;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                PlatformType = PlatformType.MacOS;
+                PlatformFamily = PlatformFamily.Desktop;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                PlatformType = PlatformType.Linux;
+                PlatformFamily = PlatformFamily.Desktop;
+            }
+
+            FrameworkDescription = RuntimeInformation.FrameworkDescription;
+            OSDescription = RuntimeInformation.OSDescription;
+        }
+    }
+}

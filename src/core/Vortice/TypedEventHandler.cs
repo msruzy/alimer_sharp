@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
-// Licensed under the MIT License.
+// Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 namespace Vortice
 {

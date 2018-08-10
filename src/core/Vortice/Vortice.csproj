@@ -1,12 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;uap10.0.16299</TargetFrameworks>
     <DefineConstants>$(DefineConstants);</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <Description>Cross platform 2D and 3D game engine with support for .NET Standard 2.0, .NET Core, .NET Framework, Xamarin, and UWP.</Description>
     <PackageTags>3D graphics direct3D vulkan opengl standard game gamedev</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Platforms\**\*.cs" />
+    <None Include="Platforms\**\*.cs" />
+    <Compile Include="Platforms\$(VorticePlatform)\**\*.cs" />
+  </ItemGroup>
 
 </Project>
