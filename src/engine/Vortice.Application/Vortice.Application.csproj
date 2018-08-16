@@ -1,0 +1,18 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;uap10.0.16299</TargetFrameworks>
+    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
+    <RootNamespace>Vortice</RootNamespace>
+    <Description>Vortice.Application library for cross platform application support</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Platforms\**\*.cs" />
+    <None Include="Platforms\**\*.cs" />
+    <Compile Include="Platforms\$(VorticePlatform)\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vortice.Graphics\Vortice.Graphics.csproj" />
+  </ItemGroup>
+</Project>

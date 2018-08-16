@@ -4,7 +4,7 @@
     <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
     <BinDir>$(RepositoryRootDirectory)bin</BinDir>
     <OutputPath>$([System.IO.Path]::GetFullPath('$(RepositoryRootDirectory)bin\$(Configuration)'))\$(MSBuildProjectName)</OutputPath>
-    <BaseIntermediateOutputPath>$([System.IO.Path]::GetFullPath('$(RepositoryRootDirectory)bin\obj\$(MSBuildProjectName)'))\</BaseIntermediateOutputPath>
+    <!--<BaseIntermediateOutputPath>$([System.IO.Path]::GetFullPath('$(RepositoryRootDirectory)bin\obj\$(MSBuildProjectName)'))\</BaseIntermediateOutputPath>-->
     <PackageOutputPath>$(BinDir)\Packages\$(Configuration)</PackageOutputPath>
   </PropertyGroup>
   
@@ -33,16 +33,19 @@
   <!-- Detect platform -->
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <VorticePlatform>Windows</VorticePlatform>
+    <VorticeD3D11>true</VorticeD3D11>
     <DefineConstants>$(DefineConstants);__DESKTOP__;VORTICE_DESKTOP</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <VorticePlatform>NetStandard</VorticePlatform>
+    <VorticeD3D11>true</VorticeD3D11>
     <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
     <VorticePlatform>UAP</VorticePlatform>
+    <VorticeD3D11>true</VorticeD3D11>
     <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD</DefineConstants>
@@ -62,26 +65,9 @@
     <VorticePlatform>macOS</VorticePlatform>
     <DefineConstants>$(DefineConstants);__MACOS__;VORTICE_MACOS</DefineConstants>
   </PropertyGroup>
-  
-  <!-- Workaround for NuGet bug, see https://github.com/AArnott/Nerdbank.GitVersioning/issues/113 -->
-  <PropertyGroup>
-    <NerdbankGitVersioningVersion>2.1.65</NerdbankGitVersioningVersion>
-  </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' == 'true' ">
-    <Import Project="$(UserProfile)\.nuget\packages\nerdbank.gitversioning\$(NerdbankGitVersioningVersion)\buildCrossTargeting\Nerdbank.GitVersioning.targets"
-            Condition="Exists('$(UserProfile)\.nuget\packages\nerdbank.gitversioning\$(NerdbankGitVersioningVersion)\buildCrossTargeting\Nerdbank.GitVersioning.targets')" />
-  </ImportGroup>
-  <Target Name="FixUpVersion"
-      BeforeTargets="_GenerateRestoreProjectSpec"
-      DependsOnTargets="GetBuildVersion"
-      Condition=" '$(NerdbankGitVersioningTasksPath)' != '' " />
-
-  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.1.65" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
   </ItemGroup>
 </Project>
