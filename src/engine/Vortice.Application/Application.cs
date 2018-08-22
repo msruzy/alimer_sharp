@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using System.Threading;
 using Vortice.Graphics;
 
 namespace Vortice
@@ -15,7 +16,23 @@ namespace Vortice
         private bool _isExiting;
         private bool _endRunRequired;
         private bool _firstUpdateDone;
+        private bool _suppressDraw;
 
+        protected readonly ApplicationTime _time;
+        private readonly TimerTick _timer;
+        private readonly TimeSpan _maximumElapsedTime;
+        private TimeSpan _accumulatedElapsedTime;
+        private TimeSpan _lastFrameElapsedTime;
+        private TimeSpan _totalTime;
+
+        private bool _drawRunningSlowly;
+        private bool _forceElapsedTimeToZero;
+
+        private readonly int[] _lastUpdateCount;
+        private int _nextLastUpdateCountIndex;
+        private readonly float _updateCountAverageSlowLimit;
+
+        private GraphicsDeviceFactory _graphicsDeviceFactory;
         private GraphicsDevice _graphicsDevice;
 
         /// <summary>
@@ -39,6 +56,22 @@ namespace Vortice
         public bool IsRunning { get; private set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is fixed time step.
+        /// </summary>
+        /// <value><c>true</c> if this instance is fixed time step; <c>false</c> otherwise.</value>
+        public bool IsFixedTimeStep { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target elapsed time.
+        /// </summary>
+        public TimeSpan TargetElapsedTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the time to sleep when the application is inactive.
+        /// </summary>
+        public TimeSpan InactiveSleepTime { get; set; } = TimeSpan.FromMilliseconds(20.0);
+
+        /// <summary>
         /// Occurs when the <see cref="Application"/> is activated (gains focus).
         /// </summary>
         public event TypedEventHandler<Application> Activated;
@@ -48,6 +81,9 @@ namespace Vortice
         /// </summary>
         public event TypedEventHandler<Application> Deactivated;
 
+        /// <summary>
+        /// Create new instance of <see cref="Application"/> class.
+        /// </summary>
         public Application()
         {
             if (Current != null)
@@ -56,6 +92,20 @@ namespace Vortice
             }
 
             Current = this;
+
+            _time = new ApplicationTime();
+            _timer = new TimerTick();
+            _maximumElapsedTime = TimeSpan.FromMilliseconds(500.0);
+            TargetElapsedTime = TimeSpan.FromTicks(10000000 / 60); // target elapsed time is by default 60Hz
+            _lastUpdateCount = new int[4];
+            _nextLastUpdateCountIndex = 0;
+
+            // Calculate the updateCountAverageSlowLimit (assuming moving average is >=3 )
+            // Example for a moving average of 4:
+            // updateCountAverageSlowLimit = (2 * 2 + (4 - 2)) / 4 = 1.5f
+            const int BadUpdateCountTime = 2; // number of bad frame (a bad frame is a frame that has at least 2 updates)
+            var maxLastCount = 2 * Math.Min(BadUpdateCountTime, _lastUpdateCount.Length);
+            _updateCountAverageSlowLimit = (float)(maxLastCount + (_lastUpdateCount.Length - maxLastCount)) / _lastUpdateCount.Length;
 
             // Create the handle.
             _host = ApplicationHost.Create(this);
@@ -69,6 +119,9 @@ namespace Vortice
 
         public void Dispose()
         {
+            _graphicsDevice.Dispose();
+            _graphicsDeviceFactory.Dispose();
+
             _host.Activated -= Host_Activated;
             _host.Deactivated -= Host_Deactivated;
             _host.Idle -= Host_Idle;
@@ -76,7 +129,114 @@ namespace Vortice
 
         public void Tick()
         {
-            DrawFrame();
+            // If this instance is existing, then don't make any further update/draw
+            if (_isExiting)
+            {
+                return;
+            }
+
+            // If this instance is not active, sleep for an inactive sleep time
+            if (!IsActive)
+            {
+                Thread.Sleep(InactiveSleepTime);
+            }
+
+            // Update the timer
+            _timer.Tick();
+
+            var elapsedAdjustedTime = _timer.ElapsedAdjustedTime;
+            if (_forceElapsedTimeToZero)
+            {
+                elapsedAdjustedTime = TimeSpan.Zero;
+                _forceElapsedTimeToZero = false;
+            }
+
+            if (elapsedAdjustedTime > _maximumElapsedTime)
+            {
+                elapsedAdjustedTime = _maximumElapsedTime;
+            }
+
+            bool suppressNextDraw = true;
+            int updateCount = 1;
+            var singleFrameElapsedTime = elapsedAdjustedTime;
+
+            if (IsFixedTimeStep)
+            {
+                // If the rounded TargetElapsedTime is equivalent to current ElapsedAdjustedTime
+                // then make ElapsedAdjustedTime = TargetElapsedTime. We take the same internal rules as XNA 
+                if (Math.Abs(elapsedAdjustedTime.Ticks - TargetElapsedTime.Ticks) < (TargetElapsedTime.Ticks >> 6))
+                {
+                    elapsedAdjustedTime = TargetElapsedTime;
+                }
+
+                // Update the accumulated time
+                _accumulatedElapsedTime += elapsedAdjustedTime;
+
+                // Calculate the number of update to issue
+                updateCount = (int)(_accumulatedElapsedTime.Ticks / TargetElapsedTime.Ticks);
+
+                // If there is no need for update, then exit
+                if (updateCount == 0)
+                {
+                    // check if we can sleep the thread to free CPU resources
+                    var sleepTime = TargetElapsedTime - _accumulatedElapsedTime;
+                    if (sleepTime > TimeSpan.Zero)
+                    {
+                        Thread.Sleep(sleepTime);
+                    }
+
+                    return;
+                }
+
+                // Calculate a moving average on updateCount
+                _lastUpdateCount[_nextLastUpdateCountIndex] = updateCount;
+                float updateCountMean = 0;
+                for (int i = 0; i < _lastUpdateCount.Length; i++)
+                {
+                    updateCountMean += _lastUpdateCount[i];
+                }
+
+                updateCountMean /= _lastUpdateCount.Length;
+                _nextLastUpdateCountIndex = (_nextLastUpdateCountIndex + 1) % _lastUpdateCount.Length;
+
+                // Test when we are running slowly
+                _drawRunningSlowly = updateCountMean > _updateCountAverageSlowLimit;
+
+                // We are going to call Update updateCount times, so we can subtract this from accumulated elapsed game time
+                _accumulatedElapsedTime = new TimeSpan(_accumulatedElapsedTime.Ticks - (updateCount * TargetElapsedTime.Ticks));
+                singleFrameElapsedTime = TargetElapsedTime;
+            }
+            else
+            {
+                Array.Clear(_lastUpdateCount, 0, _lastUpdateCount.Length);
+                _nextLastUpdateCountIndex = 0;
+                _drawRunningSlowly = false;
+            }
+
+            // Reset the time of the next frame.
+            for (_lastFrameElapsedTime = TimeSpan.Zero; updateCount > 0 && !_isExiting; updateCount--)
+            {
+                _time.Update(_totalTime, singleFrameElapsedTime, _drawRunningSlowly, false);
+
+                try
+                {
+                    Update(_time);
+
+                    // If there is no exception, then we can draw the frame
+                    suppressNextDraw &= _suppressDraw;
+                    _suppressDraw = false;
+                }
+                finally
+                {
+                    _lastFrameElapsedTime += singleFrameElapsedTime;
+                    _totalTime += singleFrameElapsedTime;
+                }
+            }
+
+            if (!suppressNextDraw)
+            {
+                DrawFrame();
+            }
         }
 
         public void Run()
@@ -131,6 +291,17 @@ namespace Vortice
         }
 
         /// <summary>
+        /// Resets the elapsed time counter.
+        /// </summary>
+        public void ResetElapsedTime()
+        {
+            _forceElapsedTimeToZero = true;
+            _drawRunningSlowly = false;
+            Array.Clear(_lastUpdateCount, 0, _lastUpdateCount.Length);
+            _nextLastUpdateCountIndex = 0;
+        }
+
+        /// <summary>
         /// Raises the <see cref="Activated"/> event. 
         /// Override this method to add code to handle when the application gains focus.
         /// </summary>
@@ -176,16 +347,66 @@ namespace Vortice
         {
         }
 
+        /// <summary>
+        /// Called when the application has determined that logic needs to be processed. 
+        /// This might include the management of the application state, the processing of user input, or the updating of simulation data. 
+        /// Override this method with application-specific logic.
+        /// </summary>
+        /// <param name="time">Time passed since the last call to Update.</param>
+        protected virtual void Update(ApplicationTime time)
+        {
+        }
+
+        /// <summary>
+        /// Starts the drawing of a frame. 
+        /// This method is followed by calls to <see cref="Draw"/> and <see cref="EndDraw"/>.
+        /// </summary>
+        /// <returns>True to continue drawing, false to not call <see cref="Draw"/> and <see cref="EndDraw"/></returns>
+        protected virtual bool BeginDraw()
+        {
+            // TODO:
+            return true;
+        }
+
+        /// <summary>
+        /// Called when the application determines it is time to draw a frame. 
+        /// Override this method with application-specific rendering code.
+        /// </summary>
+        /// <param name="time">Time passed since the last call to Draw.</param>
+        protected virtual void Draw(ApplicationTime time)
+        {
+        }
+
+        /// <summary>
+        /// Ends the drawing of a frame. 
+        /// This method is preceded by calls to Draw and BeginDraw.
+        /// </summary>
+        protected virtual void EndDraw()
+        {
+            _graphicsDevice.Present();
+        }
+
         private void InitializeBeforeRun()
         {
+            // Create graphics device factory first.
+#if DEBUG 
+            bool validation = true;
+#else
+            bool validation = false;
+#endif
+
+            _graphicsDeviceFactory = new GraphicsDeviceFactory(GraphicsBackend.Default, validation);
+
             var clientSize = MainView.ClientSize;
-            var swapchainDesc = new PresentationParameters
+            var presentationParameters = new PresentationParameters
             {
                 BackBufferWidth = (int)clientSize.Width,
                 BackBufferHeight = (int)clientSize.Height,
                 DeviceWindowHandle = MainView.NativeHandle
             };
-            _graphicsDevice = new GraphicsDevice(swapchainDesc);
+            _graphicsDevice = _graphicsDeviceFactory.CreateGraphicsDevice(
+                _graphicsDeviceFactory.DefaultAdapter,
+                presentationParameters);
 
             // Initialize this instance and all systems.
             Initialize();
@@ -196,19 +417,35 @@ namespace Vortice
             IsRunning = true;
             BeginRun();
 
-            //timer.Reset();
-            //gameTime.Update(totalGameTime, TimeSpan.Zero, false);
-            //gameTime.FrameCount = 0;
+            _timer.Reset();
+            _time.Reset(_totalTime);
 
             // Run the first time an update
-            //Update(gameTime);
+            Update(_time);
 
             _firstUpdateDone = true;
         }
 
         private void DrawFrame()
         {
-            _graphicsDevice.Present();
+            try
+            {
+                if (!_isExiting
+                    && _firstUpdateDone
+                    && !MainView.IsMinimized
+                    && BeginDraw())
+                {
+                    _time.Update(_totalTime, _lastFrameElapsedTime, _drawRunningSlowly, true);
+
+                    Draw(_time);
+
+                    EndDraw();
+                }
+            }
+            finally
+            {
+                _lastFrameElapsedTime = TimeSpan.Zero;
+            }
         }
 
         #region Host Events

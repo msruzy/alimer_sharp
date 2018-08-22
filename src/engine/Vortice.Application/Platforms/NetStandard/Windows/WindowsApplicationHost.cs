@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using static Vortice.Windows.Kernel32;
 using static Vortice.Windows.User32;
 using static Vortice.Windows.ShCore;
+using System.Runtime.CompilerServices;
 
 namespace Vortice.Windows
 {
@@ -77,7 +78,7 @@ namespace Vortice.Windows
             _wndProc = ProcessWindowMessage;
             var wndClassEx = new WindowClassEx
             {
-                Size = (uint)Marshal.SizeOf<WindowClassEx>(),
+                Size = (uint)Unsafe.SizeOf<WindowClassEx>(),
                 Styles = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW | WindowClassStyles.CS_OWNDC,
                 WindowProc = _wndProc,
                 InstanceHandle = HInstance,
@@ -183,14 +184,14 @@ namespace Vortice.Windows
                     case WindowMessage.EraseBackground:
                         return new IntPtr(1);
 
-                    case WindowMessage.SetCursor:
-                        if (SignedLOWORD(lParam) == HTCLIENT)
-                        {
+                    //case WindowMessage.SetCursor:
+                    //    if (SignedLOWORD(lParam) == HTCLIENT)
+                    //    {
                             //Input.UpdateCursor();
-                            return new IntPtr(1);
-                        }
+                    //        return new IntPtr(1);
+                    //    }
 
-                        break;
+                    //    break;
 
                     case WindowMessage.SetFocus:
                         //window._focused = true;
@@ -201,6 +202,9 @@ namespace Vortice.Windows
                         //window._focused = false;
                         //window.RaiseFocusChanged(false);
                         return IntPtr.Zero;
+
+                    case WindowMessage.Size:
+                        break;
 
                     case WindowMessage.KeyDown:
                     case WindowMessage.SysKeyDown:
@@ -244,7 +248,7 @@ namespace Vortice.Windows
                             return IntPtr.Zero;
                         }
 
-                    //case WindowMessage.NcMouseMove:
+                    case WindowMessage.NcMouseMove:
                     case WindowMessage.MouseMove:
                         {
                             //var p = MakePoint(lParam);

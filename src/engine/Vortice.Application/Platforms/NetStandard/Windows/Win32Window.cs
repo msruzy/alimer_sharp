@@ -16,6 +16,9 @@ namespace Vortice.Windows
 
         public IntPtr Handle => _hwnd;
 
+        /// <inheritdoc/>
+        public override bool IsMinimized => IsIconic(_hwnd);
+
         public override Size ClientSize
         {
             get

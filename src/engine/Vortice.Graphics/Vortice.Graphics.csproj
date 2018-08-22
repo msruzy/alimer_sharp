@@ -27,8 +27,8 @@
 
   <ItemGroup>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
-    <PackageReference Include="SharpDX.Direct3D11" Version="4.0.1" Condition="'$(VorticeD3D11)' == 'true'" />
-    <PackageReference Include="SharpDX.Direct3D12" Version="4.0.1" Condition="'$(VorticeD3D12)' == 'true'" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0-ci284" Condition="'$(VorticeD3D11)' == 'true'" />
+    <PackageReference Include="SharpDX.Direct3D12" Version="4.2.0-ci284" Condition="'$(VorticeD3D12)' == 'true'" />
   </ItemGroup>
 
 </Project>

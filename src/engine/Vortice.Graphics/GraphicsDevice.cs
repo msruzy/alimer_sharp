@@ -5,28 +5,32 @@ using System;
 
 namespace Vortice.Graphics
 {
-    public sealed class GraphicsDevice : IDisposable
+    public abstract class GraphicsDevice : IDisposable
     {
-        private readonly IGraphicsDevice _backend;
+        public GraphicsAdapter Adapter { get; }
 
         public PresentationParameters PresentationParameters { get; }
 
-        public GraphicsDevice(PresentationParameters presentationParameters)
+        protected GraphicsDevice(GraphicsAdapter adapter, PresentationParameters presentationParameters)
         {
+            Guard.NotNull(adapter, nameof(adapter));
             Guard.NotNull(presentationParameters, nameof(presentationParameters));
 
+            Adapter = adapter;
             PresentationParameters = presentationParameters;
-            _backend = new D3D11.D3D11GraphicsDevice(presentationParameters, validation: false);
         }
 
         public void Dispose()
         {
-            _backend.Destroy();
+            Destroy();
         }
 
         public void Present()
         {
-            _backend.Present();
+            PresentCore();
         }
+
+        protected abstract void Destroy();
+        protected abstract void PresentCore();
     }
 }

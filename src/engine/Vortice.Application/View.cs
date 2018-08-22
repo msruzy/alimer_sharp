@@ -24,6 +24,11 @@ namespace Vortice
         public event TypedEventHandler<View> Closed;
 
         /// <summary>
+        /// Gets whether the view is minimized.
+        /// </summary>
+        public virtual bool IsMinimized => false;
+
+        /// <summary>
         /// Gets the view client size.
         /// </summary>
         public abstract Size ClientSize { get; }

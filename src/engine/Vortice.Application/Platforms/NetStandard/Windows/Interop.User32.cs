@@ -462,6 +462,9 @@ namespace Vortice.Windows
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern uint GetMessageTime();
 
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool IsIconic(IntPtr hwnd);
+
         #region Monitor
 
         [DllImport("user32", CharSet = CharSet.Unicode, EntryPoint = "GetMonitorInfoW")]
