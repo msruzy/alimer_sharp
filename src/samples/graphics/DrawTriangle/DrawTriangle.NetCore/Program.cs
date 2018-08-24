@@ -7,7 +7,6 @@ namespace DrawTriangle
 	{
 		public static void Main()
 		{
-            // Bootstrap game with platform.
             using (var game = new DrawTriangleGame())
 			{
                 game.Run();

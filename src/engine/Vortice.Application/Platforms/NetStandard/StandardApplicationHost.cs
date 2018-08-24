@@ -11,12 +11,9 @@ namespace Vortice
 
         public override View MainView => throw new System.NotImplementedException();
 
-        //private readonly UAPView _mainView;
-
         public StandardApplicationHost(Application application)
             : base(application)
         {
-            //_mainView = new UAPView("Alimer");
         }
 
         public override void Exit()

@@ -46,6 +46,11 @@ namespace Vortice
         public View MainView => _host.MainView;
 
         /// <summary>
+        /// Gets the <see cref="GraphicsDevice"/> created by this application.
+        /// </summary>
+        public GraphicsDevice GraphicsDevice => _graphicsDevice;
+
+        /// <summary>
         /// Gets a value indicating whether the applicationis is active.
         /// </summary>
         public bool IsActive { get; private set; }
