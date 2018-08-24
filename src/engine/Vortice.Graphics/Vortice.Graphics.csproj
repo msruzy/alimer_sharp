@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;uap10.0.16299</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.2</LangVersion>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <Description>Vortice.Application library for cross platform application support</Description>
   </PropertyGroup>
@@ -9,7 +10,6 @@
   <ItemGroup>
     <Compile Remove="Backends\**\*.cs" />
     <None Include="Backends\**\*.cs" />
-    <Compile Include="Backends\$(VorticePlatform)\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(VorticeD3D11)' == 'true' or '$(VorticeD3D12)' == 'true'">

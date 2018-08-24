@@ -1,21 +1,23 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
-// Licensed under the MIT License.
+// Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using SharpDX;
 using SharpDX.Mathematics.Interop;
+using SharpDX.Direct3D11;
 using System;
 using DXGI = SharpDX.DXGI;
+using Vortice.Graphics.D3D;
 
 namespace Vortice.Graphics.D3D11
 {
     internal unsafe class D3D11SwapChain
     {
         public const int FrameCount = 2;
-
-        private readonly DXGI.SwapChain _swapChain;
-        //private readonly D3D11Texture _backBufferTexture;
         private readonly int _syncInterval = 1;
         private readonly DXGI.PresentFlags _presentFlags;
+
+        private readonly DXGI.SwapChain _swapChain;
+        public readonly D3D11Texture BackbufferTexture;
 
         public D3D11SwapChain(D3D11GraphicsDevice device, PresentationParameters presentationParameters)
         {
@@ -108,18 +110,23 @@ namespace Vortice.Graphics.D3D11
                 }
             }
 
-            //var backBufferTexture = Resource.FromSwapChain<Texture2D>(_swapChain, 0);
-            //var textureDescription = backBufferTexture.Description;
-            //_backBufferTexture = new D3D11Texture(device, backBufferTexture, ref textureDescription);
-            //var passDescription = new RenderPassDescription(
-            //    new[] { new RenderPassAttachment(_backBufferTexture) });
-            //_renderPasses[0] = new D3D11RenderPass(device, passDescription);
+            var backBufferTexture = Resource.FromSwapChain<Texture2D>(_swapChain, 0);
+            var d3dTextureDesc = backBufferTexture.Description;
+            var textureDescription = TextureDescription.Texture2D(
+                d3dTextureDesc.Width,
+                d3dTextureDesc.Height,
+                d3dTextureDesc.MipLevels,
+                d3dTextureDesc.ArraySize,
+                D3DConvert.Convert(d3dTextureDesc.Format),
+                D3D11Convert.Convert(d3dTextureDesc.BindFlags),
+                (SampleCount)d3dTextureDesc.SampleDescription.Count);
+            BackbufferTexture = new D3D11Texture(device, textureDescription, backBufferTexture);
         }
 
         /// <inheritdoc/>
         public void Destroy()
         {
-            // _backBufferTexture.Dispose();
+            BackbufferTexture.Dispose();
             _swapChain.Dispose();
         }
 
