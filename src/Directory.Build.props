@@ -1,14 +1,17 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="OutDir">
+<Project>
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
-    <BinDir>$(RepositoryRootDirectory)bin</BinDir>
-    <OutputPath>$([System.IO.Path]::GetFullPath('$(RepositoryRootDirectory)bin\$(Configuration)'))\$(MSBuildProjectName)</OutputPath>
-    <!--<BaseIntermediateOutputPath>$([System.IO.Path]::GetFullPath('$(RepositoryRootDirectory)bin\obj\$(MSBuildProjectName)'))\</BaseIntermediateOutputPath>-->
-    <PackageOutputPath>$(BinDir)\Packages\$(Configuration)</PackageOutputPath>
-  </PropertyGroup>
-  
-  <PropertyGroup>
+    <RepoBinPath>$(MSBuildThisFileDirectory)..\bin\</RepoBinPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <BaseOutputPath Condition=" '$(BaseOutputPath)' == '' ">$(RepoBinPath)$(MSBuildProjectName)\</BaseOutputPath>
+    <PackageOutputPath>$(RepoBinPath)$(Configuration)\Packages\</PackageOutputPath>
+
+    <DebugType Condition=" '$(Configuration)' == 'Release' ">pdbonly</DebugType>
+    <DebugType Condition=" '$(Configuration)' == 'Debug' ">Full</DebugType>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591;CS1701</NoWarn>
+
     <Authors>Amer Koleci</Authors>
     <Product>Vortice</Product>
     <Copyright>Copyright © Amer Koleci 2018</Copyright>
@@ -18,7 +21,8 @@
     <PackageLicenseUrl>https://github.com/amerkoleci/vortice/blob/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/amerkoleci/vortice</PackageProjectUrl>
-    
+    <PackageTags>engine graphics gamedev vortice</PackageTags>
+
     <!-- Enable sourcelink support -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>

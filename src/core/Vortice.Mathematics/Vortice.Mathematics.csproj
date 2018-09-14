@@ -4,7 +4,6 @@
     <TargetFrameworks>net45;netstandard1.1;</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RootNamespace>Vortice</RootNamespace>
-    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <Description>A mathematics library support</Description>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
