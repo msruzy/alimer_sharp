@@ -14,7 +14,7 @@ namespace Vortice.Graphics.DirectX11
         public readonly RenderTargetView[] RenderTargetViews = new RenderTargetView[8];
         public DepthStencilView DepthStencilView = null;
 
-        public DirectX11CommandBuffer(D3D11GraphicsDevice device, DeviceContext1 context)
+        public DirectX11CommandBuffer(DirectX11GraphicsDevice device, DeviceContext1 context)
             : base(device)
         {
             Guard.NotNull(context, nameof(context));
@@ -55,7 +55,7 @@ namespace Vortice.Graphics.DirectX11
                     case LoadAction.Clear:
                         _context.ClearRenderTargetView(
                             RenderTargetViews[i],
-                            D3D11Convert.Convert(colorAttachment.ClearColor)
+                            DirectX11Utils.Convert(colorAttachment.ClearColor)
                             );
                         break;
 

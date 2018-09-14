@@ -10,7 +10,7 @@ using SharpDX.Mathematics.Interop;
 
 namespace Vortice.Graphics.DirectX11
 {
-    internal static class D3D11Convert
+    internal static class DirectX11Utils
     {
         public static RawColor4 Convert(in Color4 color) => new RawColor4(color.R, color.G, color.B, color.A);
 

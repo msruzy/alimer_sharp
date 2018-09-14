@@ -11,15 +11,15 @@ namespace Vortice.Graphics.DirectX11
     {
         public readonly Buffer Resource;
 
-        public DirectX11Buffer(D3D11GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
+        public DirectX11Buffer(DirectX11GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
             : base(device, descriptor)
         {
             var description = new BufferDescription()
             {
                 SizeInBytes = descriptor.SizeInBytes,
                 Usage = (ResourceUsage)descriptor.Usage,
-                BindFlags = D3D11Convert.Convert(descriptor.BufferUsage),
-                CpuAccessFlags = D3D11Convert.Convert(descriptor.Usage),
+                BindFlags = DirectX11Utils.Convert(descriptor.BufferUsage),
+                CpuAccessFlags = DirectX11Utils.Convert(descriptor.Usage),
                 OptionFlags = ResourceOptionFlags.None,
                 StructureByteStride = 0
             };

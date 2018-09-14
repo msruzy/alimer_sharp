@@ -18,7 +18,7 @@ namespace Vortice.Graphics.DirectX11
         private readonly DXGI.SwapChain _swapChain;
         public readonly DirectX11Texture BackbufferTexture;
 
-        public DirectX11SwapChain(D3D11GraphicsDevice device, PresentationParameters presentationParameters)
+        public DirectX11SwapChain(DirectX11GraphicsDevice device, PresentationParameters presentationParameters)
         {
             var width = Math.Max(presentationParameters.BackBufferWidth, 1);
             var height = Math.Max(presentationParameters.BackBufferHeight, 1);
@@ -36,7 +36,7 @@ namespace Vortice.Graphics.DirectX11
                                 {
                                     // Check tearing support.
                                     RawBool allowTearing = false;
-                                    if (D3D11Convert.IsWindows10x)
+                                    if (DirectX11Utils.IsWindows10x)
                                     {
                                         using (var factory5 = dxgiFactory2.QueryInterfaceOrNull<DXGI.Factory5>())
                                         {
@@ -116,8 +116,8 @@ namespace Vortice.Graphics.DirectX11
                 d3dTextureDesc.Height,
                 d3dTextureDesc.MipLevels,
                 d3dTextureDesc.ArraySize,
-                D3D11Convert.Convert(d3dTextureDesc.Format),
-                D3D11Convert.Convert(d3dTextureDesc.BindFlags),
+                DirectX11Utils.Convert(d3dTextureDesc.Format),
+                DirectX11Utils.Convert(d3dTextureDesc.BindFlags),
                 (SampleCount)d3dTextureDesc.SampleDescription.Count);
             BackbufferTexture = new DirectX11Texture(device, textureDescription, backBufferTexture);
         }

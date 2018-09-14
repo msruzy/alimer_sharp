@@ -14,16 +14,16 @@ namespace Vortice.Graphics.DirectX11
         public readonly Resource Resource;
         private readonly Dictionary<RenderTargetViewEntry, RenderTargetView> _rtvViews = new Dictionary<RenderTargetViewEntry, RenderTargetView>();
 
-        public DirectX11Texture(D3D11GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
+        public DirectX11Texture(DirectX11GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
             : base(device, description)
         {
-            DXGIFormat = D3D11Convert.Convert(description.Format);
+            DXGIFormat = DirectX11Utils.Convert(description.Format);
             if (nativeTexture == null)
             {
                 // Create new one.
                 var cpuFlags = CpuAccessFlags.None;
                 var resourceUsage = ResourceUsage.Default;
-                var bindFlags = D3D11Convert.Convert(description.TextureUsage, description.Format);
+                var bindFlags = DirectX11Utils.Convert(description.TextureUsage, description.Format);
                 var optionFlags = ResourceOptionFlags.None;
 
                 var arraySize = description.ArrayLayers;
@@ -188,7 +188,7 @@ namespace Vortice.Graphics.DirectX11
                         break;
                 }
 
-                view = new RenderTargetView(((D3D11GraphicsDevice)Device).Device, Resource, viewDesc);
+                view = new RenderTargetView(((DirectX11GraphicsDevice)Device).Device, Resource, viewDesc);
                 _rtvViews.Add(viewEntry, view);
             }
 

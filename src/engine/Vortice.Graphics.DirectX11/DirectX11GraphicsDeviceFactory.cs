@@ -82,7 +82,7 @@ namespace Vortice.Graphics
 
         protected override GraphicsDevice CreateGraphicsDeviceImpl(GraphicsAdapter adapter, PresentationParameters presentationParameters)
         {
-            return new D3D11GraphicsDevice(this, (DirectX11GpuAdapter)adapter, presentationParameters);
+            return new DirectX11GraphicsDevice(this, (DirectX11GpuAdapter)adapter, presentationParameters);
         }
     }
 }

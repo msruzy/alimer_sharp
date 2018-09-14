@@ -8,7 +8,7 @@ using SharpDX.Direct3D11;
 
 namespace Vortice.Graphics.DirectX11
 {
-    internal unsafe class D3D11GraphicsDevice : GraphicsDevice
+    internal unsafe class DirectX11GraphicsDevice : GraphicsDevice
     {
         private static readonly FeatureLevel[] s_featureLevels = new FeatureLevel[]
         {
@@ -29,7 +29,7 @@ namespace Vortice.Graphics.DirectX11
         /// <inheritdoc/>
         public override CommandBuffer ImmediateCommandBuffer { get; }
 
-        public D3D11GraphicsDevice(
+        public DirectX11GraphicsDevice(
             DirectX11GraphicsDeviceFactory factory,
             DirectX11GpuAdapter adapter,
             PresentationParameters presentationParameters)
@@ -47,7 +47,7 @@ namespace Vortice.Graphics.DirectX11
             {
                 using (var device = new Device(adapter.Adapter, creationFlags, s_featureLevels))
                 {
-                    if (D3D11Convert.IsWindows10x)
+                    if (DirectX11Utils.IsWindows10x)
                     {
                         Device = device.QueryInterface<Device5>();
                     }
@@ -64,7 +64,7 @@ namespace Vortice.Graphics.DirectX11
 
                 using (var device = new Device(adapter.Adapter, creationFlags, s_featureLevels))
                 {
-                    if (D3D11Convert.IsWindows10x)
+                    if (DirectX11Utils.IsWindows10x)
                     {
                         Device = device.QueryInterface<Device5>();
                     }
