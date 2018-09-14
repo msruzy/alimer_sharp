@@ -11,21 +11,25 @@ namespace Vortice.Graphics
     public abstract class GraphicsBuffer : GraphicsResource
     {
         /// <summary>
+        /// Gets the size in bytes of the buffer.
+        /// </summary>
+        public BufferUsage BufferUsage { get; }
+
+        /// <summary>
         /// Gets the <see cref="BufferUsage"/>.
         /// </summary>
-        public BufferUsage Usage { get; }
+        public int SizeInBytes { get; }
 
         /// <summary>
         /// Create a new instance of <see cref="GraphicsBuffer"/> class.
         /// </summary>
         /// <param name="device">The creation device</param>
-        /// <param name="usage">The buffer usage.</param>
-        protected GraphicsBuffer(GraphicsDevice device, BufferUsage usage)
-            : base(device, GraphicsResourceType.Buffer)
+        /// <param name="descriptor">The buffer descritor</param>
+        protected GraphicsBuffer(GraphicsDevice device, in BufferDescriptor descriptor)
+            : base(device, GraphicsResourceType.Buffer, descriptor.Usage)
         {
-            Guard.IsTrue(usage != BufferUsage.Unknown, nameof(usage), $"BufferUsage cannot be {nameof(BufferUsage.Unknown)}");
-
-            Usage = usage;
+            SizeInBytes = descriptor.SizeInBytes;
+            BufferUsage = descriptor.BufferUsage;
         }
     }
 }

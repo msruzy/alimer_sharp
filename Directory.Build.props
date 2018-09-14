@@ -33,22 +33,19 @@
   <!-- Detect platform -->
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <VorticePlatform>Windows</VorticePlatform>
-    <VorticeD3D11>true</VorticeD3D11>
-    <DefineConstants>$(DefineConstants);__DESKTOP__;VORTICE_DESKTOP;VORTICE_D3D11</DefineConstants>
+    <DefineConstants>$(DefineConstants);__DESKTOP__;VORTICE_DESKTOP</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <VorticePlatform>NetStandard</VorticePlatform>
-    <VorticeD3D11>true</VorticeD3D11>
-    <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD;VORTICE_D3D11</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
     <VorticePlatform>UAP</VorticePlatform>
-    <VorticeD3D11>true</VorticeD3D11>
     <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
-    <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD;VORTICE_D3D11</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">

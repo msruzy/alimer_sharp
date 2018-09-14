@@ -6,17 +6,35 @@ using System;
 namespace Vortice.Graphics
 {
     /// <summary>
-    /// Defines a command context for storing recorded graphics commands.
+    /// Defines a command buffer for storing recorded graphics commands.
     /// </summary>
-    public abstract class CommandContext : GraphicsResource
+    public abstract class CommandBuffer : DisposableBase
     {
+        /// <summary>
+        /// Gets the creation <see cref="GraphicsDevice"/>.
+        /// </summary>
+        public GraphicsDevice Device { get; }
+
         /// <summary>
         /// Create a new instance of <see cref="CommandContext"/> class.
         /// </summary>
         /// <param name="device">The creation device</param>
-        protected CommandContext(GraphicsDevice device)
-            : base(device, GraphicsResourceType.CommandContext)
+        protected CommandBuffer(GraphicsDevice device)
         {
+            Device = device;
+        }
+
+        /// <inheritdoc/>
+        protected sealed override void Dispose(bool disposing)
+        {
+            if (disposing
+                && !IsDisposed)
+            {
+                //DestroyAllResources();
+                Destroy();
+            }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -37,6 +55,7 @@ namespace Vortice.Graphics
             EndRenderPassCore();
         }
 
+        protected abstract void Destroy();
         protected abstract void BeginRenderPassCore(in RenderPassDescription renderPassDescription);
         protected abstract void EndRenderPassCore();
     }

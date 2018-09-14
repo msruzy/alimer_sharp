@@ -4,27 +4,26 @@
 using System;
 using System.Collections.Generic;
 using SharpDX.Direct3D11;
-using Vortice.Graphics.D3D;
 using DXGI = SharpDX.DXGI;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.DirectX11
 {
-    internal class D3D11Texture : Texture
+    internal class DirectX11Texture : Texture
     {
         public readonly DXGI.Format DXGIFormat;
         public readonly Resource Resource;
         private readonly Dictionary<RenderTargetViewEntry, RenderTargetView> _rtvViews = new Dictionary<RenderTargetViewEntry, RenderTargetView>();
 
-        public D3D11Texture(D3D11GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
+        public DirectX11Texture(D3D11GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
             : base(device, description)
         {
-            DXGIFormat = D3DConvert.Convert(description.Format);
+            DXGIFormat = D3D11Convert.Convert(description.Format);
             if (nativeTexture == null)
             {
                 // Create new one.
                 var cpuFlags = CpuAccessFlags.None;
                 var resourceUsage = ResourceUsage.Default;
-                var bindFlags = D3D11Convert.Convert(description.Usage, description.Format);
+                var bindFlags = D3D11Convert.Convert(description.TextureUsage, description.Format);
                 var optionFlags = ResourceOptionFlags.None;
 
                 var arraySize = description.ArrayLayers;

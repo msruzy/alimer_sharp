@@ -9,18 +9,13 @@ namespace Vortice.Graphics
     public enum GraphicsBackend
     {
         /// <summary>
-        /// Best supported device on running platform.
-        /// </summary>
-        Default,
-
-        /// <summary>
 		/// DirectX 11.1+ backend.
 		/// </summary>
-		Direct3D11,
+		DirectX11,
 
         /// <summary>
         /// DirectX 12 backend.
         /// </summary>
-        Direct3D12,
+        DirectX12,
     }
 }

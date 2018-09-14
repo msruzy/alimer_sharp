@@ -10,6 +10,5 @@ namespace Vortice.Graphics
     {
         Buffer,
         Texture,
-        CommandContext
     }
 }

@@ -6,20 +6,19 @@ using SharpDX.Mathematics.Interop;
 using SharpDX.Direct3D11;
 using System;
 using DXGI = SharpDX.DXGI;
-using Vortice.Graphics.D3D;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.DirectX11
 {
-    internal unsafe class D3D11SwapChain
+    internal unsafe class DirectX11SwapChain
     {
         public const int FrameCount = 2;
         private readonly int _syncInterval = 1;
         private readonly DXGI.PresentFlags _presentFlags;
 
         private readonly DXGI.SwapChain _swapChain;
-        public readonly D3D11Texture BackbufferTexture;
+        public readonly DirectX11Texture BackbufferTexture;
 
-        public D3D11SwapChain(D3D11GraphicsDevice device, PresentationParameters presentationParameters)
+        public DirectX11SwapChain(D3D11GraphicsDevice device, PresentationParameters presentationParameters)
         {
             var width = Math.Max(presentationParameters.BackBufferWidth, 1);
             var height = Math.Max(presentationParameters.BackBufferHeight, 1);
@@ -37,7 +36,7 @@ namespace Vortice.Graphics.D3D11
                                 {
                                     // Check tearing support.
                                     RawBool allowTearing = false;
-                                    if (PlatformDetection.IsWindows10x)
+                                    if (D3D11Convert.IsWindows10x)
                                     {
                                         using (var factory5 = dxgiFactory2.QueryInterfaceOrNull<DXGI.Factory5>())
                                         {
@@ -117,10 +116,10 @@ namespace Vortice.Graphics.D3D11
                 d3dTextureDesc.Height,
                 d3dTextureDesc.MipLevels,
                 d3dTextureDesc.ArraySize,
-                D3DConvert.Convert(d3dTextureDesc.Format),
+                D3D11Convert.Convert(d3dTextureDesc.Format),
                 D3D11Convert.Convert(d3dTextureDesc.BindFlags),
                 (SampleCount)d3dTextureDesc.SampleDescription.Count);
-            BackbufferTexture = new D3D11Texture(device, textureDescription, backBufferTexture);
+            BackbufferTexture = new DirectX11Texture(device, textureDescription, backBufferTexture);
         }
 
         /// <inheritdoc/>

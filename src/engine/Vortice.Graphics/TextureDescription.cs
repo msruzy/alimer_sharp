@@ -20,13 +20,13 @@ namespace Vortice.Graphics
         /// <param name="mipLevels">The mipLevels</param>
         /// <param name="arrayLayers">The array layers</param>
         /// <param name="format">The <see cref="PixelFormat"/></param>
-        /// <param name="usage">The usage</param>
+        /// <param name="textureUsage">The texture usage</param>
         /// <param name="samples">The samples</param>
         public TextureDescription(TextureType textureType,
             int width, int height, int depth,
             int mipLevels, int arrayLayers,
             PixelFormat format,
-            TextureUsage usage,
+            TextureUsage textureUsage,
             SampleCount samples)
         {
             TextureType = textureType;
@@ -36,7 +36,7 @@ namespace Vortice.Graphics
             MipLevels = mipLevels;
             ArrayLayers = arrayLayers;
             Format = format;
-            Usage = usage;
+            TextureUsage = textureUsage;
             Samples = samples;
         }
 
@@ -147,7 +147,7 @@ namespace Vortice.Graphics
         /// <summary>
         /// Gets the texture usage.
         /// </summary>
-        public TextureUsage Usage { get; }
+        public TextureUsage TextureUsage { get; }
 
         /// <summary>
 		/// Gets the number of samples.
@@ -193,7 +193,7 @@ namespace Vortice.Graphics
             && MipLevels == other.MipLevels
             && ArrayLayers == other.ArrayLayers
             && Format == other.Format
-            && Usage == other.Usage
+            && TextureUsage == other.TextureUsage
             && Samples == other.Samples;
 
         /// <inheritdoc/>
@@ -214,7 +214,7 @@ namespace Vortice.Graphics
                 hashCode = (hashCode * 397) ^ MipLevels.GetHashCode();
                 hashCode = (hashCode * 397) ^ ArrayLayers.GetHashCode();
                 hashCode = (hashCode * 397) ^ Format.GetHashCode();
-                hashCode = (hashCode * 397) ^ Usage.GetHashCode();
+                hashCode = (hashCode * 397) ^ TextureUsage.GetHashCode();
                 hashCode = (hashCode * 397) ^ Samples.GetHashCode();
                 return hashCode;
             }

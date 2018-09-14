@@ -1,16 +1,15 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using System;
-using DXGI = SharpDX.DXGI;
+using SharpDX.DXGI;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.DirectX11
 {
-    internal class D3D11GpuAdapter : GraphicsAdapter
+    internal class DirectX11GpuAdapter : GraphicsAdapter
     {
-        public readonly DXGI.Adapter1 Adapter;
+        public readonly Adapter1 Adapter;
 
-        public D3D11GpuAdapter(DXGI.Adapter1 adapter)
+        public DirectX11GpuAdapter(Adapter1 adapter)
         {
             Adapter = adapter;
 

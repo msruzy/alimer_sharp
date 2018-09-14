@@ -26,9 +26,9 @@ namespace Vortice.Graphics
         public abstract Texture BackbufferTexture { get; }
 
         /// <summary>
-        /// Gets the default <see cref="CommandContext"/>.
+        /// Gets the immediate <see cref="CommandBuffer"/>
         /// </summary>
-        public abstract CommandContext DefaultContext { get; }
+        public abstract CommandBuffer ImmediateCommandBuffer { get; }
 
         protected GraphicsDevice(GraphicsAdapter adapter, PresentationParameters presentationParameters)
         {
@@ -57,26 +57,51 @@ namespace Vortice.Graphics
             PresentCore();
         }
 
-        public GraphicsBuffer CreateBuffer(BufferUsage usage, int sizeInBytes, IntPtr data)
+        public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor, IntPtr initialData)
         {
-            Guard.IsTrue(usage != BufferUsage.Unknown, nameof(usage), $"BufferUsage cannot be {nameof(BufferUsage.Unknown)}");
-            Guard.MustBeGreaterThan(sizeInBytes, 0, nameof(sizeInBytes));
+            Guard.IsTrue(descriptor.BufferUsage != BufferUsage.Unknown, nameof(descriptor.Usage), $"BufferUsage cannot be {nameof(BufferUsage.Unknown)}");
+            Guard.MustBeGreaterThan(descriptor.SizeInBytes, 0, nameof(descriptor.SizeInBytes));
 
-            return CreateBufferCore(usage, sizeInBytes, data);
+            if (descriptor.Usage == GraphicsResourceUsage.Immutable
+                && initialData == IntPtr.Zero)
+            {
+                throw new GraphicsException("Immutable buffer needs valid initial data.");
+            }
+
+            return CreateBufferCore(descriptor, initialData);
         }
 
-        public GraphicsBuffer CreateBuffer(BufferUsage usage, int sizeInBytes) => CreateBuffer(usage, sizeInBytes, IntPtr.Zero);
+        public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor) => CreateBuffer(descriptor, IntPtr.Zero);
 
-        public GraphicsBuffer CreateBuffer<T>(BufferUsage usage, T[] data) where T : struct
+        public GraphicsBuffer CreateBuffer<T>(BufferDescriptor descriptor, T[] initialData) where T : struct
         {
-            Guard.NotNull(data, nameof(data));
-            Guard.MustBeGreaterThan(data.Length, 0, nameof(data));
+            Guard.NotNull(initialData, nameof(initialData));
+            Guard.MustBeGreaterThan(initialData.Length, 0, nameof(initialData));
 
-            var sizeInBytes = Unsafe.SizeOf<T>() * data.Length;
-            var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-            var buffer = CreateBuffer(usage, sizeInBytes, handle.AddrOfPinnedObject());
+            // Calculate size in bytes if not provided.
+            if (descriptor.SizeInBytes == 0)
+            {
+                descriptor.SizeInBytes = Unsafe.SizeOf<T>() * initialData.Length;
+            }
+
+            var handle = GCHandle.Alloc(initialData, GCHandleType.Pinned);
+            var buffer = CreateBuffer(descriptor, handle.AddrOfPinnedObject());
             handle.Free();
             return buffer;
+        }
+
+        /// <summary>
+        /// Create a new immutable <see cref="GraphicsBuffer"/>.
+        /// </summary>
+        /// <typeparam name="T">Type of data</typeparam>
+        /// <param name="bufferUsage">The <see cref="BufferUsage"/></param>
+        /// <param name="initialData">Valid iniitial data</param>
+        /// <returns>New instance of <see cref="GraphicsBuffer"/></returns>
+        public GraphicsBuffer CreateBuffer<T>(BufferUsage bufferUsage, T[] initialData) where T : struct
+        {
+            return CreateBuffer(
+                new BufferDescriptor(Unsafe.SizeOf<T>() * initialData.Length, bufferUsage, GraphicsResourceUsage.Immutable),
+                initialData);
         }
 
         public Texture CreateTexture(in TextureDescription description)
@@ -126,7 +151,7 @@ namespace Vortice.Graphics
         protected abstract void Destroy();
         protected abstract void PresentCore();
 
-        protected abstract GraphicsBuffer CreateBufferCore(BufferUsage usage, int sizeInBytes, IntPtr data);
+        protected abstract GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData);
         protected abstract Texture CreateTextureCore(in TextureDescription description);
     }
 }

@@ -3,21 +3,33 @@
 
 using System;
 using SharpDX.Direct3D11;
-using Vortice.Graphics.D3D;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.DirectX11
 {
-    internal class D3D11CommandContext : CommandContext
+    internal sealed class DirectX11CommandBuffer : CommandBuffer
     {
-        private readonly SharpDX.Direct3D11.DeviceContext1 _context;
-        public readonly RenderTargetView[] RenderTargetViews;
-        public readonly DepthStencilView DepthStencilView;
+        private readonly DeviceContext1 _context;
+        private readonly bool _immediate;
+        private readonly bool _needWorkaround;
+        public readonly RenderTargetView[] RenderTargetViews = new RenderTargetView[8];
+        public DepthStencilView DepthStencilView = null;
 
-        public D3D11CommandContext(D3D11GraphicsDevice device)
+        public DirectX11CommandBuffer(D3D11GraphicsDevice device, DeviceContext1 context)
             : base(device)
         {
-            _context = device.ImmediateContext;
-            RenderTargetViews = new RenderTargetView[8];
+            Guard.NotNull(context, nameof(context));
+
+            _immediate = context.TypeInfo == DeviceContextType.Immediate;
+            _context = context;
+
+            if (context.TypeInfo == DeviceContextType.Deferred 
+                && device.Device.CheckThreadingSupport(out var supportsConcurrentResources, out var supportsCommandLists).Success)
+            {
+                // The runtime emulates command lists.
+                _needWorkaround = !supportsCommandLists;
+            }
+
+            Reset();
         }
 
         /// <inheritdoc/>
@@ -35,7 +47,7 @@ namespace Vortice.Graphics.D3D11
             {
                 ref RenderPassColorAttachment colorAttachment = ref renderPassDescription.ColorAttachments[i];
 
-                var d3dTexture = (D3D11Texture)colorAttachment.Texture;
+                var d3dTexture = (DirectX11Texture)colorAttachment.Texture;
                 RenderTargetViews[i] = d3dTexture.GetRenderTargetView(colorAttachment.MipLevel, colorAttachment.Slice);
 
                 switch (colorAttachment.LoadAction)
@@ -43,7 +55,7 @@ namespace Vortice.Graphics.D3D11
                     case LoadAction.Clear:
                         _context.ClearRenderTargetView(
                             RenderTargetViews[i],
-                            D3DConvert.Convert(colorAttachment.ClearColor)
+                            D3D11Convert.Convert(colorAttachment.ClearColor)
                             );
                         break;
 
@@ -58,7 +70,7 @@ namespace Vortice.Graphics.D3D11
             {
                 var depthStencilAttachment = renderPassDescription.DepthStencilAttachment.Value;
 
-                var d3dTexture = (D3D11Texture)depthStencilAttachment.Texture;
+                var d3dTexture = (DirectX11Texture)depthStencilAttachment.Texture;
                 //DepthStencilView = d3dTexture.GetDepthStencilView(depthStencilAttachment.MipLevel, depthStencilAttachment.Slice);
 
                 switch (depthStencilAttachment.LoadAction)
@@ -84,6 +96,11 @@ namespace Vortice.Graphics.D3D11
         protected override void EndRenderPassCore()
         {
             _context.OutputMerger.ResetTargets();
+        }
+
+        private void Reset()
+        {
+
         }
     }
 }

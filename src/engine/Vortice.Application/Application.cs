@@ -10,7 +10,7 @@ namespace Vortice
     /// <summary>
     /// Cross platform application class that handles main loop and <see cref="View"/> logic.
     /// </summary>
-    public class Application : IDisposable
+    public abstract class Application : IDisposable
     {
         private readonly ApplicationHost _host;
         private bool _isExiting;
@@ -89,7 +89,7 @@ namespace Vortice
         /// <summary>
         /// Create new instance of <see cref="Application"/> class.
         /// </summary>
-        public Application()
+        protected Application()
         {
             if (Current != null)
             {
@@ -391,16 +391,15 @@ namespace Vortice
             _graphicsDevice.Present();
         }
 
+        /// <summary>
+        /// Create <see cref="GraphicsDeviceFactory"/> for the application.
+        /// </summary>
+        protected abstract GraphicsDeviceFactory CreateGraphicsDeviceFactory();
+
         private void InitializeBeforeRun()
         {
             // Create graphics device factory first.
-#if DEBUG 
-            bool validation = true;
-#else
-            bool validation = false;
-#endif
-
-            _graphicsDeviceFactory = new GraphicsDeviceFactory(GraphicsBackend.Default, validation);
+            _graphicsDeviceFactory = CreateGraphicsDeviceFactory();
 
             var clientSize = MainView.ClientSize;
             var presentationParameters = new PresentationParameters

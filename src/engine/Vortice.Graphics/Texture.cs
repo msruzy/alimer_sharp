@@ -48,7 +48,7 @@ namespace Vortice.Graphics
         /// <summary>
         /// Gets the texture usage.
         /// </summary>
-        public TextureUsage Usage { get; }
+        public TextureUsage TextureUsage { get; }
 
         /// <summary>
 		/// Gets the number of samples.
@@ -61,7 +61,7 @@ namespace Vortice.Graphics
         /// <param name="device">The creation device</param>
         /// <param name="description">The texture description</param>
         protected Texture(GraphicsDevice device, in TextureDescription description)
-            : base(device, GraphicsResourceType.Texture)
+            : base(device, GraphicsResourceType.Texture, GraphicsResourceUsage.Default)
         {
             TextureType = description.TextureType;
             Width = description.Width;
@@ -70,7 +70,7 @@ namespace Vortice.Graphics
             MipLevels = description.MipLevels;
             ArrayLayers = description.ArrayLayers;
             Format = description.Format;
-            Usage = description.Usage;
+            TextureUsage = description.TextureUsage;
             Samples = description.Samples;
         }
     }

@@ -6,7 +6,7 @@ using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.DirectX11
 {
     internal unsafe class D3D11GraphicsDevice : GraphicsDevice
     {
@@ -18,20 +18,20 @@ namespace Vortice.Graphics.D3D11
             FeatureLevel.Level_10_0
         };
 
-        private readonly D3D11GraphicsDeviceFactory _factory;
+        private readonly DirectX11GraphicsDeviceFactory _factory;
         public readonly Device1 Device;
         public readonly DeviceContext1 ImmediateContext;
-        private readonly D3D11SwapChain _swapChain;
+        private readonly DirectX11SwapChain _swapChain;
 
         /// <inheritdoc/>
         public override Texture BackbufferTexture => _swapChain.BackbufferTexture;
 
         /// <inheritdoc/>
-        public override CommandContext DefaultContext { get; }
+        public override CommandBuffer ImmediateCommandBuffer { get; }
 
         public D3D11GraphicsDevice(
-            D3D11GraphicsDeviceFactory factory,
-            D3D11GpuAdapter adapter,
+            DirectX11GraphicsDeviceFactory factory,
+            DirectX11GpuAdapter adapter,
             PresentationParameters presentationParameters)
             : base(adapter, presentationParameters)
         {
@@ -47,7 +47,7 @@ namespace Vortice.Graphics.D3D11
             {
                 using (var device = new Device(adapter.Adapter, creationFlags, s_featureLevels))
                 {
-                    if (PlatformDetection.IsWindows10x)
+                    if (D3D11Convert.IsWindows10x)
                     {
                         Device = device.QueryInterface<Device5>();
                     }
@@ -64,7 +64,7 @@ namespace Vortice.Graphics.D3D11
 
                 using (var device = new Device(adapter.Adapter, creationFlags, s_featureLevels))
                 {
-                    if (PlatformDetection.IsWindows10x)
+                    if (D3D11Convert.IsWindows10x)
                     {
                         Device = device.QueryInterface<Device5>();
                     }
@@ -73,18 +73,17 @@ namespace Vortice.Graphics.D3D11
                         Device = device.QueryInterface<Device1>();
                     }
                 }
-
-                _factory.Validation = false;
             }
 
             ImmediateContext = Device.ImmediateContext1;
-            DefaultContext = new D3D11CommandContext(this);
-            _swapChain = new D3D11SwapChain(this, presentationParameters);
+            ImmediateCommandBuffer = new DirectX11CommandBuffer(this, ImmediateContext);
+            _swapChain = new DirectX11SwapChain(this, presentationParameters);
         }
 
         protected override void Destroy()
         {
             _swapChain.Destroy();
+            ImmediateContext.Dispose();
             Device.Dispose();
         }
 
@@ -93,14 +92,14 @@ namespace Vortice.Graphics.D3D11
             _swapChain.Present();
         }
 
-        protected override GraphicsBuffer CreateBufferCore(BufferUsage usage, int sizeInBytes, IntPtr data)
+        protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
         {
-            return new D3D11Buffer(this, usage, sizeInBytes, data);
+            return new DirectX11Buffer(this, descriptor, initialData);
         }
 
         protected override Texture CreateTextureCore(in TextureDescription description)
         {
-            return new D3D11Texture(this, description, nativeTexture: null);
+            return new DirectX11Texture(this, description, nativeTexture: null);
         }
     }
 }

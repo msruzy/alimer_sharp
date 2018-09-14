@@ -7,5 +7,7 @@
   <Import Project="..\DrawTriangle.Shared\DrawTriangle.Shared.projitems" Label="Shared" />
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\engine\Vortice.Application\Vortice.Application.csproj" />
+    <ProjectReference Include="..\..\..\..\engine\Vortice.Graphics.DirectX11\Vortice.Graphics.DirectX11.csproj" />
+    <ProjectReference Include="..\..\..\..\engine\Vortice.Graphics.DirectX12\Vortice.Graphics.DirectX12.csproj" />
   </ItemGroup>
 </Project>

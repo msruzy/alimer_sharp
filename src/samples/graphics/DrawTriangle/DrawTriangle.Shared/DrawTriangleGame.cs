@@ -10,6 +10,21 @@ namespace DrawTriangle
     {
         private GraphicsBuffer _vertexBuffer;
 
+        protected override GraphicsDeviceFactory CreateGraphicsDeviceFactory()
+        {
+#if DEBUG
+            bool validation = true;
+#else
+            bool validation = false;
+#endif
+            //if (DirectX12GraphicsDeviceFactory.IsSupported())
+            //{
+            //return new DirectX12GraphicsDeviceFactory(validation);
+            //}
+
+            return new DirectX11GraphicsDeviceFactory(validation);
+        }
+
         protected override void LoadContent()
         {
             base.LoadContent();
@@ -27,7 +42,7 @@ namespace DrawTriangle
         {
             base.Draw(time);
 
-            var context = GraphicsDevice.DefaultContext;
+            var context = GraphicsDevice.ImmediateCommandBuffer;
             context.BeginRenderPass(new Color4(0.0f, 0.2f, 0.4f));
             context.EndRenderPass();
         }

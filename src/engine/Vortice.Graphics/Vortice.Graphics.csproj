@@ -1,23 +1,15 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;uap10.0.16299</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>7.2</LangVersion>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
-    <Description>Vortice.Application library for cross platform application support</Description>
+    <Description>Vortice.Graphics library for cross platform application support</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Backends\**\*.cs" />
-    <None Include="Backends\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(VorticeD3D11)' == 'true' or '$(VorticeD3D12)' == 'true'">
-    <Compile Include="Backends\D3D\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(VorticeD3D11)' == 'true'">
-    <Compile Include="Backends\D3D11\**\*.cs" />
+  
+  <ItemGroup Condition="'$(VorticeD3D12)' == 'true'">
+    <Compile Include="Backends\D3D12\**\*.cs" />
   </ItemGroup>
   
   <ItemGroup>
