@@ -12,7 +12,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\core\Vortice.Mathematics\Vortice.Mathematics.csproj" />
     <ProjectReference Include="..\..\core\Vortice\Vortice.csproj" />
   </ItemGroup>
 

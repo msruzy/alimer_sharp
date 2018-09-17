@@ -121,13 +121,13 @@ namespace Vortice
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool operator !=(Color4 left, Color4 right) => !left.Equals(ref right);
 
-		/// <inheritdoc/>
-		public override int GetHashCode() => HashHelpers.Combine(
+        /// <inheritdoc/>
+        public override int GetHashCode() => HashHelpers.Combine(
             R.GetHashCode(), G.GetHashCode(),
             B.GetHashCode(), A.GetHashCode());
 
-		/// <inheritdoc/>
-		public override string ToString()
+        /// <inheritdoc/>
+        public override string ToString()
 		{
 			return $"Color4 [ R={R}, G={G}, B={B}, A={A} ]";
 		}

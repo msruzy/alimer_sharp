@@ -3,6 +3,7 @@
     <TargetFrameworks>netstandard2.0;uap10.0.16299</TargetFrameworks>
     <DefineConstants>$(DefineConstants);</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.2</LangVersion>
     <Description>Cross platform 2D and 3D game engine with support for .NET Standard 2.0, .NET Core, .NET Framework, Xamarin, and UWP.</Description>
     <PackageTags>3D graphics direct3D vulkan opengl standard game gamedev</PackageTags>
   </PropertyGroup>
@@ -12,5 +13,10 @@
     <None Include="Platforms\**\*.cs" />
     <Compile Include="Platforms\$(VorticePlatform)\**\*.cs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+  </ItemGroup>
+
 
 </Project>
