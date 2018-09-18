@@ -1,15 +1,50 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
+using System;
 using System.Numerics;
+using System.Runtime.Serialization;
 using Vortice;
 using Vortice.Graphics;
 
 namespace DrawTriangle
 {
+    public readonly struct Entity : IEquatable<Entity>
+    {
+        public int Id { get; }
+
+        public Entity(int id)
+        {
+            Id = id;
+        }
+
+        public bool Equals(Entity other) => Id == other.Id;
+    }
+
+    public class EntityManager
+    {
+        private int _nextEntityId = 1;
+
+        public Entity CreateEntity()
+        {
+            var entityId = _nextEntityId;
+            _nextEntityId++;
+            return new Entity(entityId);
+        }
+    }
+
+    [DataContract(Name = nameof(Scene))]
+    public sealed class Scene
+    {
+        private readonly EntityManager _entityManager = new EntityManager();
+
+        public Entity CreateEntity() => _entityManager.CreateEntity();
+    }
+
     public sealed class DrawTriangleGame : Application
     {
         private GraphicsBuffer _vertexBuffer;
+        private readonly Scene _scene = new Scene();
 
         protected override GraphicsDeviceFactory CreateGraphicsDeviceFactory()
         {
@@ -18,12 +53,19 @@ namespace DrawTriangle
 #else
             bool validation = false;
 #endif
-            //if (DirectX12GraphicsDeviceFactory.IsSupported())
-            //{
-            //return new DirectX12GraphicsDeviceFactory(validation);
-            //}
+            if (DirectX12GraphicsDeviceFactory.IsSupported())
+            {
+                //return new DirectX12GraphicsDeviceFactory(validation);
+            }
 
             return new DirectX11GraphicsDeviceFactory(validation);
+        }
+
+        protected override void Initialize()
+        {
+            _scene.CreateEntity();
+
+            base.Initialize();
         }
 
         protected override void LoadContent()

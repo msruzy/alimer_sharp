@@ -53,6 +53,28 @@ namespace Vortice.Graphics.DirectX12
                 Device = new Device(warpAdapter, FeatureLevel.Level_11_0);
             }
 
+            if (_factory.Validation)
+            {
+                var infoQueue = Device.QueryInterfaceOrNull<InfoQueue>();
+                if (infoQueue != null)
+                {
+                    infoQueue.SetBreakOnSeverity(MessageSeverity.Corruption, true);
+                    infoQueue.SetBreakOnSeverity(MessageSeverity.Error, true);
+                    infoQueue.AddStorageFilterEntries(new InfoQueueFilter
+                    {
+                        DenyList = new InfoQueueFilterDescription
+                        {
+                            Ids = new[]
+                            {
+                                MessageId.MapInvalidNullRange,
+                                MessageId.UnmapInvalidNullRange
+                            }
+                        }
+                    });
+                    infoQueue.Dispose();
+                }
+            }
+
             // Init capabilities.
             unsafe
             {
@@ -102,9 +124,11 @@ namespace Vortice.Graphics.DirectX12
 
             if (_factory.Validation)
             {
-                using (var deviceDebug = Device.QueryInterface<DebugDevice>())
+                var debugDevice = Device.QueryInterfaceOrNull<DebugDevice>();
+                if (debugDevice != null)
                 {
-                    deviceDebug.ReportLiveDeviceObjects(ReportingLevel.Detail);
+                    debugDevice.ReportLiveDeviceObjects(ReportingLevel.Detail);
+                    debugDevice.Dispose();
                 }
             }
 
@@ -113,7 +137,7 @@ namespace Vortice.Graphics.DirectX12
 
         //public override void WaitIdle()
         //{
-            //CommandListManager.WaitIdle();
+        //CommandListManager.WaitIdle();
         //}
 
         protected override void PresentCore()

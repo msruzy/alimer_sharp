@@ -77,6 +77,11 @@ namespace Vortice
         public TimeSpan InactiveSleepTime { get; set; } = TimeSpan.FromMilliseconds(20.0);
 
         /// <summary>
+        /// Gets the collection of <see cref="GameSystem"/> registered.
+        /// </summary>
+        public GameSystemCollection GameSystems { get; }
+
+        /// <summary>
         /// Occurs when the <see cref="Application"/> is activated (gains focus).
         /// </summary>
         public event TypedEventHandler<Application> Activated;
@@ -111,6 +116,9 @@ namespace Vortice
             const int BadUpdateCountTime = 2; // number of bad frame (a bad frame is a frame that has at least 2 updates)
             var maxLastCount = 2 * Math.Min(BadUpdateCountTime, _lastUpdateCount.Length);
             _updateCountAverageSlowLimit = (float)(maxLastCount + (_lastUpdateCount.Length - maxLastCount)) / _lastUpdateCount.Length;
+
+            // Init systems
+            GameSystems = new GameSystemCollection();
 
             // Create the handle.
             _host = ApplicationHost.Create(this);
