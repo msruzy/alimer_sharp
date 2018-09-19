@@ -10,9 +10,9 @@ namespace Vortice
     /// </summary>
     public abstract class GameSystem
     {
-        public Application Game { get; set; }
+        public Game Game { get; set; }
 
-        protected GameSystem(Application game)
+        protected GameSystem(Game game)
         {
             Game = game;
         }

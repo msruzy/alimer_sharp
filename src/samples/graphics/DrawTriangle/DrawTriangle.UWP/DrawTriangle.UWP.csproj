@@ -111,7 +111,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\engine\Vortice.Application\Vortice.Application.csproj">
+    <ProjectReference Include="..\..\..\..\engine\Vortice.Game\Vortice.Game.csproj">
       <Project>{84735234-e7bf-40e3-82d4-d54104943efc}</Project>
       <Name>Vortice.Application</Name>
     </ProjectReference>

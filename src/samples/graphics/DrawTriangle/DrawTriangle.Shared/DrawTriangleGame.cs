@@ -41,7 +41,7 @@ namespace DrawTriangle
         public Entity CreateEntity() => _entityManager.CreateEntity();
     }
 
-    public sealed class DrawTriangleGame : Application
+    public sealed class DrawTriangleGame : Game
     {
         private GraphicsBuffer _vertexBuffer;
         private readonly Scene _scene = new Scene();
@@ -81,7 +81,7 @@ namespace DrawTriangle
             _vertexBuffer = GraphicsDevice.CreateBuffer(BufferUsage.Vertex, vertices);
         }
 
-        protected override void Draw(ApplicationTime time)
+        protected override void Draw(GameTime time)
         {
             base.Draw(time);
 

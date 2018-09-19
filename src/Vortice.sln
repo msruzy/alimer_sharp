@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6CAD8296
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "engine", "engine", "{FAB2ABB8-1CEF-452B-A86E-995AB9907B37}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Application", "engine\Vortice.Application\Vortice.Application.csproj", "{84735234-E7BF-40E3-82D4-D54104943EFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Game", "engine\Vortice.Game\Vortice.Game.csproj", "{84735234-E7BF-40E3-82D4-D54104943EFC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Graphics", "engine\Vortice.Graphics\Vortice.Graphics.csproj", "{D8645B0C-1C12-44A3-BEA6-3A929BDF9BE5}"
 EndProject

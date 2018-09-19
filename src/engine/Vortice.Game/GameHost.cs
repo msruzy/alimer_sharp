@@ -7,12 +7,12 @@ namespace Vortice
 {
     public abstract partial class ApplicationHost
     {
-        public readonly Application Application;
+        public readonly Game Game;
 
-        protected ApplicationHost(Application application)
+        protected ApplicationHost(Game game)
         {
-            Guard.NotNull(application, nameof(application));
-            Application = application;
+            Guard.NotNull(game, nameof(game));
+            Game = game;
         }
 
         public event EventHandler<EventArgs> Activated;

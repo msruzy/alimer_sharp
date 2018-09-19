@@ -11,8 +11,8 @@ namespace Vortice
 
         public override View MainView => throw new System.NotImplementedException();
 
-        public StandardApplicationHost(Application application)
-            : base(application)
+        public StandardApplicationHost(Game game)
+            : base(game)
         {
         }
 
@@ -29,14 +29,14 @@ namespace Vortice
 
     public abstract partial class ApplicationHost
     {
-        public static ApplicationHost Create(Application application)
+        public static ApplicationHost Create(Game game)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return new Windows.WindowsApplicationHost(application);
+                return new Windows.WindowsApplicationHost(game);
             }
 
-            return new StandardApplicationHost(application);
+            return new StandardApplicationHost(game);
         }
     }
 }

@@ -6,9 +6,9 @@ using System;
 namespace Vortice
 {
     /// <summary>
-    /// Current timing used for variable-step (real time) or fixed-step (application time) apps.
+    /// Current timing used for variable-step (real time) or fixed-step (game time) apps.
     /// </summary>
-    public sealed class ApplicationTime
+    public sealed class GameTime
     {
         /// <summary>
         /// Gets the amount of time since the start of the <see cref="Application"/>.

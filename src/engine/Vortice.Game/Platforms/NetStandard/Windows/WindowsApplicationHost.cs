@@ -26,8 +26,8 @@ namespace Vortice.Windows
 
         public override View MainView { get; }
 
-        public WindowsApplicationHost(Application application)
-            : base(application)
+        public WindowsApplicationHost(Game game)
+            : base(game)
         {
             // TODO: Add options for EnableHighResolution
             const bool EnableHighResolution = true;

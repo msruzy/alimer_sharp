@@ -8,9 +8,9 @@ using Vortice.Graphics;
 namespace Vortice
 {
     /// <summary>
-    /// Cross platform application class that handles main loop and <see cref="View"/> logic.
+    /// Cross platform game class that handles main loop and main <see cref="View"/> creation logic.
     /// </summary>
-    public abstract class Application : IDisposable
+    public abstract class Game : IDisposable
     {
         private readonly ApplicationHost _host;
         private bool _isExiting;
@@ -18,7 +18,7 @@ namespace Vortice
         private bool _firstUpdateDone;
         private bool _suppressDraw;
 
-        protected readonly ApplicationTime _time;
+        protected readonly GameTime _time;
         private readonly TimerTick _timer;
         private readonly TimeSpan _maximumElapsedTime;
         private TimeSpan _accumulatedElapsedTime;
@@ -36,9 +36,9 @@ namespace Vortice
         private GraphicsDevice _graphicsDevice;
 
         /// <summary>
-        /// Gets the current <see cref="Application"/>.
+        /// Gets the current <see cref="Game"/>.
         /// </summary>
-        public static Application Current { get; private set; }
+        public static Game Current { get; private set; }
 
         /// <summary>
         /// Gets the main <see cref="View"/>.
@@ -82,19 +82,19 @@ namespace Vortice
         public GameSystemCollection GameSystems { get; }
 
         /// <summary>
-        /// Occurs when the <see cref="Application"/> is activated (gains focus).
+        /// Occurs when the <see cref="Game"/> is activated (gains focus).
         /// </summary>
-        public event TypedEventHandler<Application> Activated;
+        public event TypedEventHandler<Game> Activated;
 
         /// <summary>
-        /// Occurs when the <see cref="Application"/> is deactivated (loses focus).
+        /// Occurs when the <see cref="Game"/> is deactivated (loses focus).
         /// </summary>
-        public event TypedEventHandler<Application> Deactivated;
+        public event TypedEventHandler<Game> Deactivated;
 
         /// <summary>
-        /// Create new instance of <see cref="Application"/> class.
+        /// Create new instance of <see cref="Game"/> class.
         /// </summary>
-        protected Application()
+        protected Game()
         {
             if (Current != null)
             {
@@ -103,7 +103,7 @@ namespace Vortice
 
             Current = this;
 
-            _time = new ApplicationTime();
+            _time = new GameTime();
             _timer = new TimerTick();
             _maximumElapsedTime = TimeSpan.FromMilliseconds(500.0);
             TargetElapsedTime = TimeSpan.FromTicks(10000000 / 60); // target elapsed time is by default 60Hz
@@ -319,7 +319,7 @@ namespace Vortice
         /// Override this method to add code to handle when the application gains focus.
         /// </summary>
         /// <param name="sender">The application.</param>
-        protected virtual void OnActivated(Application sender)
+        protected virtual void OnActivated(Game sender)
         {
             Activated?.Invoke(sender);
         }
@@ -329,12 +329,14 @@ namespace Vortice
         /// Override this method to add code to handle when the application loses focus.
         /// </summary>
         /// <param name="sender">The application.</param>
-        protected virtual void OnDeactivated(Application sender)
+        protected virtual void OnDeactivated(Game sender)
         {
             Deactivated?.Invoke(sender);
         }
 
-        /// <summary>Called after the <see cref="Application"/> and <see cref="GraphicsDevice"/> are created, but before <see cref="LoadContent"/>.</summary>
+        /// <summary>
+        /// Called after the <see cref="Game"/> and <see cref="GraphicsDevice"/> are created, but before <see cref="LoadContent"/>.
+        /// </summary>
         protected virtual void Initialize()
         {
         }
@@ -366,7 +368,7 @@ namespace Vortice
         /// Override this method with application-specific logic.
         /// </summary>
         /// <param name="time">Time passed since the last call to Update.</param>
-        protected virtual void Update(ApplicationTime time)
+        protected virtual void Update(GameTime time)
         {
         }
 
@@ -386,7 +388,7 @@ namespace Vortice
         /// Override this method with application-specific rendering code.
         /// </summary>
         /// <param name="time">Time passed since the last call to Draw.</param>
-        protected virtual void Draw(ApplicationTime time)
+        protected virtual void Draw(GameTime time)
         {
         }
 

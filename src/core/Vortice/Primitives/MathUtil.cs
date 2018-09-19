@@ -93,7 +93,7 @@ namespace Vortice
             // Choose of maxUlp = 4
             // according to http://code.google.com/p/googletest/source/browse/trunk/include/gtest/internal/gtest-internal.h
             const int maxUlp = 4;
-            return (ulp <= maxUlp);
+            return ulp <= maxUlp;
         }
 
         /// <summary>
@@ -109,5 +109,39 @@ namespace Vortice
         /// <param name="value">The floating value.</param>
         /// <returns><c>true</c> if the specified value is close to one (1.0f); otherwise, <c>false</c>.</returns>
         public static bool IsOne(float value) => IsZero(value - 1.0f);
+
+        /// <summary>
+        /// Checks if a - b are almost equals within a float epsilon.
+        /// </summary>
+        /// <param name="a">The left value to compare.</param>
+        /// <param name="b">The right value to compare.</param>
+        /// <param name="epsilon">Epsilon value</param>
+        /// <returns><c>true</c> if a almost equal to b within a float epsilon, <c>false</c> otherwise</returns>
+        public static bool WithinEpsilon(float a, float b, float epsilon)
+        {
+            float diff = a - b;
+            return (-epsilon <= diff) && (diff <= epsilon);
+        }
+
+        /// <summary>
+        /// Converts degrees to radians.
+        /// </summary>
+        /// <param name="degrees">The value to convert.</param>
+        /// <returns>The converted value in radians.</returns>
+        public static float DegreesToRadians(float degrees) => degrees * (Pi / 180.0f);
+
+        /// <summary>
+        /// Converts degrees to radians.
+        /// </summary>
+        /// <param name="degrees">The value to convert.</param>
+        /// <returns>The converted value in radians.</returns>
+        public static double DegreesToRadians(double degrees) => degrees * (Math.PI / 180.0);
+
+        /// <summary>
+        /// Converts radians to degrees.
+        /// </summary>
+        /// <param name="radians">The value to convert.</param>
+        /// <returns>The converted value in degrees.</returns>
+        public static float RadiansToDegrees(float radians) => radians * (180.0f / Pi);
     }
 }

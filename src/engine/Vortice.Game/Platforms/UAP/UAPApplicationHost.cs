@@ -9,8 +9,8 @@ namespace Vortice
     {
         private readonly UAPView _mainView;
 
-        public UAPApplicationHost(Application application)
-            : base(application)
+        public UAPApplicationHost(Game game)
+            : base(game)
         {
             _mainView = new UAPView("Vortice");
         }
@@ -32,9 +32,9 @@ namespace Vortice
 
     public abstract partial class ApplicationHost
     {
-        public static ApplicationHost Create(Application application)
+        public static ApplicationHost Create(Game game)
         {
-            return new UAPApplicationHost(application);
+            return new UAPApplicationHost(game);
         }
     }
 }
