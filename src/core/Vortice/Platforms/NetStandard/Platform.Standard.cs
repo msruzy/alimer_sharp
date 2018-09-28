@@ -16,7 +16,7 @@ namespace Vortice
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                PlatformType = PlatformType.MacOS;
+                PlatformType = PlatformType.macOS;
                 PlatformFamily = PlatformFamily.Desktop;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

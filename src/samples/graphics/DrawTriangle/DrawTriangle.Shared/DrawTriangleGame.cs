@@ -2,71 +2,20 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Vortice;
 using Vortice.Graphics;
 
 namespace DrawTriangle
 {
-    public readonly struct Entity : IEquatable<Entity>
-    {
-        public int Id { get; }
-
-        public Entity(int id)
-        {
-            Id = id;
-        }
-
-        public bool Equals(Entity other) => Id == other.Id;
-    }
-
-    public class EntityManager
-    {
-        private int _nextEntityId = 1;
-
-        public Entity CreateEntity()
-        {
-            var entityId = _nextEntityId;
-            _nextEntityId++;
-            return new Entity(entityId);
-        }
-    }
-
-    [DataContract(Name = nameof(Scene))]
-    public sealed class Scene
-    {
-        private readonly EntityManager _entityManager = new EntityManager();
-
-        public Entity CreateEntity() => _entityManager.CreateEntity();
-    }
-
     public sealed class DrawTriangleGame : Game
     {
         private GraphicsBuffer _vertexBuffer;
-        private readonly Scene _scene = new Scene();
-
-        protected override GraphicsDeviceFactory CreateGraphicsDeviceFactory()
-        {
-#if DEBUG
-            bool validation = true;
-#else
-            bool validation = false;
-#endif
-            if (DirectX12GraphicsDeviceFactory.IsSupported())
-            {
-                //return new DirectX12GraphicsDeviceFactory(validation);
-            }
-
-            return new DirectX11GraphicsDeviceFactory(validation);
-        }
-
-        protected override void Initialize()
-        {
-            _scene.CreateEntity();
-
-            base.Initialize();
-        }
 
         protected override void LoadContent()
         {
@@ -79,15 +28,45 @@ namespace DrawTriangle
                 new VertexPositionColor(new Vector3(-0.5f, -0.5f, 0.0f), new Color4(0.0f, 0.0f, 1.0f)),
             };
             _vertexBuffer = GraphicsDevice.CreateBuffer(BufferUsage.Vertex, vertices);
+
+            // Set swap chain clear color.
+            GraphicsDevice.MainSwapchain.ClearColor = new Color4(0.0f, 0.2f, 0.4f);
         }
 
         protected override void Draw(GameTime time)
         {
             base.Draw(time);
 
-            var context = GraphicsDevice.ImmediateCommandBuffer;
-            context.BeginRenderPass(new Color4(0.0f, 0.2f, 0.4f));
-            context.EndRenderPass();
+            var queue = GraphicsDevice.GraphicsQueue;
+
+            // execution order is the order of creation by default
+            var commandBuffer1 = queue.CreateCommandBuffer();
+            commandBuffer1.ExecutionOrder = 0;
+            var commandBuffer2 = queue.CreateCommandBuffer();
+            commandBuffer2.ExecutionOrder = 1;
+
+            var tasks = new Task[2];
+            tasks[0] = Task.Run(() =>
+            {
+                var renderPass = GraphicsDevice.MainSwapchain.CurrentRenderPassDescriptor;
+                renderPass.ColorAttachments[0].ClearColor = new Color4(1.0f, 0.0f, 0.0f);
+
+                commandBuffer1.BeginRenderPass(renderPass);
+                commandBuffer1.EndRenderPass();
+                commandBuffer1.Commit();
+            });
+
+            tasks[1] = Task.Run(() =>
+            {
+                var renderPass = GraphicsDevice.MainSwapchain.CurrentRenderPassDescriptor;
+                renderPass.ColorAttachments[0].ClearColor = new Color4(1.0f, 1.0f, 0.0f);
+
+                commandBuffer2.BeginRenderPass(renderPass);
+                commandBuffer2.EndRenderPass();
+                commandBuffer2.Commit();
+            });
+
+            Task.WaitAll(tasks);
         }
 
         private readonly struct VertexPositionColor

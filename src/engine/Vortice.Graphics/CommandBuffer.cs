@@ -11,17 +11,27 @@ namespace Vortice.Graphics
     public abstract class CommandBuffer : DisposableBase
     {
         /// <summary>
-        /// Gets the creation <see cref="GraphicsDevice"/>.
+        /// Gets the creation <see cref="CommandQueue"/>.
         /// </summary>
-        public GraphicsDevice Device { get; }
+        public CommandQueue Queue { get; }
 
         /// <summary>
-        /// Create a new instance of <see cref="CommandContext"/> class.
+        /// Gets the creation <see cref="GraphicsDevice"/>.
         /// </summary>
-        /// <param name="device">The creation device</param>
-        protected CommandBuffer(GraphicsDevice device)
+        public GraphicsDevice Device => Queue.Device;
+
+        /// <summary>
+        /// Gets or sets the execution order.
+        /// </summary>
+        public int ExecutionOrder { get; set; }
+
+        /// <summary>
+        /// Create a new instance of <see cref="CommandBuffer"/> class.
+        /// </summary>
+        /// <param name="queue">The creation queue</param>
+        protected CommandBuffer(CommandQueue queue)
         {
-            Device = device;
+            Queue = queue;
         }
 
         /// <inheritdoc/>
@@ -38,16 +48,22 @@ namespace Vortice.Graphics
         }
 
         /// <summary>
-        /// Begin rendering with current backbuffer texture.
+        /// Begin rendering with main swap chain render pass.
         /// </summary>
-        /// <param name="clearColor">The <see cref="Color4"/> to clear with.</param>
-        public void BeginRenderPass(Color4 clearColor)
+        public void BeginRenderPass()
         {
-            var renderPassDescription = new RenderPassDescription(
-                new[] { new RenderPassColorAttachment(Device.BackbufferTexture, clearColor) }
-                );
+            BeginRenderPass(Device.MainSwapchain.CurrentRenderPassDescriptor);
+        }
 
-            BeginRenderPassCore(renderPassDescription);
+        /// <summary>
+        /// Begin rendering with given descriptor.
+        /// </summary>
+        /// <param name="descriptor">The <see cref="RenderPassDescriptor"/></param>
+        public void BeginRenderPass(RenderPassDescriptor descriptor)
+        {
+            Guard.NotNull(descriptor, nameof(descriptor));
+
+            BeginRenderPassCore(descriptor);
         }
 
         public void EndRenderPass()
@@ -55,8 +71,14 @@ namespace Vortice.Graphics
             EndRenderPassCore();
         }
 
+        public void Commit()
+        {
+            CommitCore();
+        }
+
         protected abstract void Destroy();
-        protected abstract void BeginRenderPassCore(in RenderPassDescription renderPassDescription);
+        protected abstract void BeginRenderPassCore(RenderPassDescriptor descriptor);
         protected abstract void EndRenderPassCore();
+        protected abstract void CommitCore();
     }
 }

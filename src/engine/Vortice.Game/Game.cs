@@ -401,15 +401,10 @@ namespace Vortice
             _graphicsDevice.Present();
         }
 
-        /// <summary>
-        /// Create <see cref="GraphicsDeviceFactory"/> for the application.
-        /// </summary>
-        protected abstract GraphicsDeviceFactory CreateGraphicsDeviceFactory();
-
         private void InitializeBeforeRun()
         {
             // Create graphics device factory first.
-            _graphicsDeviceFactory = CreateGraphicsDeviceFactory();
+            _graphicsDeviceFactory = GraphicsDeviceFactory.Create(GraphicsBackend.Default, validation: true);
 
             var clientSize = MainView.ClientSize;
             var presentationParameters = new PresentationParameters
@@ -418,9 +413,9 @@ namespace Vortice
                 BackBufferHeight = (int)clientSize.Height,
                 DeviceWindowHandle = MainView.NativeHandle
             };
-            _graphicsDevice = _graphicsDeviceFactory.CreateGraphicsDevice(
-                _graphicsDeviceFactory.DefaultAdapter,
-                presentationParameters);
+
+            var adapter = _graphicsDeviceFactory.DefaultAdapter;
+            _graphicsDevice = _graphicsDeviceFactory.CreateGraphicsDevice(adapter, presentationParameters);
 
             // Initialize this instance and all systems.
             Initialize();

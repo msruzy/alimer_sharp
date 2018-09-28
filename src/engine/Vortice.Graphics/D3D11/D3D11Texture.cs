@@ -6,28 +6,27 @@ using System.Collections.Generic;
 using SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 
-namespace Vortice.Graphics.DirectX11
+namespace Vortice.Graphics.D3D11
 {
-    internal class DirectX11Texture : Texture
+    internal class D3D11Texture : Texture
     {
         public readonly DXGI.Format DXGIFormat;
         public readonly Resource Resource;
-        private readonly Dictionary<RenderTargetViewEntry, RenderTargetView> _rtvViews = new Dictionary<RenderTargetViewEntry, RenderTargetView>();
 
-        public DirectX11Texture(DirectX11GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
+        public D3D11Texture(D3D11GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
             : base(device, description)
         {
-            DXGIFormat = DirectX11Utils.Convert(description.Format);
+            DXGIFormat = D3DConvert.Convert(description.Format);
             if (nativeTexture == null)
             {
                 // Create new one.
                 var cpuFlags = CpuAccessFlags.None;
                 var resourceUsage = ResourceUsage.Default;
-                var bindFlags = DirectX11Utils.Convert(description.TextureUsage, description.Format);
+                var bindFlags = D3D11Utils.Convert(description.TextureUsage, description.Format);
                 var optionFlags = ResourceOptionFlags.None;
 
                 var arraySize = description.ArrayLayers;
-                if(description.TextureType == TextureType.TextureCube)
+                if (description.TextureType == TextureType.TextureCube)
                 {
                     arraySize *= 6;
                     optionFlags = ResourceOptionFlags.TextureCube;
@@ -49,7 +48,7 @@ namespace Vortice.Graphics.DirectX11
                                 OptionFlags = optionFlags,
                             };
 
-                            Resource = new Texture1D(device.Device, d3dTextureDesc);
+                            Resource = new Texture1D(device.NativeDevice, d3dTextureDesc);
                         }
                         break;
 
@@ -70,7 +69,7 @@ namespace Vortice.Graphics.DirectX11
                                 OptionFlags = optionFlags,
                             };
 
-                            Resource = new Texture2D(device.Device, d3dTextureDesc);
+                            Resource = new Texture2D(device.NativeDevice, d3dTextureDesc);
                         }
                         break;
 
@@ -89,7 +88,7 @@ namespace Vortice.Graphics.DirectX11
                                 OptionFlags = optionFlags,
                             };
 
-                            Resource = new Texture3D(device.Device, d3dTextureDesc);
+                            Resource = new Texture3D(device.NativeDevice, d3dTextureDesc);
                         }
                         break;
                 }
@@ -103,29 +102,36 @@ namespace Vortice.Graphics.DirectX11
         /// <inheritdoc/>
         protected override void Destroy()
         {
-            foreach (var rtvView in _rtvViews.Values)
-            {
-                rtvView.Dispose();
-            }
-
             Resource.Dispose();
         }
 
-        public RenderTargetView GetRenderTargetView(int mipLevel, int slice)
+        protected override TextureView CreateTextureViewCore(in TextureViewDescriptor descriptor)
         {
-            var viewEntry = new RenderTargetViewEntry(mipLevel, slice);
-            if (!_rtvViews.TryGetValue(viewEntry, out var view))
+            return new D3D11TextureView(this, descriptor);
+        }
+    }
+
+    internal class D3D11TextureView : TextureView
+    {
+        public readonly RenderTargetView RenderTargetView;
+
+        public D3D11TextureView(D3D11Texture texture, in TextureViewDescriptor descriptor)
+            : base(texture, descriptor)
+        {
+            var dxgiFormat = D3DConvert.Convert(descriptor.Format);
+            if ((texture.TextureUsage & TextureUsage.RenderTarget) != 0)
             {
-                // Not found, create new.
                 var viewDesc = new RenderTargetViewDescription
                 {
-                    Format = DXGIFormat
+                    Format = dxgiFormat
                 };
 
-                var arrayLayers = ArrayLayers;
-                var samples = Samples;
+                var mipLevel = 0;
+                var slice = 0;
+                var arrayLayers = texture.ArrayLayers;
+                var samples = texture.Samples;
 
-                switch (TextureType)
+                switch (texture.TextureType)
                 {
                     case TextureType.Texture1D:
                         if (arrayLayers <= 1)
@@ -188,48 +194,16 @@ namespace Vortice.Graphics.DirectX11
                         break;
                 }
 
-                view = new RenderTargetView(((DirectX11GraphicsDevice)Device).Device, Resource, viewDesc);
-                _rtvViews.Add(viewEntry, view);
+                RenderTargetView = new RenderTargetView(
+                    ((D3D11GraphicsDevice)texture.Device).NativeDevice,
+                    texture.Resource,
+                    viewDesc);
             }
-
-            return view;
         }
 
-        readonly struct RenderTargetViewEntry : IEquatable<RenderTargetViewEntry>
+        protected internal override void Destroy()
         {
-            public readonly int MipLevel;
-            public readonly int Slice;
-
-            public RenderTargetViewEntry(int mipLevel, int slice)
-            {
-                MipLevel = mipLevel;
-                Slice = slice;
-            }
-
-            public static bool operator ==(RenderTargetViewEntry left, RenderTargetViewEntry right) => left.Equals(right);
-            public static bool operator !=(RenderTargetViewEntry left, RenderTargetViewEntry right) => !left.Equals(right);
-
-            /// <inheritdoc />
-            public bool Equals(RenderTargetViewEntry other) =>
-                MipLevel == other.MipLevel
-                && Slice == other.Slice;
-
-            /// <inheritdoc/>
-            public override bool Equals(object obj)
-            {
-                return obj is RenderTargetViewEntry other && this.Equals(other);
-            }
-
-            /// <inheritdoc/>
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    int hashCode = MipLevel.GetHashCode();
-                    hashCode = (hashCode * 397) ^ Slice.GetHashCode();
-                    return hashCode;
-                }
-            }
+            RenderTargetView?.Dispose();
         }
     }
 }

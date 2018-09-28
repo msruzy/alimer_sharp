@@ -21,7 +21,7 @@
     <PackageLicenseUrl>https://github.com/amerkoleci/vortice/blob/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/amerkoleci/vortice</PackageProjectUrl>
-    <PackageTags>engine graphics gamedev vortice</PackageTags>
+    <PackageTags>3D Engine Graphics gamedev vortice Direct3D DirectX Vulkan OpenGL Metal Core Standard Game</PackageTags>
 
     <!-- Enable sourcelink support -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -37,34 +37,34 @@
   <!-- Detect platform -->
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <VorticePlatform>Windows</VorticePlatform>
-    <DefineConstants>$(DefineConstants);__DESKTOP__;VORTICE_DESKTOP</DefineConstants>
+    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_DESKTOP</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <VorticePlatform>NetStandard</VorticePlatform>
-    <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD</DefineConstants>
+    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_NET_STANDARD</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
     <VorticePlatform>UAP</VorticePlatform>
     <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
-    <DefineConstants>$(DefineConstants);NET_STANDARD;VORTICE_NET_STANDARD</DefineConstants>
+    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_NET_STANDARD;VORTICE_PLATFORM_UWP</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">
     <VorticePlatform>Android</VorticePlatform>
-    <DefineConstants>$(DefineConstants);VORTICE_ANDROID</DefineConstants>
+    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_ANDROID</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('xamarinios'))">
     <VorticePlatform>iOS</VorticePlatform>
-    <DefineConstants>$(DefineConstants);VORTICE_IOS</DefineConstants>
+    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_IOS</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition="$(TargetFramework.StartsWith('xamarinmac'))">
     <VorticePlatform>macOS</VorticePlatform>
-    <DefineConstants>$(DefineConstants);__MACOS__;VORTICE_MACOS</DefineConstants>
+    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_MACOS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

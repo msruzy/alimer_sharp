@@ -1,13 +1,16 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX.Direct3D12;
 using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 
-namespace Vortice.Graphics.DirectX12
+namespace Vortice.Graphics
 {
-    internal static class DirectX12Convert
+    internal static class D3DConvert
     {
+        public static RawColor4 Convert(in Color4 color) => new RawColor4(color.R, color.G, color.B, color.A);
+        public static Color4 Convert(in RawColor4 color) => new Color4(color.R, color.G, color.B, color.A);
+
         public static Format Convert(PixelFormat format)
         {
             switch (format)
@@ -141,80 +144,12 @@ namespace Vortice.Graphics.DirectX12
                 case Format.BC6H_Uf16:
                     return PixelFormat.BC6HUFloat;
 
-                case Format.BC7_UNorm:
+                //case Format.BC7_UNorm:
+                //    return PixelFormat.bc7;
 
                 default:
                     return PixelFormat.Unknown;
             }
-        }
-
-        public static TextureType Convert(ResourceDimension dimension)
-        {
-            switch (dimension)
-            {
-                case ResourceDimension.Texture1D:
-                    return TextureType.Texture1D;
-
-                case ResourceDimension.Texture2D:
-                    return TextureType.Texture2D;
-
-                case ResourceDimension.Texture3D:
-                    return TextureType.Texture3D;
-
-                default:
-                    return TextureType.Unknown;
-            }
-        }
-
-        public static TextureUsage Convert(ResourceFlags flags)
-        {
-            var usage = TextureUsage.Unknown;
-
-            if ((flags & ResourceFlags.DenyShaderResource) == 0)
-            {
-                usage |= TextureUsage.ShaderRead;
-            }
-
-            if ((flags & ResourceFlags.AllowRenderTarget) != 0
-                || (flags & ResourceFlags.AllowDepthStencil) != 0)
-            {
-                usage |= TextureUsage.RenderTarget;
-            }
-
-            if ((flags & ResourceFlags.AllowUnorderedAccess) != 0)
-            {
-                usage |= TextureUsage.ShaderWrite;
-            }
-
-            return usage;
-        }
-
-        public static ResourceFlags Convert(TextureUsage usage, PixelFormat format)
-        {
-            var flags = ResourceFlags.None;
-            if ((usage & TextureUsage.ShaderRead) == 0)
-            {
-                flags |= ResourceFlags.DenyShaderResource;
-            }
-
-            if ((usage & TextureUsage.ShaderWrite) != 0)
-            {
-                flags |= ResourceFlags.AllowUnorderedAccess;
-            }
-
-            if ((usage & TextureUsage.RenderTarget) != 0)
-            {
-                if (!PixelFormatUtil.IsDepthStencilFormat(format))
-                {
-                    flags |= ResourceFlags.AllowRenderTarget;
-                }
-                else
-                {
-                    flags |= ResourceFlags.AllowDepthStencil;
-                }
-            }
-
-            return flags;
         }
     }
 }

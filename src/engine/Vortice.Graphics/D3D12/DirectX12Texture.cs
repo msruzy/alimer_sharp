@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using SharpDX.Direct3D12;
 
-namespace Vortice.Graphics.DirectX12
+namespace Vortice.Graphics.D3D12
 {
     internal class DirectX12Texture : Texture
     {
         public readonly SharpDX.DXGI.Format DXGIFormat;
         public readonly Resource Resource;
 
-        public DirectX12Texture(DirectX12GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
+        public DirectX12Texture(D3D12GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
             : base(device, description)
         {
             DXGIFormat = DirectX12Convert.Convert(description.Format);

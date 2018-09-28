@@ -5,21 +5,21 @@ using System;
 using SharpDX.Direct3D11;
 using Buffer = SharpDX.Direct3D11.Buffer;
 
-namespace Vortice.Graphics.DirectX11
+namespace Vortice.Graphics.D3D11
 {
-    internal class DirectX11Buffer : GraphicsBuffer
+    internal class D3D11Buffer : GraphicsBuffer
     {
         public readonly Buffer Resource;
 
-        public DirectX11Buffer(DirectX11GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
+        public D3D11Buffer(D3D11GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
             : base(device, descriptor)
         {
             var description = new BufferDescription()
             {
                 SizeInBytes = descriptor.SizeInBytes,
                 Usage = (ResourceUsage)descriptor.Usage,
-                BindFlags = DirectX11Utils.Convert(descriptor.BufferUsage),
-                CpuAccessFlags = DirectX11Utils.Convert(descriptor.Usage),
+                BindFlags = D3D11Utils.Convert(descriptor.BufferUsage),
+                CpuAccessFlags = D3D11Utils.Convert(descriptor.Usage),
                 OptionFlags = ResourceOptionFlags.None,
                 StructureByteStride = 0
             };
@@ -29,7 +29,7 @@ namespace Vortice.Graphics.DirectX11
                 description.OptionFlags |= ResourceOptionFlags.DrawIndirectArguments;
             }
 
-            Resource = new Buffer(device.Device, initialData, description);
+            Resource = new Buffer(device.NativeDevice, initialData, description);
         }
 
         /// <inheritdoc/>

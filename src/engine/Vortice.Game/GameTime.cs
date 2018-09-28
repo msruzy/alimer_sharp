@@ -11,7 +11,7 @@ namespace Vortice
     public sealed class GameTime
     {
         /// <summary>
-        /// Gets the amount of time since the start of the <see cref="Application"/>.
+        /// Gets the amount of time since the start of the <see cref="Game"/>.
         /// </summary>
         /// <value>The total application time.</value>
         public TimeSpan TotalTime { get; private set; }
@@ -29,7 +29,7 @@ namespace Vortice
         public bool IsRunningSlowly { get; private set; }
 
         /// <summary>
-        /// Gets the current frame count since the start of the <see cref="Application"/>.
+        /// Gets the current frame count since the start of the <see cref="Game"/>.
         /// </summary>
         public int FrameCount { get; private set; }
 

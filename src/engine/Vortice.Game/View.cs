@@ -7,7 +7,7 @@ using System.ComponentModel;
 namespace Vortice
 {
     /// <summary>
-    /// Defines an <see cref="Application"/> view.
+    /// Defines an <see cref="Game"/> view.
     /// </summary>
     public abstract class View
     {

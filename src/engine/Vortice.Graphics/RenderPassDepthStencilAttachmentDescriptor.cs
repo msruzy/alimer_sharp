@@ -6,12 +6,12 @@ using System;
 namespace Vortice.Graphics
 {
     /// <summary>
-    /// A color render target attachment.
+    /// A depth-stencil render target attachment.
     /// </summary>
-    public readonly struct RenderPassColorAttachment : IEquatable<RenderPassColorAttachment>
+    public readonly struct RenderPassDepthStencilAttachmentDescriptor : IEquatable<RenderPassDepthStencilAttachmentDescriptor>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RenderPassColorAttachment"/> struct.
+        /// Initializes a new instance of the <see cref="RenderPassDepthStencilAttachmentDescriptor"/> struct.
         /// </summary>
         /// <param name="texture"><see cref="Texture"/> attachment</param>
         /// <param name="clearColor">The clear color</param>
@@ -19,16 +19,18 @@ namespace Vortice.Graphics
         /// <param name="storeAction">The attachment <see cref="Graphics.StoreAction"/></param>
         /// <param name="mipLevel">The attachment texture mip level</param>
         /// <param name="slice">The attachment texture slice</param>
-        public RenderPassColorAttachment(
+        public RenderPassDepthStencilAttachmentDescriptor(
             Texture texture,
-            Color4 clearColor,
+            float clearDepth = 1.0f,
+            byte clearStencil = 0,
             LoadAction loadAction = LoadAction.Clear,
-            StoreAction storeAction = StoreAction.Store,
+            StoreAction storeAction = StoreAction.DontCare,
             int mipLevel = 0,
             int slice = 0)
         {
             Texture = texture;
-            ClearColor = clearColor;
+            ClearDepth = clearDepth;
+            ClearStencil = clearStencil;
             LoadAction = loadAction;
             StoreAction = storeAction;
             MipLevel = mipLevel;
@@ -41,9 +43,14 @@ namespace Vortice.Graphics
         public Texture Texture { get; }
 
         /// <summary>
-        /// Gets the clear <see cref="Color4"/>.
+        /// Gets the clear depth value.
         /// </summary>
-        public Color4 ClearColor { get; }
+        public float ClearDepth { get; }
+
+        /// <summary>
+        /// Gets the clear stencil value.
+        /// </summary>
+        public byte ClearStencil { get; }
 
         public LoadAction LoadAction { get; }
         public StoreAction StoreAction { get; }
@@ -59,39 +66,40 @@ namespace Vortice.Graphics
         public int Slice { get; }
 
         /// <summary>
-        /// Compares two <see cref="RenderPassColorAttachment"/> objects for equality.
+        /// Compares two <see cref="RenderPassDepthStencilAttachmentDescriptor"/> objects for equality.
         /// </summary>
         /// <param name="left">
-        /// The <see cref="RenderPassColorAttachment"/> on the left side of the operand.
+        /// The <see cref="RenderPassDepthStencilAttachmentDescriptor"/> on the left side of the operand.
         /// </param>
         /// <param name="right">
-        /// The <see cref="RenderPassColorAttachment"/> on the right side of the operand.
+        /// The <see cref="RenderPassDepthStencilAttachmentDescriptor"/> on the right side of the operand.
         /// </param>
         /// <returns>
         /// True if the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter; otherwise, false.
         /// </returns>
-        public static bool operator ==(RenderPassColorAttachment left, RenderPassColorAttachment right)
+        public static bool operator ==(RenderPassDepthStencilAttachmentDescriptor left, RenderPassDepthStencilAttachmentDescriptor right)
         {
             return left.Equals(right);
         }
 
         /// <summary>
-        /// Compares two <see cref="RenderPassColorAttachment"/> objects for equality.
+        /// Compares two <see cref="RenderPassDepthStencilAttachmentDescriptor"/> objects for equality.
         /// </summary>
-        /// <param name="left">The <see cref="RenderPassColorAttachment"/> on the left side of the operand.</param>
-        /// <param name="right">The <see cref="RenderPassColorAttachment"/> on the right side of the operand.</param>
+        /// <param name="left">The <see cref="RenderPassDepthStencilAttachmentDescriptor"/> on the left side of the operand.</param>
+        /// <param name="right">The <see cref="RenderPassDepthStencilAttachmentDescriptor"/> on the right side of the operand.</param>
         /// <returns>
         /// True if the <paramref name="left"/> parameter is not equal to the <paramref name="right"/> parameter; otherwise, false.
         /// </returns>
-        public static bool operator !=(RenderPassColorAttachment left, RenderPassColorAttachment right)
+        public static bool operator !=(RenderPassDepthStencilAttachmentDescriptor left, RenderPassDepthStencilAttachmentDescriptor right)
         {
             return !left.Equals(right);
         }
 
         /// <inheritdoc />
-        public bool Equals(RenderPassColorAttachment other) =>
+        public bool Equals(RenderPassDepthStencilAttachmentDescriptor other) =>
             Texture == other.Texture
-            && ClearColor.Equals(other.ClearColor)
+            && ClearDepth == other.ClearDepth
+            && ClearStencil == other.ClearStencil
             && LoadAction == other.LoadAction
             && StoreAction == other.StoreAction
             && MipLevel == other.MipLevel
@@ -100,7 +108,7 @@ namespace Vortice.Graphics
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return obj is RenderPassColorAttachment other && this.Equals(other);
+            return obj is RenderPassDepthStencilAttachmentDescriptor other && this.Equals(other);
         }
 
         /// <inheritdoc/>
@@ -109,7 +117,8 @@ namespace Vortice.Graphics
             unchecked
             {
                 int hashCode = Texture?.GetHashCode() ?? 0;
-                hashCode = (hashCode * 397) ^ ClearColor.GetHashCode();
+                hashCode = (hashCode * 397) ^ ClearDepth.GetHashCode();
+                hashCode = (hashCode * 397) ^ ClearStencil.GetHashCode();
                 hashCode = (hashCode * 397) ^ LoadAction.GetHashCode();
                 hashCode = (hashCode * 397) ^ StoreAction.GetHashCode();
                 hashCode = (hashCode * 397) ^ MipLevel.GetHashCode();

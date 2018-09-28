@@ -3,12 +3,16 @@
 
 using SharpDX.Direct3D12;
 
-namespace Vortice.Graphics.DirectX12
+namespace Vortice.Graphics.D3D12
 {
-    internal class DirectX12CommandBuffer : CommandBuffer
+    internal class D3D12CommandBuffer : CommandBuffer
     {
-        public DirectX12CommandBuffer(DirectX12GraphicsDevice device)
-            : base(device)
+        private CommandList _commandList;
+
+        public CommandList CommandList => _commandList;
+
+        public D3D12CommandBuffer(D3D12CommandQueue queue)
+            : base(queue)
         {
         }
 
@@ -17,7 +21,7 @@ namespace Vortice.Graphics.DirectX12
         {
         }
 
-        protected override void BeginRenderPassCore(in RenderPassDescription renderPassDescription)
+        protected override void BeginRenderPassCore(RenderPassDescriptor descriptor)
         {
         }
 

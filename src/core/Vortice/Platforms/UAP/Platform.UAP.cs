@@ -10,19 +10,20 @@ namespace Vortice
     {
         static Platform()
         {
+            PlatformType = PlatformType.UWP;
             var versionInfo = AnalyticsInfo.VersionInfo;
             switch (versionInfo.DeviceFamily)
             {
                 case "Windows.Desktop":
-                    PlatformType = PlatformType.WindowsUniversal;
+                    //PlatformType = PlatformType.WindowsUniversal;
                     PlatformFamily = PlatformFamily.Desktop;
                     break;
                 case "Windows.Mobile":
-                    PlatformType = PlatformType.WindowsMobile;
+                    //PlatformType = PlatformType.WindowsMobile;
                     PlatformFamily = PlatformFamily.Mobile;
                     break;
                 case "Windows.Xbox":
-                    PlatformType = PlatformType.WindowsXbox;
+                    //PlatformType = PlatformType.WindowsXbox;
                     PlatformFamily = PlatformFamily.Console;
                     break;
 

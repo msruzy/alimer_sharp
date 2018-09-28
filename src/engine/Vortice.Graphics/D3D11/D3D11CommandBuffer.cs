@@ -4,58 +4,61 @@
 using System;
 using SharpDX.Direct3D11;
 
-namespace Vortice.Graphics.DirectX11
+namespace Vortice.Graphics.D3D11
 {
-    internal sealed class DirectX11CommandBuffer : CommandBuffer
+    internal class D3D11CommandBuffer : CommandBuffer
     {
+        private readonly Device1 _nativeDevice;
         private readonly DeviceContext1 _context;
-        private readonly bool _immediate;
         private readonly bool _needWorkaround;
+        private CommandList _commandList;
         public readonly RenderTargetView[] RenderTargetViews = new RenderTargetView[8];
-        public DepthStencilView DepthStencilView = null;
+        public DepthStencilView DepthStencilView;
 
-        public DirectX11CommandBuffer(DirectX11GraphicsDevice device, DeviceContext1 context)
-            : base(device)
+        public CommandList CommandList => _commandList;
+
+        public D3D11CommandBuffer(D3D11CommandQueue queue, Device1 nativeDevice)
+            : base(queue)
         {
-            Guard.NotNull(context, nameof(context));
+            _nativeDevice = nativeDevice;
+            _context = new DeviceContext1(nativeDevice);
 
-            _immediate = context.TypeInfo == DeviceContextType.Immediate;
-            _context = context;
-
-            if (context.TypeInfo == DeviceContextType.Deferred 
-                && device.Device.CheckThreadingSupport(out var supportsConcurrentResources, out var supportsCommandLists).Success)
-            {
-                // The runtime emulates command lists.
-                _needWorkaround = !supportsCommandLists;
-            }
-
-            Reset();
+            // The runtime emulates command lists.
+            _needWorkaround = !((D3D11GraphicsDevice)queue.Device).SupportsCommandLists;
         }
 
         /// <inheritdoc/>
         protected override void Destroy()
         {
+            Reset();
             _context.Dispose();
         }
 
-        protected override void BeginRenderPassCore(in RenderPassDescription renderPassDescription)
+        public void Reset()
+        {
+            _commandList?.Dispose();
+            _commandList = null;
+            _context.ClearState();
+        }
+
+        protected override void BeginRenderPassCore(RenderPassDescriptor descriptor)
         {
             // Setup color attachments.
             int renderTargetCount = 0;
 
-            for (var i = 0; i < renderPassDescription.ColorAttachments.Length; ++i)
+            for (var i = 0; i < descriptor.ColorAttachments.Length; ++i)
             {
-                ref RenderPassColorAttachment colorAttachment = ref renderPassDescription.ColorAttachments[i];
+                ref var colorAttachment = ref descriptor.ColorAttachments[i];
 
-                var d3dTexture = (DirectX11Texture)colorAttachment.Texture;
-                RenderTargetViews[i] = d3dTexture.GetRenderTargetView(colorAttachment.MipLevel, colorAttachment.Slice);
+                var textureView = (D3D11TextureView)colorAttachment.Attachment;
+                RenderTargetViews[i] = textureView.RenderTargetView;
 
                 switch (colorAttachment.LoadAction)
                 {
                     case LoadAction.Clear:
                         _context.ClearRenderTargetView(
                             RenderTargetViews[i],
-                            DirectX11Utils.Convert(colorAttachment.ClearColor)
+                            D3DConvert.Convert(colorAttachment.ClearColor)
                             );
                         break;
 
@@ -66,11 +69,11 @@ namespace Vortice.Graphics.DirectX11
                 renderTargetCount++;
             }
 
-            if (renderPassDescription.DepthStencilAttachment != null)
+            if (descriptor.DepthStencilAttachment != null)
             {
-                var depthStencilAttachment = renderPassDescription.DepthStencilAttachment.Value;
+                var depthStencilAttachment = descriptor.DepthStencilAttachment.Value;
 
-                var d3dTexture = (DirectX11Texture)depthStencilAttachment.Texture;
+                var d3dTexture = (D3D11Texture)depthStencilAttachment.Texture;
                 //DepthStencilView = d3dTexture.GetDepthStencilView(depthStencilAttachment.MipLevel, depthStencilAttachment.Slice);
 
                 switch (depthStencilAttachment.LoadAction)
@@ -98,9 +101,10 @@ namespace Vortice.Graphics.DirectX11
             _context.OutputMerger.ResetTargets();
         }
 
-        private void Reset()
+        protected override void CommitCore()
         {
-
+            _commandList = _context.FinishCommandList(false);
+            ((D3D11CommandQueue)Queue).Commit(this);
         }
     }
 }

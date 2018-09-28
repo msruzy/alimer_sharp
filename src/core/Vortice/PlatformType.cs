@@ -12,37 +12,34 @@ namespace Vortice
 		/// Unknown platform.
 		/// </summary>
 		Unknown,
+
 		/// <summary>
 		/// Windows platform.
 		/// </summary>
 		Windows,
+
 		/// <summary>
 		/// Linux platform.
 		/// </summary>
 		Linux,
+
         /// <summary>
         /// macOS platform.
         /// </summary>
-        MacOS,
+        macOS,
 		/// <summary>
 		/// Android platform.
 		/// </summary>
 		Android,
+
 		/// <summary>
 		/// iOS platform.
 		/// </summary>
 		iOS,
+
 		/// <summary>
 		/// Universal Windows platform.
 		/// </summary>
-		WindowsUniversal,
-		/// <summary>
-		/// Universal Windows Mobile platform.
-		/// </summary>
-		WindowsMobile,
-		/// <summary>
-		/// XBox UWP platform.
-		/// </summary>
-		WindowsXbox,
+		UWP,
 	}
 }

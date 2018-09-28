@@ -1,31 +1,32 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX;
-using SharpDX.Mathematics.Interop;
-using SharpDX.Direct3D12;
 using System;
+using SharpDX;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using DXGI = SharpDX.DXGI;
 
-namespace Vortice.Graphics.DirectX12
+namespace Vortice.Graphics
 {
-    internal unsafe class DirectX12SwapChain
+    internal abstract class DXGISwapchain : Swapchain
     {
-        public const int FrameCount = 2;
         private readonly int _syncInterval = 1;
-        private readonly DXGI.PresentFlags _presentFlags;
+        private readonly PresentFlags _presentFlags;
 
-        private readonly SharpDX.DXGI.SwapChain3 _swapChain;
-        public readonly DirectX12Texture[] _backbufferTextures;
-        private int _currentBackBufferIndex;
+        protected readonly SwapChain _swapChain;
+        protected int _currentFrameIndex;
+        protected readonly int _frameCount;
 
-        public DirectX12Texture BackbufferTexture => _backbufferTextures[_currentBackBufferIndex];
-
-        public DirectX12SwapChain(
-            SharpDX.DXGI.Factory2 factory,
-            DirectX12GraphicsDevice device,
-            PresentationParameters presentationParameters)
+        protected unsafe DXGISwapchain(
+            GraphicsDevice device,
+            PresentationParameters presentationParameters,
+            Factory2 factory,
+            ComObject deviceOrCommandQueue,
+            int bufferCount,
+            int frameCount) : base(device)
         {
+            _frameCount = frameCount;
             var width = Math.Max(presentationParameters.BackBufferWidth, 1);
             var height = Math.Max(presentationParameters.BackBufferHeight, 1);
 
@@ -50,15 +51,15 @@ namespace Vortice.Graphics.DirectX12
                         {
                             Width = width,
                             Height = height,
-                            Format = DXGI.Format.B8G8R8A8_UNorm,
+                            Format = Format.B8G8R8A8_UNorm,
                             Stereo = false,
                             SampleDescription = new DXGI.SampleDescription(1, 0),
                             Usage = DXGI.Usage.RenderTargetOutput,
-                            BufferCount = FrameCount,
-                            Scaling = DXGI.Scaling.Stretch,
-                            SwapEffect = allowTearing ? DXGI.SwapEffect.FlipDiscard : DXGI.SwapEffect.Discard,
-                            AlphaMode = DXGI.AlphaMode.Ignore,
-                            Flags = allowTearing ? DXGI.SwapChainFlags.AllowTearing : DXGI.SwapChainFlags.None,
+                            BufferCount = bufferCount,
+                            Scaling = Scaling.Stretch,
+                            SwapEffect = allowTearing ? SwapEffect.FlipDiscard : DXGI.SwapEffect.Discard,
+                            AlphaMode = AlphaMode.Ignore,
+                            Flags = allowTearing ? SwapChainFlags.AllowTearing : DXGI.SwapChainFlags.None,
                         };
 
                         var fullscreenDescription = new DXGI.SwapChainFullScreenDescription
@@ -66,15 +67,11 @@ namespace Vortice.Graphics.DirectX12
                             Windowed = true
                         };
 
-                        using (var newSwapChain = new DXGI.SwapChain1(factory,
-                            device.DirectCommandQueue,
+                        _swapChain = new DXGI.SwapChain1(factory,
+                            deviceOrCommandQueue,
                             hwnd,
                             ref swapchainDesc,
-                            fullscreenDescription))
-                        {
-                            _swapChain = newSwapChain.QueryInterface<DXGI.SwapChain3>();
-                        }
-
+                            fullscreenDescription);
                         factory.MakeWindowAssociation(hwnd, DXGI.WindowAssociationFlags.IgnoreAll);
                     }
                     break;
@@ -109,45 +106,24 @@ namespace Vortice.Graphics.DirectX12
                     //    }
                     //    break;
             }
-
-            _backbufferTextures = new DirectX12Texture[FrameCount];
-            for (int i = 0; i < FrameCount; i++)
-            {
-                var backBufferTexture = _swapChain.GetBackBuffer<Resource>(i);
-                var d3dTextureDesc = backBufferTexture.Description;
-                var textureDescription = TextureDescription.Texture2D(
-                    (int)d3dTextureDesc.Width,
-                    d3dTextureDesc.Height,
-                    d3dTextureDesc.MipLevels,
-                    d3dTextureDesc.DepthOrArraySize,
-                    DirectX12Convert.Convert(d3dTextureDesc.Format),
-                    DirectX12Convert.Convert(d3dTextureDesc.Flags),
-                    (SampleCount)d3dTextureDesc.SampleDescription.Count);
-                _backbufferTextures[i] = new DirectX12Texture(device, textureDescription, backBufferTexture);
-            }
-
-            _currentBackBufferIndex = _swapChain.CurrentBackBufferIndex;
         }
 
         /// <inheritdoc/>
-        public void Destroy()
+        protected override void Destroy()
         {
-            for (int i = 0; i < FrameCount; i++)
-            {
-                _backbufferTextures[i].Dispose();
-            }
-
             _swapChain.Dispose();
         }
 
-        public void Present()
+        protected override int GetBackbufferIndex() => _currentFrameIndex;
+
+        protected sealed override void PresentCore()
         {
             //var parameters = new SharpDX.DXGI.PresentParameters();
 
             try
             {
                 _swapChain.Present(_syncInterval, _presentFlags);
-                _currentBackBufferIndex = _swapChain.CurrentBackBufferIndex;
+                _currentFrameIndex = (_currentFrameIndex + 1) % _frameCount;
             }
             catch (SharpDXException)
             {

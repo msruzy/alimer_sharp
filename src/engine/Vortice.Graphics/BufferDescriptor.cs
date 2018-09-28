@@ -26,9 +26,9 @@ namespace Vortice.Graphics
         /// <summary>
         /// Create new instance of <see cref="BufferDescriptor"/> struct.
         /// </summary>
-        /// <param name="sizeInBytes">Size in bytes of the buffer</param>
-        /// <param name="usage">The buffer usage</param>
-        /// <param name="usage">The buffer resource usage</param>
+        /// <param name="sizeInBytes">Size in bytes of the buffer.</param>
+        /// <param name="bufferUsage">The buffer usage.</param>
+        /// <param name="usage">The buffer resource usage.</param>
         public BufferDescriptor(
             int sizeInBytes,
             BufferUsage bufferUsage,

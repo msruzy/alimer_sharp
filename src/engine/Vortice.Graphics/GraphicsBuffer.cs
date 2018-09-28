@@ -24,7 +24,7 @@ namespace Vortice.Graphics
         /// Create a new instance of <see cref="GraphicsBuffer"/> class.
         /// </summary>
         /// <param name="device">The creation device</param>
-        /// <param name="descriptor">The buffer descritor</param>
+        /// <param name="descriptor">The descriptor</param>
         protected GraphicsBuffer(GraphicsDevice device, in BufferDescriptor descriptor)
             : base(device, GraphicsResourceType.Buffer, descriptor.Usage)
         {

@@ -16,11 +16,26 @@ namespace Vortice.Graphics
         /// <summary>
 		/// DirectX 11.1+ backend.
 		/// </summary>
-		DirectX11,
+		Direct3D11,
 
         /// <summary>
         /// DirectX 12 backend.
         /// </summary>
-        DirectX12,
+        Direct3D12,
+
+        /// <summary>
+        /// Vulkan backend
+        /// </summary>
+        Vulkan,
+
+        /// <summary>
+        /// OpenGL 3.3+ backend.
+        /// </summary>
+        OpenGL,
+
+        /// <summary>
+        /// OpenGLES 2.0+ backend
+        /// </summary>
+        OpenGLES,
     }
 }

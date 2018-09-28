@@ -8,6 +8,9 @@ using System.Runtime.InteropServices;
 
 namespace Vortice.Graphics
 {
+    /// <summary>
+    /// Defines a graphics device class.
+    /// </summary>
     public abstract class GraphicsDevice : DisposableBase
     {
         private readonly object _resourceSyncRoot = new object();
@@ -21,14 +24,14 @@ namespace Vortice.Graphics
         public PresentationParameters PresentationParameters { get; }
 
         /// <summary>
-        /// Gets the backbuffer <see cref="Texture"/>.
+        /// Gets the main <see cref="Swapchain"/> created with device.
         /// </summary>
-        public abstract Texture BackbufferTexture { get; }
+        public abstract Swapchain MainSwapchain { get; }
 
         /// <summary>
-        /// Gets the immediate <see cref="CommandBuffer"/>
+        /// Gets the graphics <see cref="CommandQueue"/>
         /// </summary>
-        public abstract CommandBuffer ImmediateCommandBuffer { get; }
+        public abstract CommandQueue GraphicsQueue { get; }
 
         protected GraphicsDevice(GraphicsAdapter adapter, PresentationParameters presentationParameters)
         {
@@ -52,9 +55,52 @@ namespace Vortice.Graphics
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Check if given <see cref="GraphicsBackend"/> is supported.
+        /// </summary>
+        /// <param name="backend">The <see cref="GraphicsBackend"/> to check.</param>
+        /// <returns>True if supported, false otherwise.</returns>
+        public static bool IsSupported(GraphicsBackend backend)
+        {
+            switch (backend)
+            {
+                case GraphicsBackend.Direct3D11:
+#if !VORTICE_NO_D3D11
+                    return D3D11.D3D11GraphicsDevice.IsSupported();
+#else
+                    return false;
+#endif
+
+                case GraphicsBackend.Direct3D12:
+#if !VORTICE_NO_D3D12
+                    return D3D12.D3D12GraphicsDevice.IsSupported();
+#else
+                    return false;
+#endif
+
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Present content to <see cref="MainSwapchain"/>.
+        /// </summary>
         public void Present()
         {
-            PresentCore();
+            Present(MainSwapchain);
+        }
+
+        /// <summary>
+        /// Present content to swapchain.
+        /// </summary>
+        /// <param name="swapchain">The <see cref="Swapchain"/> to present.</param>
+        public void Present(Swapchain swapchain)
+        {
+            Guard.NotNull(swapchain, nameof(swapchain));
+
+            swapchain.Present();
+            FrameCore();
         }
 
         public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor, IntPtr initialData)
@@ -114,7 +160,6 @@ namespace Vortice.Graphics
             return CreateTextureCore(description);
         }
 
-
         internal void TrackResource(GraphicsResource resource)
         {
             lock (_resourceSyncRoot)
@@ -149,7 +194,7 @@ namespace Vortice.Graphics
         }
 
         protected abstract void Destroy();
-        protected abstract void PresentCore();
+        protected abstract void FrameCore();
 
         protected abstract GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData);
         protected abstract Texture CreateTextureCore(in TextureDescription description);

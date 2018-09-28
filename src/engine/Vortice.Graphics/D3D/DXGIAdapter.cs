@@ -3,13 +3,13 @@
 
 using SharpDX.DXGI;
 
-namespace Vortice.Graphics.DirectX11
+namespace Vortice.Graphics
 {
-    internal class DirectX11GpuAdapter : GraphicsAdapter
+    internal class DXGIAdapter : GraphicsAdapter
     {
         public readonly Adapter1 Adapter;
 
-        public DirectX11GpuAdapter(Adapter1 adapter)
+        public DXGIAdapter(Adapter1 adapter)
         {
             Adapter = adapter;
 
