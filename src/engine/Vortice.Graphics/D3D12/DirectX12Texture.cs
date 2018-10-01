@@ -30,5 +30,10 @@ namespace Vortice.Graphics.D3D12
         {
             Resource.Dispose();
         }
+
+        protected override TextureView CreateTextureViewCore(in TextureViewDescriptor descriptor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

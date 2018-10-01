@@ -127,7 +127,7 @@ namespace Vortice.Graphics.D3D12
                 var debugDevice = NativeDevice.QueryInterfaceOrNull<DebugDevice>();
                 if (debugDevice != null)
                 {
-                    debugDevice.ReportLiveDeviceObjects(RldoFlags.Detail);
+                    debugDevice.ReportLiveDeviceObjects(ReportingLevel.Detail);
                     debugDevice.Dispose();
                 }
             }
@@ -198,9 +198,9 @@ namespace Vortice.Graphics.D3D12
         //CommandListManager.WaitIdle();
         //}
 
-        protected override void PresentCore(Swapchain swapchain)
+        protected override void FrameCore()
         {
-            ((D3D12Swapchain)swapchain).Present();
+            ((D3D12CommandQueue)GraphicsQueue).Tick();
         }
 
         protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)

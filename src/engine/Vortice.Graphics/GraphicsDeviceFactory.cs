@@ -83,6 +83,13 @@ namespace Vortice.Graphics
                     throw new GraphicsException($"{GraphicsBackend.Direct3D12} Backend is not supported");
 #endif
 
+                case GraphicsBackend.Vulkan:
+#if !VORTICE_NO_D3D12
+                    return new Vulkan.VulkanGraphicsDeviceFactory(validation);
+#else
+                    throw new GraphicsException($"{GraphicsBackend.Vulkan} Backend is not supported");
+#endif
+
                 default:
                     throw new GraphicsException($"Invalid {backend} backend");
             }

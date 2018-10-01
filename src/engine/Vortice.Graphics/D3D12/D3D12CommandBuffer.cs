@@ -28,5 +28,10 @@ namespace Vortice.Graphics.D3D12
         protected override void EndRenderPassCore()
         {
         }
+
+        protected override void CommitCore()
+        {
+            ((D3D12CommandQueue)Queue).Commit(this);
+        }
     }
 }

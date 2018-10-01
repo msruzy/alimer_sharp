@@ -78,6 +78,13 @@ namespace Vortice.Graphics
                     return false;
 #endif
 
+                case GraphicsBackend.Vulkan:
+#if !VORTICE_NO_VULKAN
+                    return Vulkan.VulkanGraphicsDevice.IsSupported();
+#else
+                    return false;
+#endif
+
                 default:
                     return false;
             }

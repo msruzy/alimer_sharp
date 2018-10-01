@@ -21,7 +21,7 @@ namespace Vortice.Graphics.D3D12
                   presentationParameters,
                   factory,
                   ((D3D12CommandQueue)device.GraphicsQueue).NativeQueue,
-                  2)
+                  2, 2)
         {
             _backbufferTextures = new DirectX12Texture[_frameCount];
             for (int i = 0; i < _frameCount; i++)
