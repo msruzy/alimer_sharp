@@ -14,7 +14,7 @@
 
     <Authors>Amer Koleci</Authors>
     <Product>Vortice</Product>
-    <Copyright>Copyright © Amer Koleci 2018</Copyright>
+    <Copyright>Copyright © 2018 Amer Koleci and contributors.</Copyright>
     <Summary>Cross platform 2D and 3D game engine with support for .NET Standard 2.0, .NET Core, .NET Framework, Xamarin, and UWP.</Summary>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Title>Vortice</Title>

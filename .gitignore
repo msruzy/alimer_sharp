@@ -258,6 +258,3 @@ Session.vim
 
 .vscode
 launchSettings.json
-
-# Native CMake Generated stuff
-src/Native/build/vs2017_win64/
