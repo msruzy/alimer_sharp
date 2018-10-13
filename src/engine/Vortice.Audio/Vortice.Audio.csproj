@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.2</LangVersion>
+    <Description>Vortice.Audio library for cross platform audio support.</Description>
+    <DefineConstants Condition="'$(ExcludeXAudio2)' == 'true'">$(DefineConstants);VORTICE_NO_XAUDIO2</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="XAudio2/**/*" Condition="'$(ExcludeXAudio2)' == 'true'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
+    <PackageReference Include="SharpDX.XAudio2" Version="4.2.0" Condition="'$(ExcludeXAudio2)' != 'true'" />
+
+    <ProjectReference Include="..\..\core\Vortice\Vortice.csproj" />
+  </ItemGroup>
+
+</Project>

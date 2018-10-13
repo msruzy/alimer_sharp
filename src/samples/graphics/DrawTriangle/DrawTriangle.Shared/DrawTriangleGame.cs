@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Vortice;
+using Vortice.Audio;
 using Vortice.Graphics;
 
 namespace DrawTriangle
@@ -20,6 +21,8 @@ namespace DrawTriangle
         protected override void LoadContent()
         {
             base.LoadContent();
+
+            new AudioEngine();
 
             var vertices = new VertexPositionColor[]
             {

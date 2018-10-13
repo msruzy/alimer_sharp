@@ -25,14 +25,14 @@ namespace Vortice.Graphics.Tests
 #if TEST_D3D11
     public class DirectX11GpuFactoryTests : GraphicsDeviceFactoryTests
     {
-        public DirectX11GpuFactoryTests() : base(GraphicsBackend.DirectX11) { }
+        public DirectX11GpuFactoryTests() : base(GraphicsBackend.Direct3D11) { }
     }
 #endif
 
 #if TEST_D3D12
     public class DirectX12GpuFactoryTests : GraphicsDeviceFactoryTests
     {
-        public DirectX12GpuFactoryTests() : base(GraphicsBackend.DirectX12) { }
+        public DirectX12GpuFactoryTests() : base(GraphicsBackend.Direct3D12) { }
     }
 #endif
 
