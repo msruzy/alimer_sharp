@@ -173,7 +173,7 @@ namespace Vortice.Windows
                 return DefWindowProc(hWnd, msg, wParam, lParam);
             }
 
-            const int HTCLIENT = 0x1;
+            // const int HTCLIENT = 0x1;
 
             if (_windows.TryGetValue(hWnd, out var window))
             {

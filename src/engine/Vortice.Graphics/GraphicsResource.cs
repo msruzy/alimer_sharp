@@ -26,11 +26,11 @@ namespace Vortice.Graphics
         public GraphicsResourceUsage Usage { get; }
 
         /// <summary>
-        /// Create a new instance of <see cref="GpuResource"/> class.
+        /// Create a new instance of <see cref="GraphicsResource"/> class.
         /// </summary>
-        /// <param name="device">The creation <see cref="GpuDevice"/></param>
+        /// <param name="device">The creation <see cref="GraphicsDevice"/></param>
         /// <param name="resourceType">The <see cref="GraphicsResourceType"/></param>
-        /// <param name="resourceUsage">The <see cref="GraphicsResourceUsage"/></param>
+        /// <param name="usage">The <see cref="GraphicsResourceUsage"/></param>
         protected GraphicsResource(
             GraphicsDevice device,
             GraphicsResourceType resourceType,

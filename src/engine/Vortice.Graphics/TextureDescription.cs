@@ -45,7 +45,7 @@ namespace Vortice.Graphics
         /// </summary>
         /// <param name="width">The width</param>
         /// <param name="height">The height</param>
-        /// <param name="mipMap">Whether to compute mip levels from width and height, otherwise 1.</param>
+        /// <param name="mipLevels">The number of mip levels.</param>
         /// <param name="arrayLayers">The array layers count.</param>
         /// <param name="format">The <see cref="PixelFormat"/></param>
         /// <param name="textureUsage">The texture usage</param>

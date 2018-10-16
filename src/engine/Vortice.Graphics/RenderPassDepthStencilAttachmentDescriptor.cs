@@ -14,7 +14,8 @@ namespace Vortice.Graphics
         /// Initializes a new instance of the <see cref="RenderPassDepthStencilAttachmentDescriptor"/> struct.
         /// </summary>
         /// <param name="texture"><see cref="Texture"/> attachment</param>
-        /// <param name="clearColor">The clear color</param>
+        /// <param name="clearDepth">The clear depth.</param>
+        /// <param name="clearStencil">The clear stencil.</param>
         /// <param name="loadAction">The attachment <see cref="Graphics.LoadAction"/></param>
         /// <param name="storeAction">The attachment <see cref="Graphics.StoreAction"/></param>
         /// <param name="mipLevel">The attachment texture mip level</param>
