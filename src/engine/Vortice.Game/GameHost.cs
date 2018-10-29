@@ -5,11 +5,11 @@ using System;
 
 namespace Vortice
 {
-    public abstract partial class ApplicationHost
+    public abstract partial class GameHost
     {
         public readonly Game Game;
 
-        protected ApplicationHost(Game game)
+        protected GameHost(Game game)
         {
             Guard.NotNull(game, nameof(game));
             Game = game;

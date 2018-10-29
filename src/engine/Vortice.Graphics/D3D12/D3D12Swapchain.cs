@@ -38,6 +38,8 @@ namespace Vortice.Graphics.D3D12
                     (SampleCount)d3dTextureDesc.SampleDescription.Count);
                 _backbufferTextures[i] = new DirectX12Texture(device, textureDescription, backBufferTexture);
             }
+
+            Initialize(_backbufferTextures);
         }
 
         /// <inheritdoc/>

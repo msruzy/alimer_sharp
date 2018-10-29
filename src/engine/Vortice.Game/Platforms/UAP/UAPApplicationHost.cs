@@ -5,7 +5,7 @@ using Windows.ApplicationModel.Core;
 
 namespace Vortice
 {
-    internal class UAPApplicationHost : ApplicationHost
+    internal class UAPApplicationHost : GameHost
     {
         private readonly UAPView _mainView;
 
@@ -30,9 +30,9 @@ namespace Vortice
         }
     }
 
-    public abstract partial class ApplicationHost
+    public abstract partial class GameHost
     {
-        public static ApplicationHost Create(Game game)
+        public static GameHost Create(Game game)
         {
             return new UAPApplicationHost(game);
         }

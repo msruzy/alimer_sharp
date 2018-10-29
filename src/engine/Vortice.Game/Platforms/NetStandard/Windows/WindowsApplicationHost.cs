@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 
 namespace Vortice.Windows
 {
-    internal class WindowsApplicationHost : ApplicationHost
+    internal class WindowsApplicationHost : GameHost
     {
         public static readonly string WndClassName = "AlimerWindow";
 

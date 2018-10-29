@@ -41,6 +41,7 @@ namespace Vortice.Graphics.D3D12
             : base(adapter, presentationParameters)
         {
             _factory = factory;
+
             try
             {
                 NativeDevice = new Device(adapter.Adapter, FeatureLevel.Level_11_0);
@@ -90,6 +91,13 @@ namespace Vortice.Graphics.D3D12
                 }
 
                 var options = NativeDevice.D3D12Options;
+
+                var dataShaderModel = new FeatureDataShaderModel
+                {
+                    HighestShaderModel = ShaderModel.Model60
+                };
+
+                NativeDevice.CheckFeatureSupport(Feature.ShaderModel, ref dataShaderModel);
             }
 
             var featureDataRootSignature = new FeatureDataRootSignature
@@ -191,7 +199,6 @@ namespace Vortice.Graphics.D3D12
             _isSupported = true;
             return true;
         }
-
 
         //public override void WaitIdle()
         //{

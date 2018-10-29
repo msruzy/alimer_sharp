@@ -12,7 +12,7 @@ namespace Vortice
     /// </summary>
     public abstract class Game : IDisposable
     {
-        private readonly ApplicationHost _host;
+        private readonly GameHost _host;
         private bool _isExiting;
         private bool _endRunRequired;
         private bool _firstUpdateDone;
@@ -121,7 +121,7 @@ namespace Vortice
             GameSystems = new GameSystemCollection();
 
             // Create the handle.
-            _host = ApplicationHost.Create(this);
+            _host = GameHost.Create(this);
             _host.Activated += Host_Activated;
             _host.Deactivated += Host_Deactivated;
             _host.Idle += Host_Idle;

@@ -1,10 +1,10 @@
 # Vortice
 
-[![Build status](https://ci.appveyor.com/api/projects/status/ysafn8xx0ff2myhs?svg=true)](https://ci.appveyor.com/project/amerkoleci/vortice)
+[![Build status](https://ci.appveyor.com/api/projects/status/ca86lu9jyx6yq5wv?svg=true)](https://ci.appveyor.com/project/amerkoleci/vortice)
 [![Contribute!](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/amerkoleci/vortice/issues)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/amerkoleci/vortice/blob/master/LICENSE)
 
-**Vortice** is an experimental cross platform 2D and 3D .NET framework implemented in C#.
+**Vortice** is a cross platform 2D and 3D .NET framework implemented in C#.
 
 ## Features
 

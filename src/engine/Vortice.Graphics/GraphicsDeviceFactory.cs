@@ -124,6 +124,11 @@ namespace Vortice.Graphics
             {
                 case PlatformType.Windows:
                 case PlatformType.UWP:
+                    if (D3D12.D3D12GraphicsDevice.IsSupported())
+                    {
+                        return GraphicsBackend.Direct3D12;
+                    }
+
                     return GraphicsBackend.Direct3D11;
                 case PlatformType.Android:
                 case PlatformType.Linux:

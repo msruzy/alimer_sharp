@@ -43,33 +43,13 @@ namespace DrawTriangle
             var queue = GraphicsDevice.GraphicsQueue;
 
             // execution order is the order of creation by default
-            var commandBuffer1 = queue.CreateCommandBuffer();
-            commandBuffer1.ExecutionOrder = 0;
-            var commandBuffer2 = queue.CreateCommandBuffer();
-            commandBuffer2.ExecutionOrder = 1;
+            var commandBuffer = queue.CreateCommandBuffer();
+            var renderPass = GraphicsDevice.MainSwapchain.CurrentRenderPassDescriptor;
+            renderPass.ColorAttachments[0].ClearColor = new Color4(1.0f, 0.0f, 0.0f);
 
-            var tasks = new Task[2];
-            tasks[0] = Task.Run(() =>
-            {
-                var renderPass = GraphicsDevice.MainSwapchain.CurrentRenderPassDescriptor;
-                renderPass.ColorAttachments[0].ClearColor = new Color4(1.0f, 0.0f, 0.0f);
-
-                commandBuffer1.BeginRenderPass(renderPass);
-                commandBuffer1.EndRenderPass();
-                commandBuffer1.Commit();
-            });
-
-            tasks[1] = Task.Run(() =>
-            {
-                var renderPass = GraphicsDevice.MainSwapchain.CurrentRenderPassDescriptor;
-                renderPass.ColorAttachments[0].ClearColor = new Color4(1.0f, 1.0f, 0.0f);
-
-                commandBuffer2.BeginRenderPass(renderPass);
-                commandBuffer2.EndRenderPass();
-                commandBuffer2.Commit();
-            });
-
-            Task.WaitAll(tasks);
+            commandBuffer.BeginRenderPass(renderPass);
+            commandBuffer.EndRenderPass();
+            commandBuffer.Commit();
         }
 
         private readonly struct VertexPositionColor
