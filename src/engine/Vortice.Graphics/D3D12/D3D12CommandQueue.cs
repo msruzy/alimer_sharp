@@ -15,7 +15,7 @@ namespace Vortice.Graphics.D3D12
         public D3D12CommandQueue(D3D12GraphicsDevice device, CommandListType type)
             : base(device)
         {
-            NativeQueue = device.NativeDevice.CreateCommandQueue(new CommandQueueDescription(type, CommandQueueFlags.None));
+            NativeQueue = device.Device.CreateCommandQueue(new CommandQueueDescription(type, CommandQueueFlags.None));
         }
 
         public void Destroy()

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX;
-using SharpDX.Mathematics.Interop;
 using SharpDX.Direct3D12;
 using System;
 using DXGI = SharpDX.DXGI;
@@ -11,7 +9,7 @@ namespace Vortice.Graphics.D3D12
 {
     internal unsafe class D3D12Swapchain : DXGISwapchain
     {
-        public readonly DirectX12Texture[] _backbufferTextures;
+        public readonly D3D12Texture[] _backbufferTextures;
 
         public D3D12Swapchain(
             DXGI.Factory2 factory,
@@ -23,7 +21,7 @@ namespace Vortice.Graphics.D3D12
                   ((D3D12CommandQueue)device.GraphicsQueue).NativeQueue,
                   2, 2)
         {
-            _backbufferTextures = new DirectX12Texture[_frameCount];
+            _backbufferTextures = new D3D12Texture[_frameCount];
             for (int i = 0; i < _frameCount; i++)
             {
                 var backBufferTexture = _swapChain.GetBackBuffer<Resource>(i);
@@ -33,10 +31,11 @@ namespace Vortice.Graphics.D3D12
                     d3dTextureDesc.Height,
                     d3dTextureDesc.MipLevels,
                     d3dTextureDesc.DepthOrArraySize,
-                    DirectX12Convert.Convert(d3dTextureDesc.Format),
-                    DirectX12Convert.Convert(d3dTextureDesc.Flags),
+                    D3DConvert.Convert(d3dTextureDesc.Format),
+                    D3D12Convert.Convert(d3dTextureDesc.Flags),
                     (SampleCount)d3dTextureDesc.SampleDescription.Count);
-                _backbufferTextures[i] = new DirectX12Texture(device, textureDescription, backBufferTexture);
+
+                _backbufferTextures[i] = new D3D12Texture(device, textureDescription, backBufferTexture);
             }
 
             Initialize(_backbufferTextures);

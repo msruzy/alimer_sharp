@@ -6,11 +6,11 @@ using SharpDX.Direct3D12;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal class DirectX12Buffer : GraphicsBuffer
+    internal class D3D12Buffer : GraphicsBuffer
     {
         public readonly Resource Resource;
 
-        public DirectX12Buffer(D3D12GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
+        public D3D12Buffer(D3D12GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
             : base(device, descriptor)
         {
         }

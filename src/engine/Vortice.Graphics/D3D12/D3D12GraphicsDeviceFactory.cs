@@ -37,10 +37,7 @@ namespace Vortice.Graphics.D3D12
             }
 
             // Create factory first.
-            using (var tempFactory = new SharpDX.DXGI.Factory2(Validation))
-            {
-                DXGIFactory = tempFactory.QueryInterface<SharpDX.DXGI.Factory4>();
-            }
+            DXGIFactory = new SharpDX.DXGI.Factory4(Validation);
 
             var adapterCount = DXGIFactory.GetAdapterCount1();
             for (var i = 0; i < adapterCount; i++)

@@ -21,7 +21,7 @@ namespace Vortice.Graphics.D3D12
 
         private static bool? _isSupported;
         private readonly D3D12GraphicsDeviceFactory _factory;
-        public readonly Device NativeDevice;
+        public readonly Device Device;
         public readonly FeatureLevel FeatureLevel;
         public readonly int RTVDescriptorSize;
         public readonly int DSVDescriptorSize;
@@ -44,18 +44,18 @@ namespace Vortice.Graphics.D3D12
 
             try
             {
-                NativeDevice = new Device(adapter.Adapter, FeatureLevel.Level_11_0);
+                Device = new Device(adapter.Adapter, FeatureLevel.Level_11_0);
             }
             catch (SharpDXException)
             {
                 // Create the Direct3D 12 with WARP adapter.
                 var warpAdapter = factory.DXGIFactory.GetWarpAdapter();
-                NativeDevice = new Device(warpAdapter, FeatureLevel.Level_11_0);
+                Device = new Device(warpAdapter, FeatureLevel.Level_11_0);
             }
 
             if (_factory.Validation)
             {
-                var infoQueue = NativeDevice.QueryInterfaceOrNull<InfoQueue>();
+                var infoQueue = Device.QueryInterfaceOrNull<InfoQueue>();
                 if (infoQueue != null)
                 {
                     infoQueue.SetBreakOnSeverity(MessageSeverity.Corruption, true);
@@ -76,49 +76,33 @@ namespace Vortice.Graphics.D3D12
             }
 
             // Init capabilities.
-            unsafe
-            {
-                fixed (FeatureLevel* levelsPtr = &s_featureLevels[0])
-                {
-                    var featureLevels = new FeatureDataFeatureLevels
-                    {
-                        FeatureLevelCount = 4,
-                        FeatureLevelsRequestedPointer = new IntPtr(levelsPtr)
-                    };
-
-                    Debug.Assert(NativeDevice.CheckFeatureSupport(Feature.FeatureLevels, ref featureLevels));
-                    FeatureLevel = featureLevels.MaxSupportedFeatureLevel;
-                }
-
-                var options = NativeDevice.D3D12Options;
-
-                var dataShaderModel = new FeatureDataShaderModel
-                {
-                    HighestShaderModel = ShaderModel.Model60
-                };
-
-                NativeDevice.CheckFeatureSupport(Feature.ShaderModel, ref dataShaderModel);
-            }
+            FeatureLevel = Device.CheckMaxSupportedFeatureLevel(s_featureLevels);
+            var D3D12Options = Device.D3D12Options;
+            
+            var dataShaderModel = Device.CheckShaderModel(ShaderModel.Model60);
+            var dataShaderModel1 = Device.CheckShaderModel(ShaderModel.Model61);
+            var dataShaderModel2 = Device.CheckShaderModel(ShaderModel.Model62);
+            var waveIntrinsicsSupport = default(FeatureDataD3D12Options1);
+            Device.CheckFeatureSupport(Feature.D3D12Options1, ref waveIntrinsicsSupport);
 
             var featureDataRootSignature = new FeatureDataRootSignature
             {
                 HighestVersion = RootSignatureVersion.Version11
             };
 
-            if (!NativeDevice.CheckFeatureSupport(Feature.RootSignature, ref featureDataRootSignature))
+            if (!Device.CheckFeatureSupport(Feature.RootSignature, ref featureDataRootSignature))
             {
                 featureDataRootSignature.HighestVersion = RootSignatureVersion.Version10;
             }
 
-            var gpuVaSupport = default(FeatureDataGpuVirtualAddressSupport);
-            NativeDevice.CheckFeatureSupport(Feature.GpuVirtualAddressSupport, ref gpuVaSupport);
+            var gpuVaSupport = Device.GpuVirtualAddressSupport;
 
             // Create direct command queue.
             GraphicsQueue = new D3D12CommandQueue(this, CommandListType.Direct);
 
             // Get descriptor heaps size.
-            RTVDescriptorSize = NativeDevice.GetDescriptorHandleIncrementSize(DescriptorHeapType.RenderTargetView);
-            DSVDescriptorSize = NativeDevice.GetDescriptorHandleIncrementSize(DescriptorHeapType.DepthStencilView);
+            RTVDescriptorSize = Device.GetDescriptorHandleIncrementSize(DescriptorHeapType.RenderTargetView);
+            DSVDescriptorSize = Device.GetDescriptorHandleIncrementSize(DescriptorHeapType.DepthStencilView);
 
             // Create main swap chain.
             _mainSwapchain = new D3D12Swapchain(_factory.DXGIFactory, this, presentationParameters);
@@ -132,7 +116,7 @@ namespace Vortice.Graphics.D3D12
 
             if (_factory.Validation)
             {
-                var debugDevice = NativeDevice.QueryInterfaceOrNull<DebugDevice>();
+                var debugDevice = Device.QueryInterfaceOrNull<DebugDevice>();
                 if (debugDevice != null)
                 {
                     debugDevice.ReportLiveDeviceObjects(ReportingLevel.Detail);
@@ -140,7 +124,7 @@ namespace Vortice.Graphics.D3D12
                 }
             }
 
-            NativeDevice.Dispose();
+            Device.Dispose();
         }
 
         /// <summary>
@@ -212,12 +196,12 @@ namespace Vortice.Graphics.D3D12
 
         protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
         {
-            return new DirectX12Buffer(this, descriptor, initialData);
+            return new D3D12Buffer(this, descriptor, initialData);
         }
 
         protected override Texture CreateTextureCore(in TextureDescription description)
         {
-            return new DirectX12Texture(this, description, nativeTexture: null);
+            return new D3D12Texture(this, description, nativeTexture: null);
         }
     }
 }

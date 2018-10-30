@@ -4,13 +4,9 @@
 namespace Vortice.Graphics
 {
     /// <summary>
-    /// Defines the type of <see cref="GraphicsResource"/>.
+    /// Describes a rendering <see cref="Pipeline"/>.
     /// </summary>
-    public enum GraphicsResourceType
+    public struct RenderPipelineDescriptor
     {
-        Swapchain,
-        Texture,
-        Buffer,
-        Pipeline,
     }
 }
