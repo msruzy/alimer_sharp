@@ -29,7 +29,7 @@ namespace Vortice.Graphics.D3D11
                 description.OptionFlags |= ResourceOptionFlags.DrawIndirectArguments;
             }
 
-            Resource = new Buffer(device.NativeDevice, initialData, description);
+            Resource = new Buffer(device.D3DDevice, initialData, description);
         }
 
         /// <inheritdoc/>

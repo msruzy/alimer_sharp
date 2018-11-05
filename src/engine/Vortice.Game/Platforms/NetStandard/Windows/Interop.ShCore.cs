@@ -3,29 +3,20 @@
 
 using System;
 using System.Runtime.InteropServices;
-using static Vortice.Windows.Kernel32;
 
 namespace Vortice.Windows
 {
-    
-
     internal static class ShCore
     {
 		public const string Name = "shcore";
 
-		
+        [DllImport(Name)]
+        public static extern long SetProcessDpiAwareness(ProcessDpiAwareness value);
 
-		private static readonly IntPtr ShCoreDll = LoadLibrary(Name);
+        [DllImport(Name)]
+        public static extern long GetDpiForMonitor(IntPtr hmonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
 
-		public static bool IsShCoreAvailable => ShCoreDll != IntPtr.Zero;
-
-		[DllImport(Name)]
-		public static extern long SetProcessDpiAwareness(ProcessDpiAwareness value);
-
-		[DllImport(Name)]
-		public static extern long GetDpiForMonitor(IntPtr hmonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
-
-		[DllImport(Name)]
-		public static extern void GetScaleFactorForMonitor(IntPtr hMon, out uint pScale);
-	}
+        [DllImport(Name)]
+        public static extern void GetScaleFactorForMonitor(IntPtr hMon, out uint pScale);
+    }
 }

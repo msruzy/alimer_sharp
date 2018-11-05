@@ -7,18 +7,13 @@ namespace Vortice.Graphics.Tests
 {
     public abstract class GraphicsDeviceTestBase : IDisposable
     {
-        protected readonly GraphicsDeviceFactory _factory;
         protected readonly GraphicsDevice _graphicsDevice;
 
         protected GraphicsDeviceTestBase(GraphicsBackend backend = GraphicsBackend.Default, bool createDevice = true, bool enableValidation = false)
         {
-            //if (GraphicsDeviceFactory.IsSupported(backend))
-            //{
-            //    _factory = new GraphicsDeviceFactory(backend, enableValidation);
-            //}
-            //else
+            if (!GraphicsDevice.IsSupported(backend))
             {
-                throw new GraphicsException();
+                throw new GraphicsException($"Backend {backend} is not supported");
             }
 
             //if (createDevice)
@@ -30,7 +25,6 @@ namespace Vortice.Graphics.Tests
         public virtual void Dispose()
         {
             _graphicsDevice?.Dispose();
-            _factory.Dispose();
         }
 
         protected virtual GraphicsAdapter SelectedAdapter() => _factory.DefaultAdapter;

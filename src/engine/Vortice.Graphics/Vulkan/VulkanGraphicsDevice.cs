@@ -9,8 +9,8 @@ namespace Vortice.Graphics.Vulkan
     {
         private static bool? _isSupported;
 
-        public VulkanGraphicsDevice(VulkanGraphicsAdapter adapter, PresentationParameters presentationParameters)
-            : base(adapter, presentationParameters)
+        public VulkanGraphicsDevice(bool validation, PresentationParameters presentationParameters)
+            : base(GraphicsBackend.Vulkan, presentationParameters)
         {
 
         }

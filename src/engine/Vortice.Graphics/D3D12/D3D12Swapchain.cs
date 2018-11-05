@@ -11,13 +11,9 @@ namespace Vortice.Graphics.D3D12
     {
         public readonly D3D12Texture[] _backbufferTextures;
 
-        public D3D12Swapchain(
-            DXGI.Factory2 factory,
-            D3D12GraphicsDevice device,
-            PresentationParameters presentationParameters)
+        public D3D12Swapchain(D3D12GraphicsDevice device, PresentationParameters presentationParameters)
             : base(device,
                   presentationParameters,
-                  factory,
                   ((D3D12CommandQueue)device.GraphicsQueue).NativeQueue,
                   2, 2)
         {

@@ -8,8 +8,8 @@ namespace Vortice.Graphics.D3D11
 {
     internal class D3D11CommandBuffer : CommandBuffer
     {
-        private readonly Device1 _nativeDevice;
-        private readonly DeviceContext1 _context;
+        private readonly Device _nativeDevice;
+        private readonly DeviceContext _context;
         private readonly bool _needWorkaround;
         private CommandList _commandList;
         public readonly RenderTargetView[] RenderTargetViews = new RenderTargetView[8];
@@ -17,11 +17,11 @@ namespace Vortice.Graphics.D3D11
 
         public CommandList CommandList => _commandList;
 
-        public D3D11CommandBuffer(D3D11CommandQueue queue, Device1 nativeDevice)
+        public D3D11CommandBuffer(D3D11CommandQueue queue, Device nativeDevice)
             : base(queue)
         {
             _nativeDevice = nativeDevice;
-            _context = new DeviceContext1(nativeDevice);
+            _context = new DeviceContext(nativeDevice);
 
             // The runtime emulates command lists.
             _needWorkaround = !((D3D11GraphicsDevice)queue.Device).SupportsCommandLists;

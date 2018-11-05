@@ -21,7 +21,6 @@ namespace Vortice.Graphics
         protected unsafe DXGISwapchain(
             GraphicsDevice device,
             PresentationParameters presentationParameters,
-            Factory2 factory,
             ComObject deviceOrCommandQueue,
             int bufferCount,
             int frameCount) : base(device)
@@ -34,45 +33,51 @@ namespace Vortice.Graphics
             {
                 case IntPtr hwnd:
                     {
-                        // Check tearing support.
-                        RawBool allowTearing = false;
-                        using (var factory5 = factory.QueryInterfaceOrNull<DXGI.Factory5>())
+                        using (var dxgiDevice = deviceOrCommandQueue.QueryInterface<SharpDX.DXGI.Device>())
                         {
-                            factory5.CheckFeatureSupport(DXGI.Feature.PresentAllowTearing,
-                                new IntPtr(&allowTearing), sizeof(RawBool)
-                                );
+                            using (var dxgiFactory = dxgiDevice.Adapter.GetParent<Factory2>())
+                            {
+                                // Check tearing support.
+                                RawBool allowTearing = false;
+                                using (var factory5 = dxgiFactory.QueryInterfaceOrNull<DXGI.Factory5>())
+                                {
+                                    factory5.CheckFeatureSupport(DXGI.Feature.PresentAllowTearing,
+                                        new IntPtr(&allowTearing), sizeof(RawBool)
+                                        );
 
-                            // Recommended to always use tearing if supported when using a sync interval of 0.
-                            _syncInterval = 0;
-                            _presentFlags |= DXGI.PresentFlags.AllowTearing;
+                                    // Recommended to always use tearing if supported when using a sync interval of 0.
+                                    _syncInterval = 0;
+                                    _presentFlags |= DXGI.PresentFlags.AllowTearing;
+                                }
+
+                                var swapchainDesc = new SharpDX.DXGI.SwapChainDescription1()
+                                {
+                                    Width = width,
+                                    Height = height,
+                                    Format = Format.B8G8R8A8_UNorm,
+                                    Stereo = false,
+                                    SampleDescription = new DXGI.SampleDescription(1, 0),
+                                    Usage = DXGI.Usage.RenderTargetOutput,
+                                    BufferCount = bufferCount,
+                                    Scaling = Scaling.Stretch,
+                                    SwapEffect = allowTearing ? SwapEffect.FlipDiscard : DXGI.SwapEffect.Discard,
+                                    AlphaMode = AlphaMode.Ignore,
+                                    Flags = allowTearing ? SwapChainFlags.AllowTearing : DXGI.SwapChainFlags.None,
+                                };
+
+                                var fullscreenDescription = new DXGI.SwapChainFullScreenDescription
+                                {
+                                    Windowed = true
+                                };
+
+                                _swapChain = new DXGI.SwapChain1(dxgiFactory,
+                                    deviceOrCommandQueue,
+                                    hwnd,
+                                    ref swapchainDesc,
+                                    fullscreenDescription);
+                                dxgiFactory.MakeWindowAssociation(hwnd, DXGI.WindowAssociationFlags.IgnoreAll);
+                            }
                         }
-
-                        var swapchainDesc = new SharpDX.DXGI.SwapChainDescription1()
-                        {
-                            Width = width,
-                            Height = height,
-                            Format = Format.B8G8R8A8_UNorm,
-                            Stereo = false,
-                            SampleDescription = new DXGI.SampleDescription(1, 0),
-                            Usage = DXGI.Usage.RenderTargetOutput,
-                            BufferCount = bufferCount,
-                            Scaling = Scaling.Stretch,
-                            SwapEffect = allowTearing ? SwapEffect.FlipDiscard : DXGI.SwapEffect.Discard,
-                            AlphaMode = AlphaMode.Ignore,
-                            Flags = allowTearing ? SwapChainFlags.AllowTearing : DXGI.SwapChainFlags.None,
-                        };
-
-                        var fullscreenDescription = new DXGI.SwapChainFullScreenDescription
-                        {
-                            Windowed = true
-                        };
-
-                        _swapChain = new DXGI.SwapChain1(factory,
-                            deviceOrCommandQueue,
-                            hwnd,
-                            ref swapchainDesc,
-                            fullscreenDescription);
-                        factory.MakeWindowAssociation(hwnd, DXGI.WindowAssociationFlags.IgnoreAll);
                     }
                     break;
 

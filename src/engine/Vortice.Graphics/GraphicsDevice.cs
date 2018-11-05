@@ -17,11 +17,24 @@ namespace Vortice.Graphics
         private readonly List<GraphicsResource> _resources = new List<GraphicsResource>();
 
         /// <summary>
-        /// Gets the <see cref="GraphicsAdapter"/> used for device creation.
+        /// Gets the device <see cref="GraphicsBackend"/>.
         /// </summary>
-        public GraphicsAdapter Adapter { get; }
+        public GraphicsBackend Backend { get; }
 
+        /// <summary>
+        /// Gets value indicating gpu validation enable state.
+        /// </summary>
+        public bool Validation { get; protected set; }
+
+        /// <summary>
+        /// Gets the main swap chain <see cref="PresentationParameters"/>.
+        /// </summary>
         public PresentationParameters PresentationParameters { get; }
+
+        /// <summary>
+        /// Gets the features of this device.
+        /// </summary>
+        public GraphicsDeviceFeatures Features { get; }
 
         /// <summary>
         /// Gets the main <see cref="Swapchain"/> created with device.
@@ -33,13 +46,19 @@ namespace Vortice.Graphics
         /// </summary>
         public abstract CommandQueue GraphicsQueue { get; }
 
-        protected GraphicsDevice(GraphicsAdapter adapter, PresentationParameters presentationParameters)
+        /// <summary>
+        /// Create new instance of <see cref="GraphicsDevice"/> class.
+        /// </summary>
+        /// <param name="backend"></param>
+        /// <param name="presentationParameters"></param>
+        protected GraphicsDevice(GraphicsBackend backend, PresentationParameters presentationParameters)
         {
-            Guard.NotNull(adapter, nameof(adapter));
+            Guard.IsTrue(backend != GraphicsBackend.Default, nameof(backend), "Invalid backend");
             Guard.NotNull(presentationParameters, nameof(presentationParameters));
 
-            Adapter = adapter;
+            Backend = backend;
             PresentationParameters = presentationParameters;
+            Features = new GraphicsDeviceFeatures();
         }
 
         /// <inheritdoc/>
@@ -62,6 +81,11 @@ namespace Vortice.Graphics
         /// <returns>True if supported, false otherwise.</returns>
         public static bool IsSupported(GraphicsBackend backend)
         {
+            if (backend == GraphicsBackend.Default)
+            {
+                backend = GetDefaultGraphicsPlatform(Platform.PlatformType);
+            }
+
             switch (backend)
             {
                 case GraphicsBackend.Direct3D11:
@@ -87,6 +111,84 @@ namespace Vortice.Graphics
 
                 default:
                     return false;
+            }
+        }
+
+        /// <summary>
+        /// Create new instance of <see cref="GraphicsDevice"/>
+        /// </summary>
+        /// <param name="backend">The type of <see cref="GraphicsBackend"/></param>
+        /// <param name="validation">Whether to enable validation if supported.</param>
+        /// <param name="presentationParameters">The main swap chain parameters.</param>
+        /// <returns>New instance of <see cref="GraphicsDevice"/>.</returns>
+        public static GraphicsDevice Create(GraphicsBackend backend, bool validation, PresentationParameters presentationParameters)
+        {
+            Guard.NotNull(presentationParameters, nameof(presentationParameters));
+
+            if (backend == GraphicsBackend.Default)
+            {
+                backend = GetDefaultGraphicsPlatform(Platform.PlatformType);
+            }
+
+            if (!IsSupported(backend))
+            {
+                throw new GraphicsException($"Backend {backend} is not supported");
+            }
+
+            switch (backend)
+            {
+                case GraphicsBackend.Direct3D11:
+#if !VORTICE_NO_D3D11
+                    return new D3D11.D3D11GraphicsDevice(validation, presentationParameters);
+#else
+                    throw new GraphicsException($"{GraphicsBackend.Direct3D11} Backend is not supported");
+#endif
+
+                case GraphicsBackend.Direct3D12:
+#if !VORTICE_NO_D3D12
+                    return new D3D12.D3D12GraphicsDevice(validation, presentationParameters);
+#else
+                    throw new GraphicsException($"{GraphicsBackend.Direct3D12} Backend is not supported");
+#endif
+
+                case GraphicsBackend.Vulkan:
+#if !VORTICE_NO_D3D12
+                    return new Vulkan.VulkanGraphicsDevice(validation, presentationParameters);
+#else
+                    throw new GraphicsException($"{GraphicsBackend.Vulkan} Backend is not supported");
+#endif
+
+                default:
+                    throw new GraphicsException($"Invalid {backend} backend");
+            }
+        }
+
+        /// <summary>
+        /// Gets the best <see cref="GraphicsBackend"/> for given platform.
+        /// </summary>
+        /// <param name="platformType">The <see cref="PlatformType"/> to detect.</param>
+        /// <returns></returns>
+        private static GraphicsBackend GetDefaultGraphicsPlatform(PlatformType platformType)
+        {
+            switch (platformType)
+            {
+                case PlatformType.Windows:
+                case PlatformType.UWP:
+                    //if (D3D12.D3D12GraphicsDevice.IsSupported())
+                    //{
+                    //    return GraphicsBackend.Direct3D12;
+                    //}
+
+                    return GraphicsBackend.Direct3D11;
+                case PlatformType.Android:
+                case PlatformType.Linux:
+                    return GraphicsBackend.OpenGLES;
+
+                case PlatformType.iOS:
+                case PlatformType.macOS:
+                    return GraphicsBackend.OpenGL;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

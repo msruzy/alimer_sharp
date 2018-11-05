@@ -9,6 +9,7 @@ using static Vortice.Windows.Kernel32;
 using static Vortice.Windows.User32;
 using static Vortice.Windows.ShCore;
 using System.Runtime.CompilerServices;
+using Vortice.Diagnostics;
 
 namespace Vortice.Windows
 {
@@ -30,31 +31,28 @@ namespace Vortice.Windows
             : base(game)
         {
             // TODO: Add options for EnableHighResolution
-            const bool EnableHighResolution = true;
-            if (EnableHighResolution)
+            if (PlatformDetection.IsWindows10Version1703OrGreater())
             {
-                if (IsShCoreAvailable)
+                if (SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2)
+                    || SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE))
                 {
-                    if (SetProcessDpiAwareness(ProcessDpiAwareness.PerMonitorDpiAware) == 0)
-                    {
-                        //Log.Debug("Enabled per monitor DPI awareness.");
-                    }
-                    else
-                    {
-                        //Log.Error("Failed to set process DPI awareness");
-                    }
+                    Log.Debug("Win32", "Enabled per monitor DPI awareness.");
+                }
+            }
+            else if (PlatformDetection.IsWindows8Point1OrGreater())
+            {
+                if (SetProcessDpiAwareness(ProcessDpiAwareness.PerMonitorDpiAware) == 0)
+                {
+                    Log.Debug("Enabled per monitor DPI awareness.");
                 }
                 else
                 {
-                    if (!SetProcessDPIAware())
-                    {
-                        //Log.Error("Failed to set process DPI awareness");
-                    }
-                    else
-                    {
-                        //Log.Debug("User32 process DPI awareness enabled.");
-                    }
+                    Log.Error("Failed to set process DPI awareness");
                 }
+            }
+            else
+            {
+                SetProcessDPIAware();
             }
 
             //EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero,
@@ -187,7 +185,7 @@ namespace Vortice.Windows
                     //case WindowMessage.SetCursor:
                     //    if (SignedLOWORD(lParam) == HTCLIENT)
                     //    {
-                            //Input.UpdateCursor();
+                    //Input.UpdateCursor();
                     //        return new IntPtr(1);
                     //    }
 

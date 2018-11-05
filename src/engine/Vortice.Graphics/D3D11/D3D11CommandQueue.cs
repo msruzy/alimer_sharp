@@ -9,8 +9,8 @@ namespace Vortice.Graphics.D3D11
 {
     internal class D3D11CommandQueue : CommandQueue
     {
-        private readonly Device1 _nativeDevice;
-        private readonly DeviceContext1 _immediateContext;
+        private readonly Device _nativeDevice;
+        private readonly DeviceContext _immediateContext;
         private readonly object _contextLock = new object();
         private readonly List<D3D11CommandBuffer> _completedBuffers = new List<D3D11CommandBuffer>();
         private readonly List<D3D11CommandBuffer> _pendingCommandBuffers = new List<D3D11CommandBuffer>();
@@ -18,8 +18,8 @@ namespace Vortice.Graphics.D3D11
         public D3D11CommandQueue(D3D11GraphicsDevice device)
             : base(device)
         {
-            _nativeDevice = device.NativeDevice;
-            _immediateContext = device.NativeImmediateContext;
+            _nativeDevice = device.D3DDevice;
+            _immediateContext = device.D3DContext1;
         }
 
         public override CommandBuffer CreateCommandBuffer()

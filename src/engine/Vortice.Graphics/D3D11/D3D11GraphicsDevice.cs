@@ -5,6 +5,8 @@ using System;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using Vortice.Diagnostics;
+using DXGI = SharpDX.DXGI;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -19,9 +21,12 @@ namespace Vortice.Graphics.D3D11
         };
 
         private static bool? _isSupported;
-        private readonly D3D11GraphicsDeviceFactory _factory;
-        public readonly Device1 NativeDevice;
-        public readonly DeviceContext1 NativeImmediateContext;
+        public readonly Device D3DDevice;
+        public readonly Device1 D3DDevice1;
+        public readonly FeatureLevel FeatureLevel;
+        public readonly DeviceContext D3DContext;
+        public readonly DeviceContext1 D3DContext1;
+        public readonly UserDefinedAnnotation D3DAnnotation;
 
         private readonly bool _supportsConcurrentResources;
         private readonly bool _supportsCommandLists;
@@ -36,67 +41,95 @@ namespace Vortice.Graphics.D3D11
         public bool SupportsConcurrentResources => _supportsConcurrentResources;
         public bool SupportsCommandLists => _supportsCommandLists;
 
-        public D3D11GraphicsDevice(
-            D3D11GraphicsDeviceFactory factory,
-            DXGIAdapter adapter,
-            PresentationParameters presentationParameters)
-            : base(adapter, presentationParameters)
+        public D3D11GraphicsDevice(bool validation, PresentationParameters presentationParameters)
+            : base(GraphicsBackend.Direct3D11, presentationParameters)
         {
-            _factory = factory;
-            var creationFlags = DeviceCreationFlags.BgraSupport/* | DeviceCreationFlags.VideoSupport*/;
-
-            if (_factory.Validation)
+#if DEBUG
+            SharpDX.Configuration.EnableObjectTracking = true;
+            SharpDX.Configuration.ThrowOnShaderCompileError = false;
+#endif
+            // Create factory first.
+            using (var dxgifactory = new DXGI.Factory1())
             {
-                creationFlags |= DeviceCreationFlags.Debug;
-            }
-
-            try
-            {
-                using (var device = new Device(adapter.Adapter, creationFlags, s_featureLevels))
+                var adapterCount = dxgifactory.GetAdapterCount1();
+                for (var i = 0; i < adapterCount; i++)
                 {
-                    if (D3D11Utils.IsWindows10x)
+                    var adapter = dxgifactory.GetAdapter1(i);
+                    var desc = adapter.Description1;
+
+                    // Don't select the Basic Render Driver adapter.
+                    if ((desc.Flags & DXGI.AdapterFlags.Software) != DXGI.AdapterFlags.None)
                     {
-                        NativeDevice = device.QueryInterface<Device5>();
+                        continue;
                     }
-                    else
+
+                    var creationFlags = DeviceCreationFlags.BgraSupport/* | DeviceCreationFlags.VideoSupport*/;
+
+                    if (validation)
                     {
-                        NativeDevice = device.QueryInterface<Device1>();
+                        creationFlags |= DeviceCreationFlags.Debug;
                     }
+
+                    try
+                    {
+                        D3DDevice = new Device(adapter, creationFlags, s_featureLevels);
+                    }
+                    catch (SharpDXException)
+                    {
+                        // Remove debug flag not being supported.
+                        creationFlags &= ~DeviceCreationFlags.Debug;
+
+                        D3DDevice = new Device(adapter, creationFlags, s_featureLevels);
+                    }
+
+                    Features.VendorId = desc.VendorId;
+                    Features.DeviceId = desc.DeviceId;
+                    Features.DeviceName = desc.Description;
+                    Log.Debug($"Direct3D Adapter ({i}): VID:{desc.VendorId}, PID:{desc.DeviceId} - {desc.Description}");
+                    break;
                 }
             }
-            catch (SharpDXException)
-            {
-                // Remove debug flag not being supported.
-                creationFlags &= ~DeviceCreationFlags.Debug;
 
-                using (var device = new Device(adapter.Adapter, creationFlags, s_featureLevels))
-                {
-                    if (D3D11Utils.IsWindows10x)
-                    {
-                        NativeDevice = device.QueryInterface<Device5>();
-                    }
-                    else
-                    {
-                        NativeDevice = device.QueryInterface<Device1>();
-                    }
-                }
+            FeatureLevel = D3DDevice.FeatureLevel;
+            D3DContext = D3DDevice.ImmediateContext;
+            D3DDevice1 = D3DDevice.QueryInterfaceOrNull<Device1>();
+            if (D3DDevice1 != null)
+            {
+                D3DContext1 = D3DContext.QueryInterface<DeviceContext1>();
+                D3DAnnotation = D3DContext.QueryInterface<UserDefinedAnnotation>();
             }
 
-            NativeDevice.CheckThreadingSupport(out _supportsConcurrentResources, out _supportsCommandLists);
+            // Detect multithreading
+            D3DDevice1.CheckThreadingSupport(out _supportsConcurrentResources, out _supportsCommandLists);
+            if (_supportsConcurrentResources
+                && _supportsCommandLists)
+            {
+                Features.Multithreading = true;
+            }
 
             // Create queue's
-            NativeImmediateContext = NativeDevice.ImmediateContext1;
             GraphicsQueue = new D3D11CommandQueue(this);
 
             //ImmediateContext = new D3D11CommandContext(this, Device.ImmediateContext1);
-            _mainSwapchain = new D3D11Swapchain(_factory.DXGIFactory, this, presentationParameters);
+            _mainSwapchain = new D3D11Swapchain(this, presentationParameters);
         }
 
         protected override void Destroy()
         {
             _mainSwapchain.Dispose();
-            NativeImmediateContext.Dispose();
-            NativeDevice.Dispose();
+            D3DContext.Dispose();
+            D3DContext1?.Dispose();
+            D3DAnnotation?.Dispose();
+            D3DDevice1?.Dispose();
+
+            var deviceDebug = D3DDevice.QueryInterfaceOrNull<DeviceDebug>();
+            if (deviceDebug != null)
+            {
+                deviceDebug.ReportLiveDeviceObjects(ReportingLevel.Summary);
+                deviceDebug.Dispose();
+            }
+
+            D3DDevice.Dispose();
         }
 
         /// <summary>

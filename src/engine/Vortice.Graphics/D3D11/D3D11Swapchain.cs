@@ -13,8 +13,8 @@ namespace Vortice.Graphics.D3D11
     {
         public readonly D3D11Texture BackbufferTexture;
 
-        public D3D11Swapchain(DXGI.Factory2 factory, D3D11GraphicsDevice device, PresentationParameters presentationParameters)
-            : base(device, presentationParameters, factory, device.NativeDevice, 2, 1)
+        public D3D11Swapchain(D3D11GraphicsDevice device, PresentationParameters presentationParameters)
+            : base(device, presentationParameters, device.D3DDevice, 2, 1)
         {
             var backBufferTexture = Resource.FromSwapChain<Texture2D>(_swapChain, 0);
             var d3dTextureDesc = backBufferTexture.Description;

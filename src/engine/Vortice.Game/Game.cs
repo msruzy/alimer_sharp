@@ -32,7 +32,6 @@ namespace Vortice
         private int _nextLastUpdateCountIndex;
         private readonly float _updateCountAverageSlowLimit;
 
-        private GraphicsDeviceFactory _graphicsDeviceFactory;
         private GraphicsDevice _graphicsDevice;
 
         /// <summary>
@@ -133,7 +132,6 @@ namespace Vortice
         public void Dispose()
         {
             _graphicsDevice.Dispose();
-            _graphicsDeviceFactory.Dispose();
 
             _host.Activated -= Host_Activated;
             _host.Deactivated -= Host_Deactivated;
@@ -403,9 +401,7 @@ namespace Vortice
 
         private void InitializeBeforeRun()
         {
-            // Create graphics device factory first.
-            _graphicsDeviceFactory = GraphicsDeviceFactory.Create(GraphicsBackend.Default, validation: true);
-
+            // Create graphics device.
             var clientSize = MainView.ClientSize;
             var presentationParameters = new PresentationParameters
             {
@@ -414,8 +410,10 @@ namespace Vortice
                 DeviceWindowHandle = MainView.NativeHandle
             };
 
-            var adapter = _graphicsDeviceFactory.DefaultAdapter;
-            _graphicsDevice = _graphicsDeviceFactory.CreateGraphicsDevice(adapter, presentationParameters);
+            _graphicsDevice = Graphics.GraphicsDevice.Create(
+                GraphicsBackend.Default, 
+                validation: true, 
+                presentationParameters: presentationParameters);
 
             // Initialize this instance and all systems.
             Initialize();

@@ -273,6 +273,11 @@ namespace Vortice.Windows
     {
 		public const string LibraryName = "user32";
 
+        public static readonly IntPtr DPI_AWARENESS_CONTEXT_UNAWARE = new IntPtr(-1);
+        public static readonly IntPtr DPI_AWARENESS_CONTEXT_SYSTEM_AWARE = new IntPtr(-2);
+        public static readonly IntPtr DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE = new IntPtr(-3);
+        public static readonly IntPtr DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = new IntPtr(-4);
+
         [DllImport(LibraryName, CharSet = CharSet.Unicode)]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
@@ -347,12 +352,16 @@ namespace Vortice.Windows
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool TranslateMessage([In] ref Message lpMsg);
 
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        [DllImport(LibraryName, CharSet = CharSet.Unicode)]
         public static extern IntPtr DispatchMessage([In] ref Message lpmsg);
 
-        [DllImport("user32.dll")]
-		[return: MarshalAs(UnmanagedType.I1)]
+        [DllImport(LibraryName, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.I1)]
 		public static extern bool SetProcessDPIAware();
+
+        [DllImport(LibraryName, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.I1)]
+        public static extern bool SetProcessDpiAwarenessContext(IntPtr dpiAWarenessContext);
 
         [DllImport(LibraryName, CharSet = CharSet.Unicode)]
         public static extern IntPtr LoadIcon(IntPtr hInstance, string lpIconName);

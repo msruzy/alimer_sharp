@@ -6,6 +6,7 @@ using System.Diagnostics;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
+using DXGI = SharpDX.DXGI;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -20,7 +21,8 @@ namespace Vortice.Graphics.D3D12
         };
 
         private static bool? _isSupported;
-        private readonly D3D12GraphicsDeviceFactory _factory;
+        public readonly DXGI.Factory4 DXGIFactory;
+        public readonly DXGI.Adapter1 DXGIAdapter;
         public readonly Device Device;
         public readonly FeatureLevel FeatureLevel;
         public readonly int RTVDescriptorSize;
@@ -34,26 +36,63 @@ namespace Vortice.Graphics.D3D12
         /// <inheritdoc/>
         public override CommandQueue GraphicsQueue { get; }
 
-        public D3D12GraphicsDevice(
-            D3D12GraphicsDeviceFactory factory,
-            DXGIAdapter adapter,
-            PresentationParameters presentationParameters)
-            : base(adapter, presentationParameters)
+        public D3D12GraphicsDevice(bool validation, PresentationParameters presentationParameters)
+            : base(GraphicsBackend.Direct3D12, presentationParameters)
         {
-            _factory = factory;
+#if DEBUG
+            SharpDX.Configuration.EnableObjectTracking = true;
+            SharpDX.Configuration.ThrowOnShaderCompileError = false;
+#endif
+
+            // Just try to enable debug layer.
+            try
+            {
+                if (validation)
+                {
+                    // Enable the D3D12 debug layer.
+                    DebugInterface.Get().EnableDebugLayer();
+
+                    Validation = true;
+                }
+            }
+            catch (SharpDX.SharpDXException)
+            {
+                Validation = false;
+            }
+
+            // Create factory first.
+            DXGIFactory = new DXGI.Factory4(Validation);
+
+            var adapterCount = DXGIFactory.GetAdapterCount1();
+            for (var i = 0; i < adapterCount; i++)
+            {
+                var adapter = DXGIFactory.GetAdapter1(i);
+                var desc = adapter.Description1;
+
+                // Don't select the Basic Render Driver adapter.
+                if ((desc.Flags & DXGI.AdapterFlags.Software) != DXGI.AdapterFlags.None)
+                {
+                    continue;
+                }
+
+                var tempDevice = new Device(adapter, FeatureLevel.Level_11_0);
+                tempDevice.Dispose();
+
+                DXGIAdapter = adapter;
+            }
 
             try
             {
-                Device = new Device(adapter.Adapter, FeatureLevel.Level_11_0);
+                Device = new Device(DXGIAdapter, FeatureLevel.Level_11_0);
             }
             catch (SharpDXException)
             {
                 // Create the Direct3D 12 with WARP adapter.
-                var warpAdapter = factory.DXGIFactory.GetWarpAdapter();
+                var warpAdapter = DXGIFactory.GetWarpAdapter();
                 Device = new Device(warpAdapter, FeatureLevel.Level_11_0);
             }
 
-            if (_factory.Validation)
+            if (Validation)
             {
                 var infoQueue = Device.QueryInterfaceOrNull<InfoQueue>();
                 if (infoQueue != null)
@@ -105,7 +144,7 @@ namespace Vortice.Graphics.D3D12
             DSVDescriptorSize = Device.GetDescriptorHandleIncrementSize(DescriptorHeapType.DepthStencilView);
 
             // Create main swap chain.
-            _mainSwapchain = new D3D12Swapchain(_factory.DXGIFactory, this, presentationParameters);
+            _mainSwapchain = new D3D12Swapchain(this, presentationParameters);
         }
 
         protected override void Destroy()
@@ -114,7 +153,7 @@ namespace Vortice.Graphics.D3D12
             ((D3D12CommandQueue)GraphicsQueue).Destroy();
             _mainSwapchain.Dispose();
 
-            if (_factory.Validation)
+            if (Validation)
             {
                 var debugDevice = Device.QueryInterfaceOrNull<DebugDevice>();
                 if (debugDevice != null)

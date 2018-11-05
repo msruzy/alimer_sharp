@@ -48,7 +48,7 @@ namespace Vortice.Graphics.D3D11
                                 OptionFlags = optionFlags,
                             };
 
-                            Resource = new Texture1D(device.NativeDevice, d3dTextureDesc);
+                            Resource = new Texture1D(device.D3DDevice, d3dTextureDesc);
                         }
                         break;
 
@@ -69,7 +69,7 @@ namespace Vortice.Graphics.D3D11
                                 OptionFlags = optionFlags,
                             };
 
-                            Resource = new Texture2D(device.NativeDevice, d3dTextureDesc);
+                            Resource = new Texture2D(device.D3DDevice, d3dTextureDesc);
                         }
                         break;
 
@@ -88,7 +88,7 @@ namespace Vortice.Graphics.D3D11
                                 OptionFlags = optionFlags,
                             };
 
-                            Resource = new Texture3D(device.NativeDevice, d3dTextureDesc);
+                            Resource = new Texture3D(device.D3DDevice, d3dTextureDesc);
                         }
                         break;
                 }
@@ -195,7 +195,7 @@ namespace Vortice.Graphics.D3D11
                 }
 
                 RenderTargetView = new RenderTargetView(
-                    ((D3D11GraphicsDevice)texture.Device).NativeDevice,
+                    ((D3D11GraphicsDevice)texture.Device).D3DDevice,
                     texture.Resource,
                     viewDesc);
             }
