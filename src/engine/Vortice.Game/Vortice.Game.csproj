@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Platforms\NetStandard\Windows\PlatformDetection.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Vortice.Graphics\Vortice.Graphics.csproj" />
   </ItemGroup>
 </Project>
