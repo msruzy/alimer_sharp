@@ -1,6 +1,6 @@
 # Vortice
 
-[![Build status](https://ci.appveyor.com/api/projects/status/ca86lu9jyx6yq5wv?svg=true)](https://ci.appveyor.com/project/amerkoleci/vortice)
+[![Build status](https://ci.appveyor.com/api/projects/status/o4fbjpflanfma0nn?svg=true)](https://ci.appveyor.com/project/amerkoleci/vortice)
 [![Contribute!](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/amerkoleci/vortice/issues)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/amerkoleci/vortice/blob/master/LICENSE)
 
