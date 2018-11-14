@@ -33,7 +33,7 @@ namespace Vortice.Graphics.D3D12
 
         protected override TextureView CreateTextureViewCore(in TextureViewDescriptor descriptor)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

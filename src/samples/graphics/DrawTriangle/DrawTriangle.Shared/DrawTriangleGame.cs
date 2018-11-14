@@ -40,7 +40,7 @@ namespace DrawTriangle
         {
             base.Draw(time);
 
-            var queue = GraphicsDevice.GraphicsQueue;
+            /*var queue = GraphicsDevice.GraphicsQueue;
 
             // execution order is the order of creation by default
             var commandBuffer = queue.CreateCommandBuffer();
@@ -49,7 +49,7 @@ namespace DrawTriangle
 
             commandBuffer.BeginRenderPass(renderPass);
             commandBuffer.EndRenderPass();
-            commandBuffer.Commit();
+            commandBuffer.Commit();*/
         }
 
         private readonly struct VertexPositionColor

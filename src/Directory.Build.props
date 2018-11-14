@@ -67,8 +67,13 @@
     <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_MACOS</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <SharpDXVersion>4.2.1-beta0-*</SharpDXVersion>
+    <NerdbankGitVersioningVersion>2.2.33</NerdbankGitVersioningVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.33" PrivateAssets="All" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
   </ItemGroup>
 </Project>

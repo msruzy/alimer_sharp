@@ -17,14 +17,14 @@ namespace Vortice.Graphics.D3D11
 
         public CommandList CommandList => _commandList;
 
-        public D3D11CommandBuffer(D3D11CommandQueue queue, Device nativeDevice)
-            : base(queue)
+        public D3D11CommandBuffer(D3D11GraphicsDevice device)
+            : base(device)
         {
-            _nativeDevice = nativeDevice;
-            _context = new DeviceContext(nativeDevice);
+            _nativeDevice = device.D3DDevice;
+            _context = new DeviceContext(_nativeDevice);
 
             // The runtime emulates command lists.
-            _needWorkaround = !((D3D11GraphicsDevice)queue.Device).SupportsCommandLists;
+            _needWorkaround = !device.SupportsCommandLists;
         }
 
         /// <inheritdoc/>
@@ -104,7 +104,7 @@ namespace Vortice.Graphics.D3D11
         protected override void CommitCore()
         {
             _commandList = _context.FinishCommandList(false);
-            ((D3D11CommandQueue)Queue).Commit(this);
+            //((D3D11CommandQueue)Queue).Commit(this);
         }
     }
 }

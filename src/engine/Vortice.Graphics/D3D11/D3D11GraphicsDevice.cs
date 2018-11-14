@@ -35,9 +35,6 @@ namespace Vortice.Graphics.D3D11
         /// <inheritdoc/>
         public override Swapchain MainSwapchain => _mainSwapchain;
 
-        /// <inheritdoc/>
-        public override CommandQueue GraphicsQueue { get; }
-
         public bool SupportsConcurrentResources => _supportsConcurrentResources;
         public bool SupportsCommandLists => _supportsCommandLists;
 
@@ -108,7 +105,7 @@ namespace Vortice.Graphics.D3D11
             }
 
             // Create queue's
-            GraphicsQueue = new D3D11CommandQueue(this);
+            //GraphicsQueue = new D3D11CommandQueue(this);
 
             //ImmediateContext = new D3D11CommandContext(this, Device.ImmediateContext1);
             _mainSwapchain = new D3D11Swapchain(this, presentationParameters);
@@ -166,7 +163,10 @@ namespace Vortice.Graphics.D3D11
 
         protected override void FrameCore()
         {
-            ((D3D11CommandQueue)GraphicsQueue).Tick();
+        }
+
+        protected override void WaitIdleCore()
+        {
         }
 
         protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
@@ -177,6 +177,11 @@ namespace Vortice.Graphics.D3D11
         protected override Texture CreateTextureCore(in TextureDescription description)
         {
             return new D3D11Texture(this, description, nativeTexture: null);
+        }
+
+        internal override IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Vortice.Graphics
         Swapchain,
         Texture,
         Buffer,
+        Framebuffer,
         Pipeline,
     }
 }

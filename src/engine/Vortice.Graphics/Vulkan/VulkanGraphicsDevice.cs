@@ -52,8 +52,6 @@ namespace Vortice.Graphics.Vulkan
 
         public override Swapchain MainSwapchain => throw new NotImplementedException();
 
-        public override CommandQueue GraphicsQueue => throw new NotImplementedException();
-
         protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
         {
             throw new NotImplementedException();
@@ -66,6 +64,16 @@ namespace Vortice.Graphics.Vulkan
 
        
         protected override void FrameCore()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void WaitIdleCore()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)
         {
             throw new NotImplementedException();
         }

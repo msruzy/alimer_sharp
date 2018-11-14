@@ -396,7 +396,7 @@ namespace Vortice
         /// </summary>
         protected virtual void EndDraw()
         {
-            _graphicsDevice.Present();
+            _graphicsDevice.Frame();
         }
 
         private void InitializeBeforeRun()

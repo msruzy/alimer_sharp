@@ -36,25 +36,18 @@ namespace Vortice.Graphics
             }
         }
 
-
-        public void Present()
-        {
-            PresentCore();
-        }
-
         protected void Initialize(Texture[] textures)
         {
-            _passDescriptors = new RenderPassDescriptor[textures.Length];
-            for (var i = 0; i < textures.Length; i++)
-            {
-                _passDescriptors[i] = new RenderPassDescriptor(new[]
-                {
-                    new RenderPassColorAttachmentDescriptor(textures[i].DefaultTextureView)
-                });
-            }
+            //_passDescriptors = new RenderPassDescriptor[textures.Length];
+            //for (var i = 0; i < textures.Length; i++)
+            //{
+            //    _passDescriptors[i] = new RenderPassDescriptor(new[]
+            //    {
+            //        new RenderPassColorAttachmentDescriptor(textures[i].DefaultTextureView)
+            //    });
+            //}
         }
 
         protected abstract int GetBackbufferIndex();
-        protected abstract void PresentCore();
     }
 }

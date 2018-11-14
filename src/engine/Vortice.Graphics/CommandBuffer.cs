@@ -11,27 +11,17 @@ namespace Vortice.Graphics
     public abstract class CommandBuffer : DisposableBase
     {
         /// <summary>
-        /// Gets the creation <see cref="CommandQueue"/>.
-        /// </summary>
-        public CommandQueue Queue { get; }
-
-        /// <summary>
         /// Gets the creation <see cref="GraphicsDevice"/>.
         /// </summary>
-        public GraphicsDevice Device => Queue.Device;
-
-        /// <summary>
-        /// Gets or sets the execution order.
-        /// </summary>
-        public int ExecutionOrder { get; set; }
+        public GraphicsDevice Device { get; }
 
         /// <summary>
         /// Create a new instance of <see cref="CommandBuffer"/> class.
         /// </summary>
-        /// <param name="queue">The creation queue</param>
-        protected CommandBuffer(CommandQueue queue)
+        /// <param name="device">The creation device</param>
+        protected CommandBuffer(GraphicsDevice device)
         {
-            Queue = queue;
+            Device = device;
         }
 
         /// <inheritdoc/>

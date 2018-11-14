@@ -42,11 +42,6 @@ namespace Vortice.Graphics
         public abstract Swapchain MainSwapchain { get; }
 
         /// <summary>
-        /// Gets the graphics <see cref="CommandQueue"/>
-        /// </summary>
-        public abstract CommandQueue GraphicsQueue { get; }
-
-        /// <summary>
         /// Create new instance of <see cref="GraphicsDevice"/> class.
         /// </summary>
         /// <param name="backend"></param>
@@ -174,10 +169,10 @@ namespace Vortice.Graphics
             {
                 case PlatformType.Windows:
                 case PlatformType.UWP:
-                    //if (D3D12.D3D12GraphicsDevice.IsSupported())
-                    //{
-                    //    return GraphicsBackend.Direct3D12;
-                    //}
+                    if (D3D12.D3D12GraphicsDevice.IsSupported())
+                    {
+                        return GraphicsBackend.Direct3D12;
+                    }
 
                     return GraphicsBackend.Direct3D11;
                 case PlatformType.Android:
@@ -193,23 +188,16 @@ namespace Vortice.Graphics
         }
 
         /// <summary>
-        /// Present content to <see cref="MainSwapchain"/>.
+        /// Present current frame and advance to next frame.
         /// </summary>
-        public void Present()
+        public void Frame()
         {
-            Present(MainSwapchain);
+            FrameCore();
         }
 
-        /// <summary>
-        /// Present content to swapchain.
-        /// </summary>
-        /// <param name="swapchain">The <see cref="Swapchain"/> to present.</param>
-        public void Present(Swapchain swapchain)
+        public void WaitIdle()
         {
-            Guard.NotNull(swapchain, nameof(swapchain));
-
-            swapchain.Present();
-            FrameCore();
+            WaitIdleCore();
         }
 
         public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor, IntPtr initialData)
@@ -305,7 +293,11 @@ namespace Vortice.Graphics
         protected abstract void Destroy();
         protected abstract void FrameCore();
 
+        protected abstract void WaitIdleCore();
+
         protected abstract GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData);
         protected abstract Texture CreateTextureCore(in TextureDescription description);
+
+        internal abstract IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments);
     }
 }

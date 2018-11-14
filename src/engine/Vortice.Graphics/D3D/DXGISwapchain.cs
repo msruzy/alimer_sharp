@@ -121,7 +121,7 @@ namespace Vortice.Graphics
 
         protected override int GetBackbufferIndex() => _currentFrameIndex;
 
-        protected sealed override void PresentCore()
+        public void Present()
         {
             //var parameters = new SharpDX.DXGI.PresentParameters();
 

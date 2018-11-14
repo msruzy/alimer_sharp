@@ -11,8 +11,8 @@ namespace Vortice.Graphics.D3D12
 
         public CommandList CommandList => _commandList;
 
-        public D3D12CommandBuffer(D3D12CommandQueue queue)
-            : base(queue)
+        public D3D12CommandBuffer(D3D12GraphicsDevice device)
+            : base(device)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Vortice.Graphics.D3D12
 
         protected override void CommitCore()
         {
-            ((D3D12CommandQueue)Queue).Commit(this);
+            //((D3D12CommandQueue)Queue).Commit(this);
         }
     }
 }
