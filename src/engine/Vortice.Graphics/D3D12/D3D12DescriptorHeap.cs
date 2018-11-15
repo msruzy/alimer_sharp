@@ -25,7 +25,9 @@ namespace Vortice.Graphics.D3D12
         public readonly int DescriptorSize;
 
         private readonly int[] _deadList;
+        private int _heapIndex;
         private readonly object _lockObject = new object();
+        private volatile int _temporaryAllocated = 0;
 
         public D3D12DescriptorHeap(
             D3D12GraphicsDevice device,
@@ -73,7 +75,7 @@ namespace Vortice.Graphics.D3D12
                 }
             }
 
-            DescriptorSize = device.Device .GetDescriptorHandleIncrementSize(_heapType);
+            DescriptorSize = device.Device.GetDescriptorHandleIncrementSize(_heapType);
 
             _deadList = new int[persistentCount];
             for (var i = 0; i < persistentCount; ++i)
@@ -89,6 +91,40 @@ namespace Vortice.Graphics.D3D12
             {
                 _heaps[i].Dispose();
             }
+        }
+
+        public void EndFrame()
+        {
+            Debug.Assert(_heaps[0] != null);
+            _temporaryAllocated = 0;
+            _heapIndex = (_heapIndex + 1) % _heapCount;
+        }
+
+        public DescriptorHeap CurrentHeap()
+        {
+            Debug.Assert(_heaps[0] != null);
+            return _heaps[_heapIndex];
+        }
+
+        public int TotalNumDescriptors => _persistentCount + _temporaryCount;
+
+        public int IndexFromHandle(CpuDescriptorHandle handle)
+        {
+            Debug.Assert(_heaps[0] != null);
+            long handlePtr = handle.Ptr;
+            Debug.Assert(handlePtr >= _cpuStart[_heapIndex].Ptr);
+            Debug.Assert(handlePtr < _cpuStart[_heapIndex].Ptr + (DescriptorSize * TotalNumDescriptors));
+            Debug.Assert((handlePtr - _cpuStart[_heapIndex].Ptr) % DescriptorSize == 0);
+            return (handlePtr - _cpuStart[_heapIndex].Ptr) / DescriptorSize;
+        }
+
+        public int IndexFromHandle(GpuDescriptorHandle handle)
+        {
+            Debug.Assert(_heaps[0] != null);
+            Debug.Assert(handle.Ptr >= _gpuStart[_heapIndex].Ptr);
+            Debug.Assert(handle.Ptr < _gpuStart[_heapIndex].Ptr + (DescriptorSize * TotalNumDescriptors));
+            Debug.Assert((handle.Ptr - _gpuStart[_heapIndex].Ptr) % DescriptorSize == 0);
+            return (int)(handle.Ptr - _gpuStart[_heapIndex].Ptr) / DescriptorSize;
         }
 
         public PersistentDescriptorAlloc AllocatePersistent()
@@ -109,6 +145,46 @@ namespace Vortice.Graphics.D3D12
                 }
 
                 return new PersistentDescriptorAlloc(handles, index);
+            }
+        }
+
+        public void FreePersistent(ref int index)
+        {
+            if (index == -1)
+                return;
+
+            Debug.Assert(index < _persistentCount);
+            Debug.Assert(_heaps[0] != null);
+
+            lock (_lockObject)
+            {
+                Debug.Assert(_persistentAllocated > 0);
+                _deadList[_persistentAllocated - 1] = index;
+                --_persistentAllocated;
+            }
+
+            index = -1;
+        }
+
+        public void FreePersistent(ref CpuDescriptorHandle handle)
+        {
+            Debug.Assert(_heapCount == 1);
+            if (handle.Ptr != 0)
+            {
+                var index = IndexFromHandle(handle);
+                FreePersistent(ref index);
+                handle = default;
+            }
+        }
+
+        public void FreePersistent(ref GpuDescriptorHandle handle)
+        {
+            Debug.Assert(_heapCount == 1);
+            if (handle.Ptr != 0)
+            {
+                var index = IndexFromHandle(handle);
+                FreePersistent(ref index);
+                handle = default;
             }
         }
     }

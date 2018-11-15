@@ -34,7 +34,10 @@ namespace Vortice.Graphics.D3D12
 
         public void Destroy()
         {
-            //Device.RTVDescriptorHeap.FreePersistent();
+            for (var i = 0; i < _rtv.Length; i++)
+            {
+                Device.RTVDescriptorHeap.FreePersistent(ref _rtv[i]);
+            }
         }
     }
 }

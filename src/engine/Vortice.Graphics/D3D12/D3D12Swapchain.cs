@@ -36,16 +36,19 @@ namespace Vortice.Graphics.D3D12
                 case IntPtr hwnd:
                     {
                         // Check tearing support.
-                        RawBool allowTearing = false;
-                        using (var factory5 = device.DXGIFactory.QueryInterfaceOrNull<DXGI.Factory5>())
+                        var allowTearing = false;
+                        var factory5 = device.DXGIFactory.QueryInterfaceOrNull<DXGI.Factory5>();
+                        if (factory5 != null)
                         {
-                            factory5.CheckFeatureSupport(DXGI.Feature.PresentAllowTearing,
-                                new IntPtr(&allowTearing), sizeof(RawBool)
-                                );
+                            if (factory5.PresentAllowTearing)
+                            {
+                                // Recommended to always use tearing if supported when using a sync interval of 0.
+                                _syncInterval = 0;
+                                _presentFlags |= DXGI.PresentFlags.AllowTearing;
+                                allowTearing = true;
+                            }
 
-                            // Recommended to always use tearing if supported when using a sync interval of 0.
-                            _syncInterval = 0;
-                            _presentFlags |= DXGI.PresentFlags.AllowTearing;
+                            factory5.Dispose();
                         }
 
                         var swapchainDesc = new SharpDX.DXGI.SwapChainDescription1()

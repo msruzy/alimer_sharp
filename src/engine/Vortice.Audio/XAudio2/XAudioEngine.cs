@@ -21,16 +21,16 @@ namespace Vortice.Audio.XAudio
             {
                 // Fails if the XAudio2 SDK is not installed.
                 XAudio = new XAudio2(
-                    validation ? XAudio2Flags.DebugEngine : XAudio2Flags.None, 
+                    validation ? XAudio2Flags.DebugEngine : XAudio2Flags.None,
                     ProcessorSpecifier.AnyProcessor
                     );
-                //XAudio.StartEngine();
+                XAudio.StartEngine();
             }
             catch
             {
                 validation = false;
                 XAudio = new XAudio2(XAudio2Flags.None, ProcessorSpecifier.DefaultProcessor);
-                //XAudio.StartEngine();
+                XAudio.StartEngine();
             }
 
             MasteringVoice = new MasteringVoice(XAudio, 2, 44100);

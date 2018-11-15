@@ -144,10 +144,7 @@ namespace Vortice.Graphics.D3D12
             }
 
             // Create factory first.
-            using (var tempfactory = new DXGI.Factory2(Validation))
-            {
-                DXGIFactory = tempfactory.QueryInterface<DXGI.Factory4>();
-            }
+            DXGIFactory = new DXGI.Factory4(Validation);
 
             var adapterCount = DXGIFactory.GetAdapterCount1();
             for (var i = 0; i < adapterCount; i++)
@@ -276,13 +273,14 @@ namespace Vortice.Graphics.D3D12
 
         private void InitializeFeatures()
         {
-            FeatureLevel = SharpDX.Direct3D.FeatureLevel.Level_11_0; //. Device.CheckMaxSupportedFeatureLevel(s_featureLevels);
+            FeatureLevel = Device.CheckMaxSupportedFeatureLevel(s_featureLevels);
             var D3D12Options = Device.D3D12Options;
 
-            //var dataShaderModel = Device.CheckShaderModel(ShaderModel.Model60);
-            //var dataShaderModel1 = Device.CheckShaderModel(ShaderModel.Model61);
-            //var dataShaderModel2 = Device.CheckShaderModel(ShaderModel.Model62);
-            //var waveIntrinsicsSupport = default(FeatureDataD3D12Options1);
+            var dataShaderModel = Device.CheckShaderModel(ShaderModel.Model60);
+            var dataShaderModel1 = Device.CheckShaderModel(ShaderModel.Model61);
+            var dataShaderModel2 = Device.CheckShaderModel(ShaderModel.Model62);
+            var waveIntrinsicsSupport = Device.D3D12Options1;
+
             //Device.CheckFeatureSupport(Feature.D3D12Options1, ref waveIntrinsicsSupport);
             var featureDataRootSignature = new FeatureDataRootSignature
             {
@@ -321,14 +319,18 @@ namespace Vortice.Graphics.D3D12
                 ++_currentGPUFrame;
             }
 
-            // Begin new frame.
-            BeginFrame();
-
-            //EndFrame_Helpers();
+            // End frame for helpers.
+            RTVDescriptorHeap.EndFrame();
+            SRVDescriptorHeap.EndFrame();
+            DSVDescriptorHeap.EndFrame();
+            UAVDescriptorHeap.EndFrame();
 
             // See if we have any deferred releases to process
             ProcessDeferredReleases(_currentFrameIndex);
             //ProcessDeferredSRVCreates(_currentFrameIndex);
+
+            // Begin new frame.
+            BeginFrame();
         }
 
         protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
