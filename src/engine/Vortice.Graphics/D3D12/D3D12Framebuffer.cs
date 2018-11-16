@@ -11,14 +11,16 @@ namespace Vortice.Graphics.D3D12
     {
         public readonly D3D12GraphicsDevice Device;
         private readonly CpuDescriptorHandle[] _rtv;
+        private readonly DescriptorHeapHandle _rtvHeap;
 
         public D3D12Framebuffer(D3D12GraphicsDevice device, FramebufferAttachment[] colorAttachments)
         {
             Device = device;
+            _rtvHeap = device.DescriptorAllocator.AllocateCPUHeap(DescriptorHeapType.RenderTargetView, colorAttachments.Length);
             _rtv = new CpuDescriptorHandle[colorAttachments.Length];
             for (var i = 0; i < colorAttachments.Length; i++)
             {
-                _rtv[i] = device.RTVDescriptorHeap.AllocatePersistent().Handles[0];
+                _rtv[i] = _rtvHeap.GetCPUHandle(i);
 
                 var d3dTexture = ((D3D12Texture)colorAttachments[i].Texture).Resource;
 

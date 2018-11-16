@@ -45,15 +45,8 @@ namespace Vortice.Graphics.D3D12
         private bool _shuttingDown;
 
         public readonly D3D12DescriptorHeap RTVDescriptorHeap;
-        public readonly D3D12DescriptorHeap SRVDescriptorHeap;
-        public readonly D3D12DescriptorHeap DSVDescriptorHeap;
-        public readonly D3D12DescriptorHeap UAVDescriptorHeap;
 
-        public readonly int RTVDescriptorSize;
-        public readonly int SRVDescriptorSize;
-        public readonly int UAVDescriptorSize;
-        public readonly int CBVDescriptorSize;
-        public readonly int DSVDescriptorSize;
+        public readonly D3D12DescriptorAllocator DescriptorAllocator;
 
         /// <inheritdoc/>
         public override Swapchain MainSwapchain => _mainSwapchain;
@@ -227,14 +220,9 @@ namespace Vortice.Graphics.D3D12
             _frameFence = new D3D12Fence(this, 0);
 
             // Create helper objects
-            RTVDescriptorHeap = new D3D12DescriptorHeap(this, 256, 0, DescriptorHeapType.RenderTargetView, false);
-            SRVDescriptorHeap = new D3D12DescriptorHeap(this, 1024, 1024, DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView, true);
-            DSVDescriptorHeap = new D3D12DescriptorHeap(this, 256, 0, DescriptorHeapType.DepthStencilView, false);
-            UAVDescriptorHeap = new D3D12DescriptorHeap(this, 256, 0, DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView, false);
+            DescriptorAllocator = new D3D12DescriptorAllocator(this);
 
-            RTVDescriptorSize = RTVDescriptorHeap.DescriptorSize;
-            SRVDescriptorSize = UAVDescriptorSize = CBVDescriptorSize = SRVDescriptorHeap.DescriptorSize;
-            DSVDescriptorSize = DSVDescriptorHeap.DescriptorSize;
+            RTVDescriptorHeap = new D3D12DescriptorHeap(this, 256, 0, DescriptorHeapType.RenderTargetView, false);
 
             // Create main swap chain.
             _mainSwapchain = new D3D12Swapchain(this, presentationParameters, RenderLatency);
@@ -253,10 +241,8 @@ namespace Vortice.Graphics.D3D12
             _mainSwapchain.Dispose();
 
             // Dispose helper objects
+            DescriptorAllocator.Dispose();
             RTVDescriptorHeap.Dispose();
-            SRVDescriptorHeap.Dispose();
-            DSVDescriptorHeap.Dispose();
-            UAVDescriptorHeap.Dispose();
 
             if (Validation)
             {
@@ -321,9 +307,6 @@ namespace Vortice.Graphics.D3D12
 
             // End frame for helpers.
             RTVDescriptorHeap.EndFrame();
-            SRVDescriptorHeap.EndFrame();
-            DSVDescriptorHeap.EndFrame();
-            UAVDescriptorHeap.EndFrame();
 
             // See if we have any deferred releases to process
             ProcessDeferredReleases(_currentFrameIndex);

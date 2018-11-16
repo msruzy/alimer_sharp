@@ -9,24 +9,22 @@ namespace Vortice.Graphics.Tests
     {
         protected readonly GraphicsDevice _graphicsDevice;
 
-        protected GraphicsDeviceTestBase(GraphicsBackend backend = GraphicsBackend.Default, bool createDevice = true, bool enableValidation = false)
+        protected GraphicsDeviceTestBase(
+            GraphicsBackend backend = GraphicsBackend.Default, 
+            bool validation = false,
+            PresentationParameters presentationParameters = null)
         {
             if (!GraphicsDevice.IsSupported(backend))
             {
                 throw new GraphicsException($"Backend {backend} is not supported");
             }
 
-            //if (createDevice)
-            //{
-            //    _graphicsDevice = _factory.CreateGraphicsDevice(SelectedAdapter());
-            //}
+            _graphicsDevice = GraphicsDevice.Create(backend, validation, presentationParameters);
         }
 
         public virtual void Dispose()
         {
             _graphicsDevice?.Dispose();
         }
-
-        protected virtual GraphicsAdapter SelectedAdapter() => _factory.DefaultAdapter;
     }
 }

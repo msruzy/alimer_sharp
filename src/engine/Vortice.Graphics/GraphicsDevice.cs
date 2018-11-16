@@ -49,7 +49,6 @@ namespace Vortice.Graphics
         protected GraphicsDevice(GraphicsBackend backend, PresentationParameters presentationParameters)
         {
             Guard.IsTrue(backend != GraphicsBackend.Default, nameof(backend), "Invalid backend");
-            Guard.NotNull(presentationParameters, nameof(presentationParameters));
 
             Backend = backend;
             PresentationParameters = presentationParameters;
@@ -114,12 +113,10 @@ namespace Vortice.Graphics
         /// </summary>
         /// <param name="backend">The type of <see cref="GraphicsBackend"/></param>
         /// <param name="validation">Whether to enable validation if supported.</param>
-        /// <param name="presentationParameters">The main swap chain parameters.</param>
+        /// <param name="presentationParameters">The main swap chain parameters or null if headless.</param>
         /// <returns>New instance of <see cref="GraphicsDevice"/>.</returns>
         public static GraphicsDevice Create(GraphicsBackend backend, bool validation, PresentationParameters presentationParameters)
         {
-            Guard.NotNull(presentationParameters, nameof(presentationParameters));
-
             if (backend == GraphicsBackend.Default)
             {
                 backend = GetDefaultGraphicsPlatform(Platform.PlatformType);
