@@ -84,15 +84,7 @@ namespace Vortice.Graphics.D3D12
             }
 
             // If the pool has no more space, replace the pool with a new one of the specified size
-            var heapDescriptor = new DescriptorHeapDescription()
-            {
-                Type = type,
-                DescriptorCount = allocationSize,
-                Flags = flags,
-                NodeMask = 0,
-            };
-
-            var heap = Device.Device.CreateDescriptorHeap(heapDescriptor);
+            var heap = Device.Device.CreateDescriptorHeap(type, allocationSize, flags);
 
             allocationInfo = new AllocationInfo(allocationSize, allocationSize - count);
             heapInfo = new KeyValuePair<DescriptorHeap, AllocationInfo>(heap, allocationInfo);

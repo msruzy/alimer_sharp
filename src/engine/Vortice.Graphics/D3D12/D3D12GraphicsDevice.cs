@@ -184,7 +184,7 @@ namespace Vortice.Graphics.D3D12
                         {
                             Ids = new[]
                             {
-                                MessageId.ClearrendertargetviewMismatchingclearvalue,
+                                MessageId.ClearRenderTargetViewMismatchingClearValue,
 
                                 // These happen when capturing with VS diagnostics
                                 MessageId.MapInvalidNullRange,

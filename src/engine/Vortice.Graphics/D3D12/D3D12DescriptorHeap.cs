@@ -57,17 +57,9 @@ namespace Vortice.Graphics.D3D12
             _cpuStart = new CpuDescriptorHandle[_heapCount];
             _gpuStart = new GpuDescriptorHandle[_heapCount];
 
-            var heapDesc = new DescriptorHeapDescription()
-            {
-                Type = _heapType,
-                DescriptorCount = totalDescriptors,
-                Flags = _shaderVisible ? DescriptorHeapFlags.ShaderVisible : DescriptorHeapFlags.None,
-                NodeMask = 0,
-            };
-
             for (var i = 0; i < _heapCount; i++)
             {
-                _heaps[i] = device.Device.CreateDescriptorHeap(heapDesc);
+                _heaps[i] = device.Device.CreateDescriptorHeap(_heapType, totalDescriptors, _shaderVisible ? DescriptorHeapFlags.ShaderVisible : DescriptorHeapFlags.None);
                 _cpuStart[i] = _heaps[i].CPUDescriptorHandleForHeapStart;
                 if (_shaderVisible)
                 {

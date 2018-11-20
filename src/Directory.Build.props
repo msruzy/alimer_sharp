@@ -68,7 +68,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <SharpDXVersion>4.2.1-beta0-*</SharpDXVersion>
+    <SharpDXVersion>4.2.1-beta0-g3fea45daf0</SharpDXVersion>
     <NerdbankGitVersioningVersion>2.2.33</NerdbankGitVersioningVersion>
   </PropertyGroup>
 
