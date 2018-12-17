@@ -22,16 +22,19 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/amerkoleci/vortice</PackageProjectUrl>
     <PackageTags>3D Engine Graphics gamedev vortice Direct3D DirectX Vulkan OpenGL Metal Core Standard Game</PackageTags>
-
-    <!-- Enable sourcelink support -->
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <PropertyGroup>
     <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
     <IsMacOS Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsMacOS>
     <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+  </PropertyGroup>
+
+  <!-- Enable sourcelink support -->
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <!-- Detect platform -->
@@ -68,12 +71,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <SharpDXVersion>4.2.1-beta0-g3fea45daf0</SharpDXVersion>
-    <NerdbankGitVersioningVersion>2.2.33</NerdbankGitVersioningVersion>
+    <SharpDXVersion>4.2.1-beta0-gcf0727f6b1</SharpDXVersion>
+    <NerdbankGitVersioningVersion>3.0.4-beta</NerdbankGitVersioningVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
   </ItemGroup>
 </Project>
