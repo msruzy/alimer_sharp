@@ -26,14 +26,12 @@ namespace Vortice.Graphics.D3D12
         public const int RenderLatency = 2;
         public readonly DXGI.Factory4 DXGIFactory;
         public readonly DXGI.Adapter1 DXGIAdapter;
-        public readonly Device Device;
+        public readonly Device D3DDevice;
 
         public readonly CommandQueue GraphicsQueue;
 
         public FeatureLevel FeatureLevel { get; private set; }
 
-        private readonly CommandAllocator[] _commandAllocators;
-        private readonly GraphicsCommandList _commandList;
         private readonly List<IUnknown>[] _deferredReleases = new List<IUnknown>[RenderLatency];
 
         private readonly D3D12Swapchain _mainSwapchain;
@@ -44,12 +42,16 @@ namespace Vortice.Graphics.D3D12
         private long _currentGPUFrame;
         private bool _shuttingDown;
 
-        public readonly D3D12DescriptorHeap RTVDescriptorHeap;
+        private readonly DescriptorAllocator[] _descriptorAllocator = new DescriptorAllocator[(int)DescriptorHeapType.NumTypes];
+        private readonly object _heapAllocationLock = new object();
+        private readonly List<DescriptorHeap> _descriptorHeapPool = new List<DescriptorHeap>();
 
-        public readonly D3D12DescriptorAllocator DescriptorAllocator;
+        /// <inheritdoc/>
+        public override CommandBuffer ImmediateContext { get; }
 
         /// <inheritdoc/>
         public override Swapchain MainSwapchain => _mainSwapchain;
+
 
         public long CurrentCPUFrame => _currentCPUFrame;
         public long CurrentGPUFrame => _currentGPUFrame;
@@ -96,7 +98,6 @@ namespace Vortice.Graphics.D3D12
                         }
                         catch (SharpDX.SharpDXException)
                         {
-
                         }
                     }
                 }
@@ -159,18 +160,18 @@ namespace Vortice.Graphics.D3D12
 
             try
             {
-                Device = new Device(DXGIAdapter, FeatureLevel.Level_11_0);
+                D3DDevice = new Device(DXGIAdapter, FeatureLevel.Level_11_0);
             }
             catch (SharpDXException)
             {
                 // Create the Direct3D 12 with WARP adapter.
                 var warpAdapter = DXGIFactory.GetWarpAdapter();
-                Device = new Device(warpAdapter, FeatureLevel.Level_11_0);
+                D3DDevice = new Device(warpAdapter, FeatureLevel.Level_11_0);
             }
 
             if (Validation)
             {
-                var infoQueue = Device.QueryInterfaceOrNull<InfoQueue>();
+                var infoQueue = D3DDevice.QueryInterfaceOrNull<InfoQueue>();
                 if (infoQueue != null)
                 {
 #if DEBUG
@@ -200,35 +201,28 @@ namespace Vortice.Graphics.D3D12
             InitializeFeatures();
 
             // Create main graphics command queue.
-            GraphicsQueue = Device.CreateCommandQueue(CommandListType.Direct, 0);
+            GraphicsQueue = D3DDevice.CreateCommandQueue(CommandListType.Direct, 0);
             GraphicsQueue.Name = "Main GraphicsQueue";
 
-            // Create Command Allocator buffers.
-            _commandAllocators = new CommandAllocator[RenderLatency];
+            // Create ImmediateContext.
             for (int i = 0; i < RenderLatency; i++)
             {
                 _deferredReleases[i] = new List<IUnknown>();
-                _commandAllocators[i] = Device.CreateCommandAllocator(CommandListType.Direct);
-                _commandAllocators[i].Name = $"Frame CommandAllocator F{i}";
             }
-
-            _commandList = Device.CreateCommandList(CommandListType.Direct, _commandAllocators[0], null);
-            _commandList.Close();
-            _commandList.Name = "Primary Graphics Command List";
+            ImmediateContext = new D3D12CommandBuffer(this, RenderLatency, CommandListType.Direct);
+            ((D3D12CommandBuffer)ImmediateContext).CommandList.Name = "Primary Graphics Command List";
 
             // Create the frame fence
             _frameFence = new D3D12Fence(this, 0);
 
-            // Create helper objects
-            DescriptorAllocator = new D3D12DescriptorAllocator(this);
-
-            RTVDescriptorHeap = new D3D12DescriptorHeap(this, 256, 0, DescriptorHeapType.RenderTargetView, false);
+            // Create descriptor allocators
+            for (var i = 0; i < (int)DescriptorHeapType.NumTypes; i++)
+            {
+                _descriptorAllocator[i] = new DescriptorAllocator(this, (DescriptorHeapType)i);
+            }
 
             // Create main swap chain.
             _mainSwapchain = new D3D12Swapchain(this, presentationParameters, RenderLatency);
-
-            // Begin new frame.
-            BeginFrame();
         }
 
         protected override void Destroy()
@@ -240,13 +234,20 @@ namespace Vortice.Graphics.D3D12
             GraphicsQueue.Dispose();
             _mainSwapchain.Dispose();
 
-            // Dispose helper objects
-            DescriptorAllocator.Dispose();
-            RTVDescriptorHeap.Dispose();
+            // Clear DescriptorHeap Pools.
+            lock(_heapAllocationLock)
+            {
+                foreach (var heap in _descriptorHeapPool)
+                {
+                    heap.Dispose();
+                }
+
+                _descriptorHeapPool.Clear();
+            }
 
             if (Validation)
             {
-                var debugDevice = Device.QueryInterfaceOrNull<DebugDevice>();
+                var debugDevice = D3DDevice.QueryInterfaceOrNull<DebugDevice>();
                 if (debugDevice != null)
                 {
                     debugDevice.ReportLiveDeviceObjects(ReportingLevel.Detail);
@@ -254,18 +255,18 @@ namespace Vortice.Graphics.D3D12
                 }
             }
 
-            Device.Dispose();
+            D3DDevice.Dispose();
         }
 
         private void InitializeFeatures()
         {
-            FeatureLevel = Device.CheckMaxSupportedFeatureLevel(s_featureLevels);
-            var D3D12Options = Device.D3D12Options;
+            FeatureLevel = D3DDevice.CheckMaxSupportedFeatureLevel(s_featureLevels);
+            var D3D12Options = D3DDevice.D3D12Options;
 
-            var dataShaderModel = Device.CheckShaderModel(ShaderModel.Model60);
-            var dataShaderModel1 = Device.CheckShaderModel(ShaderModel.Model61);
-            var dataShaderModel2 = Device.CheckShaderModel(ShaderModel.Model62);
-            var waveIntrinsicsSupport = Device.D3D12Options1;
+            var dataShaderModel = D3DDevice.CheckShaderModel(ShaderModel.Model60);
+            var dataShaderModel1 = D3DDevice.CheckShaderModel(ShaderModel.Model61);
+            var dataShaderModel2 = D3DDevice.CheckShaderModel(ShaderModel.Model62);
+            var waveIntrinsicsSupport = D3DDevice.D3D12Options1;
 
             //Device.CheckFeatureSupport(Feature.D3D12Options1, ref waveIntrinsicsSupport);
             var featureDataRootSignature = new FeatureDataRootSignature
@@ -273,20 +274,16 @@ namespace Vortice.Graphics.D3D12
                 HighestVersion = RootSignatureVersion.Version11
             };
 
-            if (!Device.CheckFeatureSupport(Feature.RootSignature, ref featureDataRootSignature))
+            if (!D3DDevice.CheckFeatureSupport(Feature.RootSignature, ref featureDataRootSignature))
             {
                 featureDataRootSignature.HighestVersion = RootSignatureVersion.Version10;
             }
 
-            var gpuVaSupport = Device.GpuVirtualAddressSupport;
+            var gpuVaSupport = D3DDevice.GpuVirtualAddressSupport;
         }
 
         protected override void FrameCore()
         {
-            _commandList.Close();
-
-            GraphicsQueue.ExecuteCommandList(_commandList);
-
             // Present the frame.
             _mainSwapchain.Present();
 
@@ -305,15 +302,32 @@ namespace Vortice.Graphics.D3D12
                 ++_currentGPUFrame;
             }
 
-            // End frame for helpers.
-            RTVDescriptorHeap.EndFrame();
-
             // See if we have any deferred releases to process
             ProcessDeferredReleases(_currentFrameIndex);
             //ProcessDeferredSRVCreates(_currentFrameIndex);
+        }
 
-            // Begin new frame.
-            BeginFrame();
+        public DescriptorHandle AllocateDescriptor(DescriptorHeapType type, int count = 1)
+        {
+            return _descriptorAllocator[(int)type].Allocate(count);
+        }
+
+        public DescriptorHeap RequestNewHeap(DescriptorHeapType type, int descriptorCount)
+        {
+            lock (_heapAllocationLock)
+            {
+                var flags = DescriptorHeapFlags.None;
+
+                if (type == DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView
+                    || type == DescriptorHeapType.Sampler)
+                {
+                    flags = DescriptorHeapFlags.ShaderVisible;
+                }
+
+                var heap = D3DDevice.CreateDescriptorHeap(type, descriptorCount, flags, 0);
+                _descriptorHeapPool.Add(heap);
+                return heap;
+            }
         }
 
         protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
@@ -335,7 +349,7 @@ namespace Vortice.Graphics.D3D12
         {
             IUnknown unknown = resource;
             DeferredRelease_(unknown, forceDeferred);
-            resource = default(T);
+            resource = default;
         }
 
         private void DeferredRelease_(IUnknown resource, bool forceDeferred = false)
@@ -345,7 +359,7 @@ namespace Vortice.Graphics.D3D12
 
             if ((_currentCPUFrame == _currentGPUFrame && !forceDeferred)
                 || _shuttingDown
-                || Device == null)
+                || D3DDevice == null)
             {
                 // Free-for-all!
                 var count = resource.Release();
@@ -373,13 +387,6 @@ namespace Vortice.Graphics.D3D12
                 ProcessDeferredReleases(frameIdx);
                 //ProcessDeferredSRVCreates(frameIdx);
             }
-        }
-
-        private void BeginFrame()
-        {
-            _currentFrameIndex = _currentCPUFrame % RenderLatency;
-            _commandAllocators[_currentFrameIndex].Reset();
-            _commandList.Reset(_commandAllocators[_currentFrameIndex], null);
         }
 
         private void ProcessDeferredReleases(long frameIndex)

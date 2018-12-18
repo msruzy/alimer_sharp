@@ -37,6 +37,11 @@ namespace Vortice.Graphics
         public GraphicsDeviceFeatures Features { get; }
 
         /// <summary>
+        /// Gets the immediate <see cref="CommandBuffer"/> created with device.
+        /// </summary>
+        public abstract CommandBuffer ImmediateContext { get; }
+
+        /// <summary>
         /// Gets the main <see cref="Swapchain"/> created with device.
         /// </summary>
         public abstract Swapchain MainSwapchain { get; }
@@ -84,7 +89,8 @@ namespace Vortice.Graphics
             {
                 case GraphicsBackend.Direct3D11:
 #if !VORTICE_NO_D3D11
-                    return D3D11.D3D11GraphicsDevice.IsSupported();
+                    return Platform.PlatformType == PlatformType.Windows
+                        || Platform.PlatformType == PlatformType.UWP;
 #else
                     return false;
 #endif
@@ -172,6 +178,7 @@ namespace Vortice.Graphics
                     }
 
                     return GraphicsBackend.Direct3D11;
+
                 case PlatformType.Android:
                 case PlatformType.Linux:
                     return GraphicsBackend.OpenGLES;

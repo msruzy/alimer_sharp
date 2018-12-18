@@ -16,7 +16,7 @@ namespace Vortice.Graphics.D3D12
         public D3D12Fence(D3D12GraphicsDevice device, long initialValue)
         {
             Device = device;
-            _fence = device.Device.CreateFence(initialValue, FenceFlags.None);
+            _fence = device.D3DDevice.CreateFence(initialValue, FenceFlags.None);
             _fenceEvent = new AutoResetEvent(false);
         }
 

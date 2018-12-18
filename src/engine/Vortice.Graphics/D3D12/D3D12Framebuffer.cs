@@ -10,36 +10,34 @@ namespace Vortice.Graphics.D3D12
     internal class D3D12Framebuffer : IFramebuffer
     {
         public readonly D3D12GraphicsDevice Device;
-        private readonly CpuDescriptorHandle[] _rtv;
-        private readonly DescriptorHeapHandle _rtvHeap;
+        private readonly DescriptorHandle _rtvHandle = default;
+        private readonly DescriptorHandle _dsvHandle = default;
 
         public D3D12Framebuffer(D3D12GraphicsDevice device, FramebufferAttachment[] colorAttachments)
         {
             Device = device;
-            _rtvHeap = device.DescriptorAllocator.AllocateCPUHeap(DescriptorHeapType.RenderTargetView, colorAttachments.Length);
-            _rtv = new CpuDescriptorHandle[colorAttachments.Length];
-            for (var i = 0; i < colorAttachments.Length; i++)
+
+            if (colorAttachments.Length > 0)
             {
-                _rtv[i] = _rtvHeap.GetCPUHandle(i);
-
-                var d3dTexture = ((D3D12Texture)colorAttachments[i].Texture).Resource;
-
-                var renderTargetViewDesc = new RenderTargetViewDescription
+                _rtvHandle = device.AllocateDescriptor(DescriptorHeapType.RenderTargetView, colorAttachments.Length);
+                for (var i = 0; i < colorAttachments.Length; i++)
                 {
-                     Dimension = RenderTargetViewDimension.Texture2D,
-                     Format = ((D3D12Texture)colorAttachments[i].Texture).DXGIFormat
-                };
+                    var d3dTexture = ((D3D12Texture)colorAttachments[i].Texture).Resource;
 
-                device.Device.CreateRenderTargetView(d3dTexture, renderTargetViewDesc, _rtv[i]);
+                    var renderTargetViewDesc = new RenderTargetViewDescription
+                    {
+                        Dimension = RenderTargetViewDimension.Texture2D,
+                        Format = ((D3D12Texture)colorAttachments[i].Texture).DXGIFormat
+                    };
+
+                    var rtvHandle = _rtvHandle.GetCpuHandle(i);
+                    device.D3DDevice.CreateRenderTargetView(d3dTexture, renderTargetViewDesc, rtvHandle);
+                }
             }
         }
 
         public void Destroy()
         {
-            for (var i = 0; i < _rtv.Length; i++)
-            {
-                Device.RTVDescriptorHeap.FreePersistent(ref _rtv[i]);
-            }
         }
     }
 }

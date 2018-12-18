@@ -8,7 +8,7 @@ namespace Vortice.Graphics
     /// <summary>
     /// Defines a <see cref="Framebuffer"/> attachment.
     /// </summary>
-    public struct FramebufferAttachment
+    public readonly struct FramebufferAttachment
     {
         public FramebufferAttachment(Texture texture)
         {
@@ -30,8 +30,8 @@ namespace Vortice.Graphics
             Slice = slice;
         }
 
-        public Texture Texture;
-        public int MipLevel;
-        public int Slice;
+        public readonly Texture Texture;
+        public readonly int MipLevel;
+        public readonly int Slice;
     }
 }

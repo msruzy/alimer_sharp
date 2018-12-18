@@ -50,6 +50,7 @@ namespace Vortice.Graphics.Vulkan
             return true;
         }
 
+        public override CommandBuffer ImmediateContext => throw new NotImplementedException();
         public override Swapchain MainSwapchain => throw new NotImplementedException();
 
         protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)

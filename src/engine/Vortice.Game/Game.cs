@@ -410,9 +410,9 @@ namespace Vortice
                 DeviceWindowHandle = MainView.NativeHandle
             };
 
-            _graphicsDevice = Graphics.GraphicsDevice.Create(
-                GraphicsBackend.Default, 
-                validation: true, 
+            _graphicsDevice = GraphicsDevice.Create(
+                GraphicsBackend.Default,
+                validation: true,
                 presentationParameters: presentationParameters);
 
             // Initialize this instance and all systems.

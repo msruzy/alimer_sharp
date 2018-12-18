@@ -33,6 +33,9 @@ namespace Vortice.Graphics.D3D11
         private readonly D3D11Swapchain _mainSwapchain;
 
         /// <inheritdoc/>
+        public override CommandBuffer ImmediateContext => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public override Swapchain MainSwapchain => _mainSwapchain;
 
         public bool SupportsConcurrentResources => _supportsConcurrentResources;
@@ -127,38 +130,6 @@ namespace Vortice.Graphics.D3D11
             }
 
             D3DDevice.Dispose();
-        }
-
-        /// <summary>
-        /// Check if given DirectX11 backend is supported.
-        /// </summary>
-        /// <returns>True if supported, false otherwise.</returns>
-        public static bool IsSupported()
-        {
-            if (_isSupported.HasValue)
-                return _isSupported.Value;
-
-            if (Platform.PlatformType != PlatformType.Windows
-                && Platform.PlatformType != PlatformType.UWP)
-            {
-                _isSupported = false;
-                return false;
-            }
-
-            FeatureLevel supportedFeatureLevel = 0;
-            try
-            {
-                supportedFeatureLevel = SharpDX.Direct3D11.Device.GetSupportedFeatureLevel();
-            }
-            catch (SharpDX.SharpDXException)
-            {
-                // if GetSupportedFeatureLevel() fails, D3D11 is not supported.
-                _isSupported = false;
-                return false;
-            }
-
-            _isSupported = true;
-            return true;
         }
 
         protected override void FrameCore()
