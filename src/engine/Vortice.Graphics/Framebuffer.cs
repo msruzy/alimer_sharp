@@ -17,7 +17,7 @@ namespace Vortice.Graphics
         /// </summary>
         /// <param name="device">The creation device</param>
         /// <param name="colorAttachments">The color attachments.</param>
-        public Framebuffer(GraphicsDevice device, FramebufferAttachment[] colorAttachments)
+        public Framebuffer(GraphicsDevice device, params FramebufferAttachment[] colorAttachments)
             : base(device, GraphicsResourceType.Framebuffer, GraphicsResourceUsage.Default)
         {
             Backend = device.CreateFramebuffer(colorAttachments);

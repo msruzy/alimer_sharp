@@ -7,12 +7,12 @@ using SharpDX.Direct3D12;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal class D3D12Texture : Texture
+    internal class TextureD3D12 : Texture
     {
         public readonly SharpDX.DXGI.Format DXGIFormat;
         public readonly Resource Resource;
 
-        public D3D12Texture(D3D12GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
+        public TextureD3D12(D3D12GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
             : base(device, description)
         {
             DXGIFormat = D3DConvert.Convert(description.Format);
@@ -29,11 +29,6 @@ namespace Vortice.Graphics.D3D12
         protected override void Destroy()
         {
             Resource.Dispose();
-        }
-
-        protected override TextureView CreateTextureViewCore(in TextureViewDescriptor descriptor)
-        {
-            return null;
         }
     }
 }

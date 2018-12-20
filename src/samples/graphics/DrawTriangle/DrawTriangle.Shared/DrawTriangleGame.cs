@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Vortice;
+using Vortice.Assets.Graphics;
 using Vortice.Audio;
 using Vortice.Graphics;
 
@@ -17,12 +18,13 @@ namespace DrawTriangle
     public sealed class DrawTriangleGame : Game
     {
         private GraphicsBuffer _vertexBuffer;
+        private Shader _shader;
 
         protected override void LoadContent()
         {
             base.LoadContent();
 
-            new AudioEngine();
+            // new AudioEngine();
 
             var vertices = new VertexPositionColor[]
             {
@@ -32,8 +34,37 @@ namespace DrawTriangle
             };
             _vertexBuffer = GraphicsDevice.CreateBuffer(BufferUsage.Vertex, vertices);
 
-            // Set swap chain clear color.
-            GraphicsDevice.MainSwapchain.ClearColor = new Color4(0.0f, 0.2f, 0.4f);
+            const string shaderSource = @"struct PSInput
+{
+                float4 position : SV_POSITION;
+                float4 color : COLOR;
+            };
+
+            PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
+{
+                PSInput result;
+
+                result.position = position;
+                result.color = color;
+
+                return result;
+            }
+
+            float4 PSMain(PSInput input) : SV_TARGET
+{
+                return input.color;
+            }
+
+[numthreads(1, 1, 1)]
+        void CSMain(uint3 DTid : SV_DispatchThreadID )
+        {
+        }
+";
+
+            var vertex = ShaderCompiler.Compile(shaderSource, ShaderStages.Vertex, ShaderLanguage.DXC);
+            var pixel = ShaderCompiler.Compile(shaderSource, ShaderStages.Pixel, ShaderLanguage.DXC);
+
+            _shader = GraphicsDevice.CreateShader(vertex, pixel);
         }
 
         protected override void Draw(GameTime time)
@@ -42,11 +73,9 @@ namespace DrawTriangle
 
             // Record commands to default context.
             var commandBuffer = GraphicsDevice.ImmediateContext;
-            var renderPass = GraphicsDevice.MainSwapchain.CurrentRenderPassDescriptor;
-            renderPass.ColorAttachments[0].ClearColor = new Color4(1.0f, 0.0f, 0.0f);
-
-            commandBuffer.BeginRenderPass(renderPass);
-            commandBuffer.EndRenderPass();
+            var clearColor = new Color4(0.0f, 0.2f, 0.4f);
+            //commandBuffer.BeginRenderPass(GraphicsDevice.MainSwapchain.ResourceType, new RenderPassBeginDescriptor();
+            //commandBuffer.EndRenderPass();
             commandBuffer.Commit();
         }
 

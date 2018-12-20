@@ -1,8 +1,9 @@
 <Project>
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <RepoBinPath>$(MSBuildThisFileDirectory)..\bin\</RepoBinPath>
-    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <RepositoryRootDirectory>$(MSBuildThisFileDirectory)..\</RepositoryRootDirectory>
+    <RepoBinPath>$(RepositoryRootDirectory)bin\</RepoBinPath>
+    <BaseIntermediateOutputPath>$(RepositoryRootDirectory)obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
     <BaseOutputPath Condition=" '$(BaseOutputPath)' == '' ">$(RepoBinPath)$(MSBuildProjectName)\</BaseOutputPath>
     <PackageOutputPath>$(RepoBinPath)Packages\$(Configuration)\</PackageOutputPath>
 
@@ -71,7 +72,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <SharpDXVersion>4.2.1-beta0-gcf0727f6b1</SharpDXVersion>
+    <SharpDXVersion>4.2.1-beta0-ga5a2303506</SharpDXVersion>
     <NerdbankGitVersioningVersion>3.0.4-beta</NerdbankGitVersioningVersion>
   </PropertyGroup>
 

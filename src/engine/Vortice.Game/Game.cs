@@ -396,6 +396,10 @@ namespace Vortice
         /// </summary>
         protected virtual void EndDraw()
         {
+            // Present main view content.
+            //MainView.Present();
+
+            // Tick graphics device.
             _graphicsDevice.Frame();
         }
 

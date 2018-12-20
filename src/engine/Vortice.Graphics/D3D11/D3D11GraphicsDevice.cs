@@ -24,16 +24,15 @@ namespace Vortice.Graphics.D3D11
         public readonly Device D3DDevice;
         public readonly Device1 D3DDevice1;
         public readonly FeatureLevel FeatureLevel;
-        public readonly DeviceContext D3DContext;
-        public readonly DeviceContext1 D3DContext1;
-        public readonly UserDefinedAnnotation D3DAnnotation;
+        public readonly DeviceContext D3DImmediateContext;
+        
 
         private readonly bool _supportsConcurrentResources;
         private readonly bool _supportsCommandLists;
-        private readonly D3D11Swapchain _mainSwapchain;
+        private readonly SwapchainD3D11 _mainSwapchain;
 
         /// <inheritdoc/>
-        public override CommandBuffer ImmediateContext => throw new NotImplementedException();
+        public override CommandBuffer ImmediateContext { get; }
 
         /// <inheritdoc/>
         public override Swapchain MainSwapchain => _mainSwapchain;
@@ -91,12 +90,12 @@ namespace Vortice.Graphics.D3D11
             }
 
             FeatureLevel = D3DDevice.FeatureLevel;
-            D3DContext = D3DDevice.ImmediateContext;
+            D3DImmediateContext = D3DDevice.ImmediateContext;
             D3DDevice1 = D3DDevice.QueryInterfaceOrNull<Device1>();
             if (D3DDevice1 != null)
             {
-                D3DContext1 = D3DContext.QueryInterface<DeviceContext1>();
-                D3DAnnotation = D3DContext.QueryInterface<UserDefinedAnnotation>();
+                D3DImmediateContext = D3DImmediateContext.QueryInterface<DeviceContext1>();
+                
             }
 
             // Detect multithreading
@@ -107,19 +106,17 @@ namespace Vortice.Graphics.D3D11
                 Features.Multithreading = true;
             }
 
-            // Create queue's
-            //GraphicsQueue = new D3D11CommandQueue(this);
+            // Create immediate context.
+            ImmediateContext = new CommandBufferD3D11(this, D3DImmediateContext);
 
-            //ImmediateContext = new D3D11CommandContext(this, Device.ImmediateContext1);
-            _mainSwapchain = new D3D11Swapchain(this, presentationParameters);
+            // Create main swap chain.
+            _mainSwapchain = new SwapchainD3D11(this, presentationParameters);
         }
 
         protected override void Destroy()
         {
             _mainSwapchain.Dispose();
-            D3DContext.Dispose();
-            D3DContext1?.Dispose();
-            D3DAnnotation?.Dispose();
+            ImmediateContext.Dispose();
             D3DDevice1?.Dispose();
 
             var deviceDebug = D3DDevice.QueryInterfaceOrNull<DeviceDebug>();
@@ -134,10 +131,13 @@ namespace Vortice.Graphics.D3D11
 
         protected override void FrameCore()
         {
+            // Present the frame.
+            _mainSwapchain.Present();
         }
 
         protected override void WaitIdleCore()
         {
+            D3DImmediateContext.Flush();
         }
 
         protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
@@ -147,12 +147,17 @@ namespace Vortice.Graphics.D3D11
 
         protected override Texture CreateTextureCore(in TextureDescription description)
         {
-            return new D3D11Texture(this, description, nativeTexture: null);
+            return new TextureD3D11(this, description, nativeTexture: null);
+        }
+
+        protected override Shader CreateShaderCore(byte[] vertex, byte[] pixel)
+        {
+            return new ShaderD3D11(this, vertex, pixel);
         }
 
         internal override IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)
         {
-            throw new NotImplementedException();
+            return new FramebufferD3D11(this, colorAttachments);
         }
     }
 }

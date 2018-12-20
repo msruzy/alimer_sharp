@@ -12,6 +12,7 @@ namespace Vortice.Graphics
         Texture,
         Buffer,
         Framebuffer,
+        Shader,
         Pipeline,
     }
 }

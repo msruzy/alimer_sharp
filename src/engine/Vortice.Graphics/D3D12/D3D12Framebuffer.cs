@@ -22,12 +22,12 @@ namespace Vortice.Graphics.D3D12
                 _rtvHandle = device.AllocateDescriptor(DescriptorHeapType.RenderTargetView, colorAttachments.Length);
                 for (var i = 0; i < colorAttachments.Length; i++)
                 {
-                    var d3dTexture = ((D3D12Texture)colorAttachments[i].Texture).Resource;
+                    var d3dTexture = ((TextureD3D12)colorAttachments[i].Texture).Resource;
 
                     var renderTargetViewDesc = new RenderTargetViewDescription
                     {
                         Dimension = RenderTargetViewDimension.Texture2D,
-                        Format = ((D3D12Texture)colorAttachments[i].Texture).DXGIFormat
+                        Format = ((TextureD3D12)colorAttachments[i].Texture).DXGIFormat
                     };
 
                     var rtvHandle = _rtvHandle.GetCpuHandle(i);

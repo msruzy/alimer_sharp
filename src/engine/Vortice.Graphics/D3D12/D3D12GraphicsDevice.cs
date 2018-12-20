@@ -34,7 +34,7 @@ namespace Vortice.Graphics.D3D12
 
         private readonly List<IUnknown>[] _deferredReleases = new List<IUnknown>[RenderLatency];
 
-        private readonly D3D12Swapchain _mainSwapchain;
+        private readonly SwapchainD3D12 _mainSwapchain;
 
         private readonly D3D12Fence _frameFence;
         private long _currentFrameIndex;
@@ -222,7 +222,7 @@ namespace Vortice.Graphics.D3D12
             }
 
             // Create main swap chain.
-            _mainSwapchain = new D3D12Swapchain(this, presentationParameters, RenderLatency);
+            _mainSwapchain = new SwapchainD3D12(this, presentationParameters, RenderLatency);
         }
 
         protected override void Destroy()
@@ -337,7 +337,12 @@ namespace Vortice.Graphics.D3D12
 
         protected override Texture CreateTextureCore(in TextureDescription description)
         {
-            return new D3D12Texture(this, description, nativeTexture: null);
+            return new TextureD3D12(this, description, nativeTexture: null);
+        }
+
+        protected override Shader CreateShaderCore(byte[] vertex, byte[] pixel)
+        {
+            throw new NotImplementedException();
         }
 
         internal override IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)

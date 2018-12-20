@@ -9,7 +9,7 @@ using DXGI = SharpDX.DXGI;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal unsafe class D3D12Swapchain : Swapchain
+    internal unsafe class SwapchainD3D12 : Swapchain
     {
         private readonly int _backbufferCount;
         private readonly int _syncInterval = 1;
@@ -17,10 +17,9 @@ namespace Vortice.Graphics.D3D12
         private readonly DXGI.SwapChain3 _swapChain;
 
         private int _backBufferIndex;
-        private readonly D3D12Texture[] _backbufferTextures;
-        private readonly Framebuffer[] _framebuffers;
+        private readonly TextureD3D12[] _backbufferTextures;
 
-        public D3D12Swapchain(
+        public SwapchainD3D12(
             D3D12GraphicsDevice device,
             PresentationParameters presentationParameters,
             int backbufferCount)
@@ -91,8 +90,7 @@ namespace Vortice.Graphics.D3D12
             }
 
             _backBufferIndex = _swapChain.CurrentBackBufferIndex;
-            _backbufferTextures = new D3D12Texture[_backbufferCount];
-            _framebuffers = new Framebuffer[_backbufferCount];
+            _backbufferTextures = new TextureD3D12[_backbufferCount];
             for (int i = 0; i < _backbufferCount; i++)
             {
                 var backBufferTexture = _swapChain.GetBackBuffer<Resource>(i);
@@ -106,15 +104,10 @@ namespace Vortice.Graphics.D3D12
                     D3D12Convert.Convert(d3dTextureDesc.Flags),
                     (SampleCount)d3dTextureDesc.SampleDescription.Count);
 
-                _backbufferTextures[i] = new D3D12Texture(device, textureDescription, backBufferTexture);
-
-                _framebuffers[i] = new Framebuffer(device, new[]
-                {
-                    new FramebufferAttachment(_backbufferTextures[i])
-                });
+                _backbufferTextures[i] = new TextureD3D12(device, textureDescription, backBufferTexture);
             }
 
-            Initialize(_backbufferTextures);
+            Initialize(_backbufferCount);
         }
 
         /// <inheritdoc/>
@@ -123,8 +116,12 @@ namespace Vortice.Graphics.D3D12
             for (int i = 0; i < _backbufferCount; i++)
             {
                 _backbufferTextures[i].Dispose();
-                _framebuffers[i].Dispose();
             }
+        }
+
+        protected override Texture GetBackbufferTexture(int index)
+        {
+            return _backbufferTextures[index];
         }
 
         protected override int GetBackbufferIndex() => _backBufferIndex;

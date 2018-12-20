@@ -38,22 +38,15 @@ namespace Vortice.Graphics
         }
 
         /// <summary>
-        /// Begin rendering with main swap chain render pass.
-        /// </summary>
-        public void BeginRenderPass()
-        {
-            BeginRenderPass(Device.MainSwapchain.CurrentRenderPassDescriptor);
-        }
-
-        /// <summary>
         /// Begin rendering with given descriptor.
         /// </summary>
-        /// <param name="descriptor">The <see cref="RenderPassDescriptor"/></param>
-        public void BeginRenderPass(RenderPassDescriptor descriptor)
+        /// <param name="framebuffer">The <see cref="Framebuffer"/></param>
+        /// <param name="descriptor">The <see cref="RenderPassBeginDescriptor"/></param>
+        public void BeginRenderPass(Framebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
         {
-            Guard.NotNull(descriptor, nameof(descriptor));
+            Guard.NotNull(framebuffer, nameof(framebuffer));
 
-            BeginRenderPassCore(descriptor);
+            BeginRenderPassCore(framebuffer.Backend, descriptor);
         }
 
         public void EndRenderPass()
@@ -67,7 +60,7 @@ namespace Vortice.Graphics
         }
 
         protected abstract void Destroy();
-        protected abstract void BeginRenderPassCore(RenderPassDescriptor descriptor);
+        internal abstract void BeginRenderPassCore(IFramebuffer framebuffer, in RenderPassBeginDescriptor descriptor);
         protected abstract void EndRenderPassCore();
         protected abstract void CommitCore();
     }

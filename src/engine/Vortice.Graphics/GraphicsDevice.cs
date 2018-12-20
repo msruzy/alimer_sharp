@@ -97,7 +97,7 @@ namespace Vortice.Graphics
 
                 case GraphicsBackend.Direct3D12:
 #if !VORTICE_NO_D3D12
-                    return D3D12.D3D12GraphicsDevice.IsSupported();
+                    return false; //D3D12.D3D12GraphicsDevice.IsSupported();
 #else
                     return false;
 #endif
@@ -172,7 +172,7 @@ namespace Vortice.Graphics
             {
                 case PlatformType.Windows:
                 case PlatformType.UWP:
-                    if (D3D12.D3D12GraphicsDevice.IsSupported())
+                    if (IsSupported(GraphicsBackend.Direct3D12))
                     {
                         return GraphicsBackend.Direct3D12;
                     }
@@ -261,6 +261,11 @@ namespace Vortice.Graphics
             return CreateTextureCore(description);
         }
 
+        public Shader CreateShader(byte[] vertex, byte[] pixel)
+        {
+            return CreateShaderCore(vertex, pixel);
+        }
+
         internal void TrackResource(GraphicsResource resource)
         {
             lock (_resourceSyncRoot)
@@ -301,6 +306,7 @@ namespace Vortice.Graphics
 
         protected abstract GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData);
         protected abstract Texture CreateTextureCore(in TextureDescription description);
+        protected abstract Shader CreateShaderCore(byte[] vertex, byte[] pixel);
 
         internal abstract IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments);
     }

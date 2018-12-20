@@ -6,47 +6,63 @@ using SharpDX.Direct3D11;
 
 namespace Vortice.Graphics.D3D11
 {
-    internal class D3D11CommandBuffer : CommandBuffer
+    internal class CommandBufferD3D11 : CommandBuffer
     {
         private readonly Device _nativeDevice;
         private readonly DeviceContext _context;
+        private readonly DeviceContext1 _context1;
+        private readonly UserDefinedAnnotation _annotation;
+        private readonly bool _isImmediate;
         private readonly bool _needWorkaround;
         private CommandList _commandList;
-        public readonly RenderTargetView[] RenderTargetViews = new RenderTargetView[8];
-        public DepthStencilView DepthStencilView;
+        private FramebufferD3D11 _currentFramebuffer;
 
         public CommandList CommandList => _commandList;
 
-        public D3D11CommandBuffer(D3D11GraphicsDevice device)
+        public CommandBufferD3D11(D3D11GraphicsDevice device, DeviceContext context)
             : base(device)
         {
             _nativeDevice = device.D3DDevice;
-            _context = new DeviceContext(_nativeDevice);
+            _context = context;
+            _context1 = _context.QueryInterfaceOrNull<DeviceContext1>();
+            _annotation = _context.QueryInterfaceOrNull<UserDefinedAnnotation>();
+            _isImmediate = context.TypeInfo == DeviceContextType.Immediate;
 
-            // The runtime emulates command lists.
-            _needWorkaround = !device.SupportsCommandLists;
+            if (!_isImmediate)
+            {
+                // The runtime emulates command lists.
+                _needWorkaround = !device.SupportsCommandLists;
+            }
         }
 
         /// <inheritdoc/>
         protected override void Destroy()
         {
             Reset();
+
+            _annotation?.Dispose();
+            _context1?.Dispose();
             _context.Dispose();
         }
 
         public void Reset()
         {
+            _currentFramebuffer = null;
+
             _commandList?.Dispose();
             _commandList = null;
             _context.ClearState();
         }
 
-        protected override void BeginRenderPassCore(RenderPassDescriptor descriptor)
+        internal override void BeginRenderPassCore(IFramebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
         {
             // Setup color attachments.
+            _currentFramebuffer = (FramebufferD3D11)framebuffer;
+            _context.OutputMerger.SetTargets(_currentFramebuffer.DepthStencilView, _currentFramebuffer.RenderTargetViews);
+
             int renderTargetCount = 0;
 
-            for (var i = 0; i < descriptor.ColorAttachments.Length; ++i)
+            /*for (var i = 0; i < descriptor.ColorAttachments.Length; ++i)
             {
                 ref var colorAttachment = ref descriptor.ColorAttachments[i];
 
@@ -93,7 +109,7 @@ namespace Vortice.Graphics.D3D11
             }
 
             // Set up render targets
-            _context.OutputMerger.SetTargets(DepthStencilView, renderTargetCount, RenderTargetViews);
+            _context.OutputMerger.SetTargets(DepthStencilView, renderTargetCount, RenderTargetViews);*/
         }
 
         protected override void EndRenderPassCore()
@@ -103,8 +119,14 @@ namespace Vortice.Graphics.D3D11
 
         protected override void CommitCore()
         {
-            _commandList = _context.FinishCommandList(false);
-            //((D3D11CommandQueue)Queue).Commit(this);
+            if (_isImmediate)
+            {
+                _context.Flush();
+            }
+            else
+            {
+                _commandList = _context.FinishCommandList(false);
+            }
         }
     }
 }

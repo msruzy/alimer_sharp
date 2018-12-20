@@ -10,12 +10,8 @@ namespace Vortice.Graphics
     /// </summary>
     public abstract class Swapchain : GraphicsResource
     {
-        private RenderPassDescriptor[] _passDescriptors;
-
-        /// <summary>
-        /// The clear color to use for <see cref="CurrentRenderPassDescriptor"/>.
-        /// </summary>
-        public Color4 ClearColor { get; set; } = new Color4(0.0f, 0.0f, 0.0f, 1.0f);
+        private Texture[] _backbufferTextures;
+        private Framebuffer[] _framebuffers;
 
         /// <summary>
         /// Create a new instance of <see cref="Swapchain"/> class.
@@ -26,28 +22,20 @@ namespace Vortice.Graphics
         {
         }
 
-        public RenderPassDescriptor CurrentRenderPassDescriptor
+        protected void Initialize(int count)
         {
-            get
+            _backbufferTextures = new Texture[count];
+            _framebuffers = new Framebuffer[count];
+            for(var i = 0; i < count; i++)
             {
-                var descriptor = _passDescriptors[GetBackbufferIndex()];
-                descriptor.ColorAttachments[0].ClearColor = ClearColor;
-                return descriptor;
+                _backbufferTextures[i] = GetBackbufferTexture(i);
+                _framebuffers[i] = new Framebuffer(Device, new FramebufferAttachment(_backbufferTextures[i]));
             }
         }
 
-        protected void Initialize(Texture[] textures)
-        {
-            //_passDescriptors = new RenderPassDescriptor[textures.Length];
-            //for (var i = 0; i < textures.Length; i++)
-            //{
-            //    _passDescriptors[i] = new RenderPassDescriptor(new[]
-            //    {
-            //        new RenderPassColorAttachmentDescriptor(textures[i].DefaultTextureView)
-            //    });
-            //}
-        }
+        public Framebuffer GetCurrentFramebuffer() => _framebuffers[GetBackbufferIndex()];
 
+        protected abstract Texture GetBackbufferTexture(int index);
         protected abstract int GetBackbufferIndex();
     }
 }

@@ -6,14 +6,15 @@ using SharpDX.Mathematics.Interop;
 using SharpDX.Direct3D11;
 using System;
 using DXGI = SharpDX.DXGI;
+using System.Diagnostics;
 
 namespace Vortice.Graphics.D3D11
 {
-    internal unsafe class D3D11Swapchain : DXGISwapchain
+    internal unsafe class SwapchainD3D11 : DXGISwapchain
     {
-        public readonly D3D11Texture BackbufferTexture;
+        public readonly TextureD3D11 BackbufferTexture;
 
-        public D3D11Swapchain(D3D11GraphicsDevice device, PresentationParameters presentationParameters)
+        public SwapchainD3D11(D3D11GraphicsDevice device, PresentationParameters presentationParameters)
             : base(device, presentationParameters, device.D3DDevice, 2, 1)
         {
             var backBufferTexture = Resource.FromSwapChain<Texture2D>(_swapChain, 0);
@@ -27,8 +28,8 @@ namespace Vortice.Graphics.D3D11
                 D3D11Utils.Convert(d3dTextureDesc.BindFlags),
                 (SampleCount)d3dTextureDesc.SampleDescription.Count);
 
-            BackbufferTexture = new D3D11Texture(device, textureDescription, backBufferTexture);
-            Initialize(new[] { BackbufferTexture });
+            BackbufferTexture = new TextureD3D11(device, textureDescription, backBufferTexture);
+            Initialize(1);
         }
 
         /// <inheritdoc/>
@@ -36,6 +37,12 @@ namespace Vortice.Graphics.D3D11
         {
             base.Destroy();
             BackbufferTexture.Dispose();
+        }
+
+        protected override Texture GetBackbufferTexture(int index)
+        {
+            Debug.Assert(index == 0);
+            return BackbufferTexture;
         }
     }
 }

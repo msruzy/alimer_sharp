@@ -74,6 +74,11 @@ namespace Vortice.Graphics.Vulkan
             throw new NotImplementedException();
         }
 
+        protected override Shader CreateShaderCore(byte[] vertex, byte[] pixel)
+        {
+            throw new NotImplementedException();
+        }
+
         internal override IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)
         {
             throw new NotImplementedException();

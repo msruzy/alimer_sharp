@@ -10,9 +10,6 @@ namespace Vortice.Graphics
     /// </summary>
     public abstract class Texture : GraphicsResource
     {
-        private TextureView _defaultTextureView;
-        private readonly List<TextureView> _textureViews = new List<TextureView>();
-
         /// <summary>
         /// Gets the texture type.
         /// </summary>
@@ -58,8 +55,6 @@ namespace Vortice.Graphics
 		/// </summary>
         public SampleCount Samples { get; }
 
-        public TextureView DefaultTextureView => _defaultTextureView ?? (_defaultTextureView = CreateDefaultTextureView());
-
         /// <summary>
         /// Create a new instance of <see cref="Texture"/> class.
         /// </summary>
@@ -81,37 +76,6 @@ namespace Vortice.Graphics
 
         protected override void Destroy()
         {
-            // Destroy all views created by this texture.
-            foreach (var textureView in _textureViews)
-            {
-                textureView.Destroy();
-            }
-
         }
-
-        public TextureView CreateTextureView(in TextureViewDescriptor descriptor)
-        {
-            if (descriptor.Format == PixelFormat.Unknown)
-            {
-                throw new GraphicsException("Invalid TextureView format");
-            }
-
-            var textureView = CreateTextureViewCore(descriptor);
-            _textureViews.Add(textureView);
-            return textureView;
-        }
-
-        private TextureView CreateDefaultTextureView()
-        {
-            // TODO: add more props
-            var textureViewDesc = new TextureViewDescriptor
-            {
-                Format = Format,
-            };
-
-            return CreateTextureView(textureViewDesc);
-        }
-
-        protected abstract TextureView CreateTextureViewCore(in TextureViewDescriptor descriptor);
     }
 }
