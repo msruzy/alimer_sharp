@@ -75,7 +75,7 @@ namespace Vortice.Graphics
         /// <param name="mipMap">Whether to compute mip levels from width and height, otherwise 1.</param>
         /// <param name="arrayLayers">The array layers count.</param>
         /// <param name="format">The <see cref="PixelFormat"/></param>
-        /// <param name="textureUsage">The texture usage</param>
+        /// <param name="textureUsage">The texture usage.</param>
         /// <param name="samples">The number of samples.</param>
         /// <returns></returns>
         public static TextureDescription Texture2D(
@@ -166,7 +166,7 @@ namespace Vortice.Graphics
         /// <returns>
         /// True if the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter; otherwise, false.
         /// </returns>
-        public static bool operator ==(TextureDescription left, TextureDescription right)
+        public static bool operator ==(in TextureDescription left, in TextureDescription right)
         {
             return left.Equals(right);
         }
@@ -179,7 +179,7 @@ namespace Vortice.Graphics
         /// <returns>
         /// True if the <paramref name="left"/> parameter is not equal to the <paramref name="right"/> parameter; otherwise, false.
         /// </returns>
-        public static bool operator !=(TextureDescription left, TextureDescription right)
+        public static bool operator !=(in TextureDescription left, in TextureDescription right)
         {
             return !left.Equals(right);
         }

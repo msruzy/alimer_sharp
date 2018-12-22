@@ -9,8 +9,8 @@ namespace Vortice.Graphics.Vulkan
     {
         private static bool? _isSupported;
 
-        public VulkanGraphicsDevice(bool validation, PresentationParameters presentationParameters)
-            : base(GraphicsBackend.Vulkan, presentationParameters)
+        public VulkanGraphicsDevice(bool validation)
+            : base(GraphicsBackend.Vulkan)
         {
 
         }
@@ -51,7 +51,7 @@ namespace Vortice.Graphics.Vulkan
         }
 
         public override CommandBuffer ImmediateContext => throw new NotImplementedException();
-        public override Swapchain MainSwapchain => throw new NotImplementedException();
+        public override SwapChain MainSwapchain => throw new NotImplementedException();
 
         protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
         {
@@ -79,7 +79,12 @@ namespace Vortice.Graphics.Vulkan
             throw new NotImplementedException();
         }
 
-        internal override IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)
+        internal override GPUFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override GPUSwapChain CreateSwapChain(in SwapChainDescriptor descriptor)
         {
             throw new NotImplementedException();
         }

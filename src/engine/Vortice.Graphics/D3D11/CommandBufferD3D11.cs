@@ -19,7 +19,7 @@ namespace Vortice.Graphics.D3D11
 
         public CommandList CommandList => _commandList;
 
-        public CommandBufferD3D11(D3D11GraphicsDevice device, DeviceContext context)
+        public CommandBufferD3D11(GPUDeviceD3D11 device, DeviceContext context)
             : base(device)
         {
             _nativeDevice = device.D3DDevice;
@@ -54,7 +54,7 @@ namespace Vortice.Graphics.D3D11
             _context.ClearState();
         }
 
-        internal override void BeginRenderPassCore(IFramebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
+        internal override void BeginRenderPassCore(GPUFramebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
         {
             // Setup color attachments.
             _currentFramebuffer = (FramebufferD3D11)framebuffer;

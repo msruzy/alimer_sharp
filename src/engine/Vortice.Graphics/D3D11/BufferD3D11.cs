@@ -4,22 +4,22 @@
 using System;
 using SharpDX.Direct3D11;
 using Buffer = SharpDX.Direct3D11.Buffer;
+using static Vortice.Graphics.D3D11.Utils;
 
 namespace Vortice.Graphics.D3D11
 {
-    internal class D3D11Buffer : GraphicsBuffer
+    internal class BufferD3D11 : GPUBuffer
     {
         public readonly Buffer Resource;
 
-        public D3D11Buffer(D3D11GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
-            : base(device, descriptor)
+        public BufferD3D11(GPUDeviceD3D11 device, in BufferDescriptor descriptor, IntPtr initialData)
         {
             var description = new BufferDescription()
             {
                 SizeInBytes = descriptor.SizeInBytes,
                 Usage = (ResourceUsage)descriptor.Usage,
-                BindFlags = D3D11Utils.Convert(descriptor.BufferUsage),
-                CpuAccessFlags = D3D11Utils.Convert(descriptor.Usage),
+                BindFlags = Convert(descriptor.BufferUsage),
+                CpuAccessFlags = Convert(descriptor.Usage),
                 OptionFlags = ResourceOptionFlags.None,
                 StructureByteStride = 0
             };
@@ -33,9 +33,15 @@ namespace Vortice.Graphics.D3D11
         }
 
         /// <inheritdoc/>
-        protected override void Destroy()
+        public override void Destroy()
         {
             Resource.Dispose();
         }
+
+        /// <summary>
+        /// Implicit casting operator to <see cref="SharpDX.Direct3D11.Buffer"/>
+        /// </summary>
+        /// <param name="buffer">The <see cref="BufferD3D11"/> to convert from.</param>
+        public static implicit operator Buffer(BufferD3D11 buffer) => buffer.Resource;
     }
 }

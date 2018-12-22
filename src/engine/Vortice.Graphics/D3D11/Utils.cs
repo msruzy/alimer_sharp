@@ -5,7 +5,7 @@ using SharpDX.Direct3D11;
 
 namespace Vortice.Graphics.D3D11
 {
-    internal static class D3D11Utils
+    internal static class Utils
     {
         public static CpuAccessFlags Convert(GraphicsResourceUsage usage)
         {
@@ -114,6 +114,21 @@ namespace Vortice.Graphics.D3D11
             }
 
             return bindFlags;
+        }
+
+        public static TextureDescription Convert(Texture2DDescription description)
+        {
+            return new TextureDescription(
+                TextureType.Texture2D,
+                description.Width,
+                description.Height,
+                1,
+                description.MipLevels,
+                description.ArraySize,
+                D3DConvert.Convert(description.Format),
+                Convert(description.BindFlags),
+                (SampleCount)description.SampleDescription.Count
+                );
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Vortice.Graphics.D3D12
             _commandList.Dispose();
         }
 
-        internal override void BeginRenderPassCore(IFramebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
+        internal override void BeginRenderPassCore(GPUFramebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
         {
         }
 

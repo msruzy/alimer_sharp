@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
+using Vortice.Graphics;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -19,9 +20,6 @@ namespace Vortice
 
         /// <inheritdoc/>
         public override Size ClientSize => _clientSize;
-
-        /// <inheritdoc/>
-        public override object NativeHandle => _coreWindow;
 
         public UAPView(string title)
             : base(title)
@@ -59,9 +57,8 @@ namespace Vortice
 
             _coreWindow.SizeChanged += CoreWindow_SizeChanged;
 
-            // Rase and set handle.
-            //_swapChainHandle = SwapChainHandle.CreateUAPCoreWindow(window);
-            //OnHandleCreated(_swapChainHandle);
+            // Set handle.
+            OnHandleCreated(SwapChainHandle.CreateUWPCoreWindow(_coreWindow));
         }
 
         void IFrameworkView.Load(string entryPoint)

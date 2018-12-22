@@ -50,7 +50,7 @@ namespace Vortice.Graphics.D3D12
         public override CommandBuffer ImmediateContext { get; }
 
         /// <inheritdoc/>
-        public override Swapchain MainSwapchain => _mainSwapchain;
+        public override SwapChain MainSwapchain => _mainSwapchain;
 
 
         public long CurrentCPUFrame => _currentCPUFrame;
@@ -112,8 +112,8 @@ namespace Vortice.Graphics.D3D12
             return true;
         }
 
-        public D3D12GraphicsDevice(bool validation, PresentationParameters presentationParameters)
-            : base(GraphicsBackend.Direct3D12, presentationParameters)
+        public D3D12GraphicsDevice(bool validation)
+            : base(GraphicsBackend.Direct3D12)
         {
 #if DEBUG
             Configuration.EnableObjectTracking = true;
@@ -220,9 +220,6 @@ namespace Vortice.Graphics.D3D12
             {
                 _descriptorAllocator[i] = new DescriptorAllocator(this, (DescriptorHeapType)i);
             }
-
-            // Create main swap chain.
-            _mainSwapchain = new SwapchainD3D12(this, presentationParameters, RenderLatency);
         }
 
         protected override void Destroy()
@@ -235,7 +232,7 @@ namespace Vortice.Graphics.D3D12
             _mainSwapchain.Dispose();
 
             // Clear DescriptorHeap Pools.
-            lock(_heapAllocationLock)
+            lock (_heapAllocationLock)
             {
                 foreach (var heap in _descriptorHeapPool)
                 {
@@ -345,9 +342,14 @@ namespace Vortice.Graphics.D3D12
             throw new NotImplementedException();
         }
 
-        internal override IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)
+        internal override GPUFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)
         {
             return new D3D12Framebuffer(this, colorAttachments);
+        }
+
+        internal override GPUSwapChain CreateSwapChain(in SwapChainDescriptor descriptor)
+        {
+            throw new NotImplementedException();
         }
 
         public void DeferredRelease<T>(ref T resource, bool forceDeferred = false) where T : IUnknown

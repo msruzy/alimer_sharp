@@ -4,7 +4,7 @@
 namespace Vortice.Graphics
 {
     /// <summary>
-    /// Defines the type of <see cref="GraphicsDeviceFactory"/> to create.
+    /// Defines the type of <see cref="GraphicsDevice"/> to create.
     /// </summary>
     public enum GraphicsBackend
     {

@@ -60,7 +60,7 @@ namespace Vortice.Graphics
         }
 
         protected abstract void Destroy();
-        internal abstract void BeginRenderPassCore(IFramebuffer framebuffer, in RenderPassBeginDescriptor descriptor);
+        internal abstract void BeginRenderPassCore(GPUFramebuffer framebuffer, in RenderPassBeginDescriptor descriptor);
         protected abstract void EndRenderPassCore();
         protected abstract void CommitCore();
     }

@@ -2,13 +2,14 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System.ComponentModel;
+using Vortice.Graphics;
 
 namespace Vortice
 {
     /// <summary>
     /// Defines an <see cref="Game"/> view.
     /// </summary>
-    public abstract class View
+    public abstract class View : SwapChain
     {
         protected string _title;
 
@@ -48,7 +49,7 @@ namespace Vortice
             }
         }
 
-        public abstract object NativeHandle { get; }
+        public SwapChainHandle Handle { get; private set; }
 
         protected View(string title)
         {
@@ -88,6 +89,33 @@ namespace Vortice
         protected virtual void OnClosed()
         {
             Closed?.Invoke(this);
+        }
+
+        internal void SetDevice(GraphicsDevice device)
+        {
+            Device = device;
+            if (Handle != null)
+            {
+                OnHandleCreated(Handle);
+            }
+        }
+
+        protected void OnHandleCreated(SwapChainHandle handle)
+        {
+            Handle = handle;
+            if (Device == null)
+                return;
+
+            var clientSize = ClientSize;
+
+            Configure(new SwapChainDescriptor
+            {
+                Width = (int)clientSize.Width,
+                Height = (int)clientSize.Height,
+                PreferredColorFormat = PixelFormat.BGRA8UNorm,
+                PreferredDepthStencilFormat = PixelFormat.Depth24UNormStencil8,
+                Handle = handle
+            });
         }
 
         protected abstract void Destroy();

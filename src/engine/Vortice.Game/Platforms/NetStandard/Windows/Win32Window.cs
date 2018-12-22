@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using Vortice.Graphics;
 using static Vortice.Windows.User32;
 
 namespace Vortice.Windows
@@ -14,7 +15,7 @@ namespace Vortice.Windows
         private readonly WindowsApplicationHost _host;
         private IntPtr _hwnd;
 
-        public IntPtr Handle => _hwnd;
+        public IntPtr HWnd => _hwnd;
 
         /// <inheritdoc/>
         public override bool IsMinimized => IsIconic(_hwnd);
@@ -28,9 +29,6 @@ namespace Vortice.Windows
                 return new Size(rect.Right, rect.Bottom)/* / Scaling*/;
             }
         }
-
-        /// <inheritdoc/>
-        public override object NativeHandle => _hwnd;
 
         public Win32Window(WindowsApplicationHost host, string title, int width, int height)
             : base(title)
@@ -130,7 +128,7 @@ namespace Vortice.Windows
             ShowWindow(_hwnd, ShowWindowCommand.Normal);
 
             // Rase and set handle.
-            //RaiseHandleCreated(SwapChainHandle.CreateWin32Handle(_hwnd, _platform.HInstance));
+            OnHandleCreated(SwapChainHandle.CreateWin32(_hwnd, host.HInstance));
         }
 
         internal void HandleDestroy()

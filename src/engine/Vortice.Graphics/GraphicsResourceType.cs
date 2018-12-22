@@ -8,7 +8,6 @@ namespace Vortice.Graphics
     /// </summary>
     public enum GraphicsResourceType
     {
-        Swapchain,
         Texture,
         Buffer,
         Framebuffer,

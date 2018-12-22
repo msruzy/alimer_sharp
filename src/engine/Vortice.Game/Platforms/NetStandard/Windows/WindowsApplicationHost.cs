@@ -100,6 +100,8 @@ namespace Vortice.Windows
 
         public override void Run()
         {
+            Game.InitializeBeforeRun();
+
             while (!_exitRequested)
             {
                 if (!_paused)
@@ -149,7 +151,7 @@ namespace Vortice.Windows
 
         internal void RegisterWindow(Win32Window window)
         {
-            _windows.Add(window.Handle, window);
+            _windows.Add(window.HWnd, window);
         }
 
         internal bool RemoveWindow(IntPtr windowId) => _windows.Remove(windowId);
@@ -315,7 +317,7 @@ namespace Vortice.Windows
                         return IntPtr.Zero;
 
                     case WindowMessage.Destroy:
-                        if (window.Handle != IntPtr.Zero)
+                        if (window.HWnd != IntPtr.Zero)
                         {
                             window.HandleDestroy();
                         }

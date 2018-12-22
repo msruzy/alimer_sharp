@@ -257,13 +257,13 @@ namespace Vortice
                 throw new InvalidOperationException("Cannot run this instance while it is already running");
             }
 
-            if (!_host.IsAsyncLoop)
-            {
-                InitializeBeforeRun();
-            }
-
             try
             {
+                // Create GPU device first.
+                _graphicsDevice = GraphicsDevice.Create(GraphicsBackend.Default, validation: true);
+                MainView.SetDevice(_graphicsDevice);
+
+                // Enter main loop.
                 _host.Run();
 
                 if (!_host.IsAsyncLoop)
@@ -397,28 +397,14 @@ namespace Vortice
         protected virtual void EndDraw()
         {
             // Present main view content.
-            //MainView.Present();
+            MainView.Present();
 
             // Tick graphics device.
             _graphicsDevice.Frame();
         }
 
-        private void InitializeBeforeRun()
+        internal void InitializeBeforeRun()
         {
-            // Create graphics device.
-            var clientSize = MainView.ClientSize;
-            var presentationParameters = new PresentationParameters
-            {
-                BackBufferWidth = (int)clientSize.Width,
-                BackBufferHeight = (int)clientSize.Height,
-                DeviceWindowHandle = MainView.NativeHandle
-            };
-
-            _graphicsDevice = GraphicsDevice.Create(
-                GraphicsBackend.Default,
-                validation: true,
-                presentationParameters: presentationParameters);
-
             // Initialize this instance and all systems.
             Initialize();
 

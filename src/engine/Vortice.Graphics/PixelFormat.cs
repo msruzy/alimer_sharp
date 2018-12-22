@@ -14,34 +14,53 @@ namespace Vortice.Graphics
         Unknown = 0,
 
         R8UNorm,
-        RG8UNorm,
-        RGBA8UNorm,
-        BGRA8UNorm,
+        R8SNorm,
 
+        R16UNorm,
+        R16SNorm,
+
+        RG8UNorm,
+        RG8SNorm,
+
+        RG16UNorm,
+        RG16SNorm,
+
+        RGBA8UNorm,
+        RGBA8UNormSrgb,
+        RGBA8SNorm,
+
+        BGRA8UNorm,
+        BGRA8UNormSrgb,
+
+        // Depth-stencil
         Depth16UNorm,
-        Depth32Float,
         Depth24UNormStencil8,
+        Depth32Float,
         Depth32FloatStencil8,
 
-        BC1,
-        BC1_sRGB,
-        BC2,
-        BC2_sRGB,
-        BC3,
-        BC3_sRGB,
-        BC4UNorm,
-        BC4SNorm,
-        BC5UNorm,
-        BC5SNorm,
+        BC1UNorm,       // DXT1
+        BC1UNormSrgb,
+        BC2UNorm,       // DXT3
+        BC2UNormSrgb,
+        BC3UNorm,       // DXT5
+        BC3UNormSrgb,
+        BC4UNorm,   // RGTC Unsigned Red
+        BC4SNorm,   // RGTC Signed Red
+        BC5UNorm,   // RGTC Unsigned RG
+        BC5SNorm,   // RGTC Signed RG
 
         /// <summary>
         /// Compressed format with four floating-point components.
         /// </summary>
-        BC6HSFloat,
+        BC6HS16,
 
         /// <summary>
         /// Compressed format with four unsigned floating-point components.
         /// </summary>
-        BC6HUFloat,
+        BC6HU16,
+
+        BC7UNorm,
+        BC7UNormSrgb,
+        Count
     }
 }

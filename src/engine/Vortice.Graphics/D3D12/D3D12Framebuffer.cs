@@ -7,7 +7,7 @@ using SharpDX.Direct3D12;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal class D3D12Framebuffer : IFramebuffer
+    internal class D3D12Framebuffer : GPUFramebuffer
     {
         public readonly D3D12GraphicsDevice Device;
         private readonly DescriptorHandle _rtvHandle = default;
@@ -36,7 +36,7 @@ namespace Vortice.Graphics.D3D12
             }
         }
 
-        public void Destroy()
+        public override void Destroy()
         {
         }
     }

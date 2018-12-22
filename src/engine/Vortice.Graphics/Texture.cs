@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
-
 namespace Vortice.Graphics
 {
     /// <summary>
     /// Defines a graphics texture class.
     /// </summary>
-    public abstract class Texture : GraphicsResource
+    public class Texture : GraphicsResource
     {
+        internal readonly GPUTexture _backend;
+
         /// <summary>
         /// Gets the texture type.
         /// </summary>
@@ -63,6 +63,12 @@ namespace Vortice.Graphics
         protected Texture(GraphicsDevice device, in TextureDescription description)
             : base(device, GraphicsResourceType.Texture, GraphicsResourceUsage.Default)
         {
+            Guard.IsTrue(description.TextureType != TextureType.Unknown, nameof(description), $"TextureType cannot be {nameof(TextureType.Unknown)}");
+            Guard.MustBeGreaterThanOrEqualTo(description.Width, 1, nameof(description.Width));
+            Guard.MustBeGreaterThanOrEqualTo(description.Height, 1, nameof(description.Height));
+            Guard.MustBeGreaterThanOrEqualTo(description.Depth, 1, nameof(description.Depth));
+
+            _backend = device.CreateTexture(description);
             TextureType = description.TextureType;
             Width = description.Width;
             Height = description.Height;
@@ -72,6 +78,21 @@ namespace Vortice.Graphics
             Format = description.Format;
             TextureUsage = description.TextureUsage;
             Samples = description.Samples;
+        }
+
+        internal Texture(GraphicsDevice device, GPUTexture backend)
+            : base(device, GraphicsResourceType.Texture, GraphicsResourceUsage.Default)
+        {
+            _backend = backend;
+            TextureType = backend.TextureType;
+            Width = backend.Width;
+            Height = backend.Height;
+            Depth = backend.Depth;
+            MipLevels = backend.MipLevels;
+            ArrayLayers = backend.ArrayLayers;
+            Format = backend.Format;
+            TextureUsage = backend.TextureUsage;
+            Samples = backend.Samples;
         }
 
         protected override void Destroy()

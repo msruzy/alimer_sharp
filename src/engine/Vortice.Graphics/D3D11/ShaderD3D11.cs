@@ -10,7 +10,7 @@ namespace Vortice.Graphics.D3D11
         public readonly VertexShader VertexShader;
         public readonly PixelShader PixelShader;
 
-        public ShaderD3D11(D3D11GraphicsDevice device, byte[] vertex, byte[] pixel)
+        public ShaderD3D11(GPUDeviceD3D11 device, byte[] vertex, byte[] pixel)
             : base(device, isCompute: false)
         {
             VertexShader = new VertexShader(device.D3DDevice, vertex);

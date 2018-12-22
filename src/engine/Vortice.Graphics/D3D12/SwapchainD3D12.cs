@@ -9,7 +9,7 @@ using DXGI = SharpDX.DXGI;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal unsafe class SwapchainD3D12 : Swapchain
+    internal unsafe class SwapchainD3D12 : GPUSwapChain
     {
         private readonly int _backbufferCount;
         private readonly int _syncInterval = 1;
@@ -21,14 +21,14 @@ namespace Vortice.Graphics.D3D12
 
         public SwapchainD3D12(
             D3D12GraphicsDevice device,
-            PresentationParameters presentationParameters,
+            SwapChainDescriptor presentationParameters,
             int backbufferCount)
             : base(device)
         {
             _backbufferCount = backbufferCount;
 
-            var width = Math.Max(presentationParameters.BackBufferWidth, 1);
-            var height = Math.Max(presentationParameters.BackBufferHeight, 1);
+            var width = Math.Max(presentationParameters.Width, 1);
+            var height = Math.Max(presentationParameters.Height, 1);
 
             switch (presentationParameters.DeviceWindowHandle)
             {

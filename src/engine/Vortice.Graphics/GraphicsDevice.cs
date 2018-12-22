@@ -27,11 +27,6 @@ namespace Vortice.Graphics
         public bool Validation { get; protected set; }
 
         /// <summary>
-        /// Gets the main swap chain <see cref="PresentationParameters"/>.
-        /// </summary>
-        public PresentationParameters PresentationParameters { get; }
-
-        /// <summary>
         /// Gets the features of this device.
         /// </summary>
         public GraphicsDeviceFeatures Features { get; }
@@ -42,21 +37,14 @@ namespace Vortice.Graphics
         public abstract CommandBuffer ImmediateContext { get; }
 
         /// <summary>
-        /// Gets the main <see cref="Swapchain"/> created with device.
-        /// </summary>
-        public abstract Swapchain MainSwapchain { get; }
-
-        /// <summary>
         /// Create new instance of <see cref="GraphicsDevice"/> class.
         /// </summary>
         /// <param name="backend"></param>
-        /// <param name="presentationParameters"></param>
-        protected GraphicsDevice(GraphicsBackend backend, PresentationParameters presentationParameters)
+        protected GraphicsDevice(GraphicsBackend backend)
         {
             Guard.IsTrue(backend != GraphicsBackend.Default, nameof(backend), "Invalid backend");
 
             Backend = backend;
-            PresentationParameters = presentationParameters;
             Features = new GraphicsDeviceFeatures();
         }
 
@@ -117,47 +105,46 @@ namespace Vortice.Graphics
         /// <summary>
         /// Create new instance of <see cref="GraphicsDevice"/>
         /// </summary>
-        /// <param name="backend">The type of <see cref="GraphicsBackend"/></param>
+        /// <param name="preferredBackend">The preferred of <see cref="GraphicsBackend"/></param>
         /// <param name="validation">Whether to enable validation if supported.</param>
-        /// <param name="presentationParameters">The main swap chain parameters or null if headless.</param>
         /// <returns>New instance of <see cref="GraphicsDevice"/>.</returns>
-        public static GraphicsDevice Create(GraphicsBackend backend, bool validation, PresentationParameters presentationParameters)
+        public static GraphicsDevice Create(GraphicsBackend preferredBackend, bool validation)
         {
-            if (backend == GraphicsBackend.Default)
+            if (preferredBackend == GraphicsBackend.Default)
             {
-                backend = GetDefaultGraphicsPlatform(Platform.PlatformType);
+                preferredBackend = GetDefaultGraphicsPlatform(Platform.PlatformType);
             }
 
-            if (!IsSupported(backend))
+            if (!IsSupported(preferredBackend))
             {
-                throw new GraphicsException($"Backend {backend} is not supported");
+                throw new GraphicsException($"Backend {preferredBackend} is not supported");
             }
 
-            switch (backend)
+            switch (preferredBackend)
             {
                 case GraphicsBackend.Direct3D11:
 #if !VORTICE_NO_D3D11
-                    return new D3D11.D3D11GraphicsDevice(validation, presentationParameters);
+                    return new D3D11.GPUDeviceD3D11(validation);
 #else
                     throw new GraphicsException($"{GraphicsBackend.Direct3D11} Backend is not supported");
 #endif
 
                 case GraphicsBackend.Direct3D12:
 #if !VORTICE_NO_D3D12
-                    return new D3D12.D3D12GraphicsDevice(validation, presentationParameters);
+                    return new D3D12.D3D12GraphicsDevice(validation);
 #else
                     throw new GraphicsException($"{GraphicsBackend.Direct3D12} Backend is not supported");
 #endif
 
                 case GraphicsBackend.Vulkan:
 #if !VORTICE_NO_D3D12
-                    return new Vulkan.VulkanGraphicsDevice(validation, presentationParameters);
+                    return new Vulkan.VulkanGraphicsDevice(validation);
 #else
                     throw new GraphicsException($"{GraphicsBackend.Vulkan} Backend is not supported");
 #endif
 
                 default:
-                    throw new GraphicsException($"Invalid {backend} backend");
+                    throw new GraphicsException($"Invalid {preferredBackend} backend");
             }
         }
 
@@ -251,16 +238,6 @@ namespace Vortice.Graphics
                 initialData);
         }
 
-        public Texture CreateTexture(in TextureDescription description)
-        {
-            Guard.IsTrue(description.TextureType != TextureType.Unknown, nameof(description), $"TextureType cannot be {nameof(TextureType.Unknown)}");
-            Guard.MustBeGreaterThanOrEqualTo(description.Width, 1, nameof(description.Width));
-            Guard.MustBeGreaterThanOrEqualTo(description.Height, 1, nameof(description.Height));
-            Guard.MustBeGreaterThanOrEqualTo(description.Depth, 1, nameof(description.Depth));
-
-            return CreateTextureCore(description);
-        }
-
         public Shader CreateShader(byte[] vertex, byte[] pixel)
         {
             return CreateShaderCore(vertex, pixel);
@@ -305,9 +282,11 @@ namespace Vortice.Graphics
         protected abstract void WaitIdleCore();
 
         protected abstract GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData);
-        protected abstract Texture CreateTextureCore(in TextureDescription description);
+        internal abstract GPUTexture CreateTexture(in TextureDescription description);
         protected abstract Shader CreateShaderCore(byte[] vertex, byte[] pixel);
 
-        internal abstract IFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments);
+        internal abstract GPUFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment);
+
+        internal abstract GPUSwapChain CreateSwapChain(in SwapChainDescriptor descriptor);
     }
 }
