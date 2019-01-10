@@ -35,11 +35,12 @@ namespace Vortice.Graphics
                 case Win32SwapChainHandle win32Handle:
                     {
                         // Check tearing support.
-                        var allowTearing = false;
+                        RawBool allowTearing = false;
                         var dxgiFactory5 = dxgiFactory.QueryInterfaceOrNull<Factory5>();
                         if (dxgiFactory5 != null)
                         {
-                            if (dxgiFactory5.PresentAllowTearing)
+                            dxgiFactory5.CheckFeatureSupport(Feature.PresentAllowTearing, new IntPtr(&allowTearing), sizeof(RawBool));
+                            if (allowTearing)
                             {
                                 // Recommended to always use tearing if supported when using a sync interval of 0.
                                 _syncInterval = 0;
