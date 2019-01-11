@@ -10,7 +10,7 @@ using DXGI = SharpDX.DXGI;
 
 namespace Vortice.Graphics.D3D11
 {
-    internal unsafe class GPUDeviceD3D11 : GraphicsDevice
+    internal unsafe class DeviceD3D11 : GraphicsDevice
     {
         private static readonly FeatureLevel[] s_featureLevels = new FeatureLevel[]
         {
@@ -38,7 +38,7 @@ namespace Vortice.Graphics.D3D11
         public bool SupportsConcurrentResources => _supportsConcurrentResources;
         public bool SupportsCommandLists => _supportsCommandLists;
 
-        public GPUDeviceD3D11(bool validation)
+        public DeviceD3D11(bool validation)
             : base(GraphicsBackend.Direct3D11)
         {
 #if DEBUG
@@ -140,29 +140,29 @@ namespace Vortice.Graphics.D3D11
             D3DImmediateContext.Flush();
         }
 
-        protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
+        protected override GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData)
         {
             return null;
             //return new BufferD3D11(this, descriptor, initialData);
         }
 
-        internal override GPUTexture CreateTexture(in TextureDescription description)
+        protected override Texture CreateTextureImpl(in TextureDescription description)
         {
             return new TextureD3D11(this, description);
         }
 
-        protected override Shader CreateShaderCore(byte[] vertex, byte[] pixel)
+        protected override Shader CreateShaderImpl(byte[] vertex, byte[] pixel)
         {
             return null;
             //return new ShaderD3D11(this, vertex, pixel);
         }
 
-        internal override GPUFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
+        protected override Framebuffer CreateFramebufferImpl(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
         {
             return new FramebufferD3D11(this, colorAttachments, depthStencilAttachment);
         }
 
-        internal override GPUSwapChain CreateSwapChain(in SwapChainDescriptor descriptor)
+        protected override SwapChain CreateSwapChainImpl(in SwapChainDescriptor descriptor)
         {
             return new SwapchainD3D11(this, descriptor);
         }

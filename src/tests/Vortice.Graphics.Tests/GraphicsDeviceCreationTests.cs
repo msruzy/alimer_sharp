@@ -8,10 +8,9 @@ namespace Vortice.Graphics.Tests
     public abstract class GraphicsDeviceCreationTests : GraphicsDeviceTestBase
     {
         protected GraphicsDeviceCreationTests(
-            GraphicsBackend backend = GraphicsBackend.Default,
-            bool validation = false,
-            PresentationParameters presentationParameters = null)
-            : base(backend, validation, presentationParameters)
+            GraphicsBackend backend,
+            bool validation = false)
+            : base(backend, validation)
         {
         }
 
@@ -31,9 +30,9 @@ namespace Vortice.Graphics.Tests
 #endif
 
 #if TEST_D3D12
-    public class D312GpuFactoryTests : GraphicsDeviceCreationTests
+    public class D3D12GpuFactoryTests : GraphicsDeviceCreationTests
     {
-        public D312GpuFactoryTests() : base(GraphicsBackend.Direct3D12) { }
+        public D3D12GpuFactoryTests() : base(GraphicsBackend.Direct3D12) { }
     }
 #endif
 

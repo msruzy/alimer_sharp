@@ -64,7 +64,7 @@ namespace DrawTriangle
             var vertex = ShaderCompiler.Compile(shaderSource, ShaderStages.Vertex, ShaderLanguage.DXC);
             var pixel = ShaderCompiler.Compile(shaderSource, ShaderStages.Pixel, ShaderLanguage.DXC);
 
-            _shader = GraphicsDevice.CreateShader(vertex, pixel);
+            //_shader = GraphicsDevice.CreateShader(vertex, pixel);
         }
 
         protected override void Draw(GameTime time)
@@ -74,8 +74,8 @@ namespace DrawTriangle
             // Record commands to default context.
             var commandBuffer = GraphicsDevice.ImmediateContext;
             var clearColor = new Color4(0.0f, 0.2f, 0.4f);
-            //commandBuffer.BeginRenderPass(GraphicsDevice.MainSwapchain.ResourceType, new RenderPassBeginDescriptor();
-            //commandBuffer.EndRenderPass();
+            commandBuffer.BeginRenderPass(MainView.SwapChain.CurrentFramebuffer, new RenderPassBeginDescriptor());
+            commandBuffer.EndRenderPass();
             commandBuffer.Commit();
         }
 

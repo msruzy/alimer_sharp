@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using SharpDX.Direct3D12;
 
 namespace Vortice.Graphics.D3D12
@@ -12,7 +10,7 @@ namespace Vortice.Graphics.D3D12
         public readonly SharpDX.DXGI.Format DXGIFormat;
         public readonly Resource Resource;
 
-        public TextureD3D12(D3D12GraphicsDevice device, in TextureDescription description, Resource nativeTexture)
+        public TextureD3D12(DeviceD3D12 device, in TextureDescription description, Resource nativeTexture)
             : base(device, description)
         {
             DXGIFormat = D3DConvert.Convert(description.Format);

@@ -1,8 +1,9 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
+using System;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
-using SharpDX.DXGI;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -75,6 +76,45 @@ namespace Vortice.Graphics.D3D12
             }
 
             return flags;
+        }
+
+        public static unsafe FeatureLevel CheckMaxSupportedFeatureLevel(this Device device, params FeatureLevel[] levels)
+        {
+            fixed (FeatureLevel* levelsPtr = &levels[0])
+            {
+                var featureData = new FeatureDataFeatureLevels
+                {
+                    FeatureLevelCount = levels.Length,
+                    FeatureLevelsRequestedPointer = new IntPtr(levelsPtr)
+                };
+
+                device.CheckFeatureSupport(Feature.FeatureLevels, ref featureData);
+                return featureData.MaxSupportedFeatureLevel;
+            }
+        }
+
+        public static unsafe FeatureDataShaderModel CheckShaderModel(this Device device, ShaderModel highestShaderModel)
+        {
+            var featureData = new FeatureDataShaderModel
+            {
+                HighestShaderModel = highestShaderModel
+            };
+            device.CheckFeatureSupport(Feature.ShaderModel, ref featureData);
+            return featureData;
+        }
+
+        public static unsafe FeatureDataD3D12Options1 GetD3D12Options1(this Device device)
+        {
+            var featureData = new FeatureDataD3D12Options1();
+            device.CheckFeatureSupport(Feature.D3D12Options1, ref featureData);
+            return featureData;
+        }
+
+        public static unsafe FeatureDataGpuVirtualAddressSupport GetGpuVirtualAddressSupport(this Device device)
+        {
+            var featureData = new FeatureDataGpuVirtualAddressSupport();
+            device.CheckFeatureSupport(Feature.GpuVirtualAddressSupport, ref featureData);
+            return featureData;
         }
     }
 }

@@ -9,28 +9,27 @@ using DXGI = SharpDX.DXGI;
 
 namespace Vortice.Graphics
 {
-    internal abstract class SwapChainDXGI : GPUSwapChain
+    internal abstract class SwapChainDXGI : SwapChain
     {
         private readonly int _syncInterval = 1;
         private readonly PresentFlags _presentFlags;
-        private DXGI.Format _backBufferFormat = Format.B8G8R8A8_UNorm;
         protected readonly DXGI.SwapChain _swapChain;
         protected int _currentBackBuffer;
 
-        public DXGI.Format BackBufferFormat => _backBufferFormat;
-
         protected unsafe SwapChainDXGI(
+            GraphicsDevice device,
+            SwapChainDescriptor descriptor,
             Factory1 dxgiFactory,
-            SwapChainDescriptor presentationParameters,
             ComObject deviceOrCommandQueue,
             int bufferCount,
             int backBufferCount)
+            : base(device, descriptor)
         {
             BackBufferCount = backBufferCount;
-            var width = Math.Max(presentationParameters.Width, 1);
-            var height = Math.Max(presentationParameters.Height, 1);
+            var width = Math.Max(descriptor.Width, 1);
+            var height = Math.Max(descriptor.Height, 1);
 
-            switch (presentationParameters.Handle)
+            switch (descriptor.Handle)
             {
                 case Win32SwapChainHandle win32Handle:
                     {
@@ -58,7 +57,7 @@ namespace Vortice.Graphics
                             {
                                 Width = width,
                                 Height = height,
-                                Format = _backBufferFormat,
+                                Format = BackBufferFormat,
                                 Stereo = false,
                                 SampleDescription = new DXGI.SampleDescription(1, 0),
                                 Usage = DXGI.Usage.RenderTargetOutput,
@@ -86,11 +85,11 @@ namespace Vortice.Graphics
                             {
                                 BufferCount = bufferCount,
                                 IsWindowed = true,
-                                ModeDescription = new ModeDescription(width, height, new Rational(60, 1), _backBufferFormat),
+                                ModeDescription = new ModeDescription(width, height, new Rational(60, 1), BackBufferFormat),
                                 OutputHandle = win32Handle.HWnd,
                                 SampleDescription = new SampleDescription(1, 0),
                                 SwapEffect = SwapEffect.Discard,
-                                Usage = Usage.BackBuffer | Usage.RenderTargetOutput
+                                Usage = DXGI.Usage.BackBuffer | DXGI.Usage.RenderTargetOutput
                             };
 
                             _swapChain = new DXGI.SwapChain(dxgiFactory, deviceOrCommandQueue, dxgiSCDesc);
@@ -138,18 +137,20 @@ namespace Vortice.Graphics
         /// <inheritdoc/>
         public override int CurrentBackBuffer => _currentBackBuffer;
 
+        public Format BackBufferFormat { get; } = Format.B8G8R8A8_UNorm;
+
         /// <inheritdoc/>
-        public override void Configure(in SwapChainDescriptor descriptor)
+        protected override void ConfigureImpl(in SwapChainDescriptor descriptor)
         {
         }
 
         /// <inheritdoc/>
-        public override void Destroy()
+        protected override void Destroy()
         {
             _swapChain.Dispose();
         }
 
-        public override void Present()
+        protected override void PresentImpl()
         {
             //var parameters = new SharpDX.DXGI.PresentParameters();
 

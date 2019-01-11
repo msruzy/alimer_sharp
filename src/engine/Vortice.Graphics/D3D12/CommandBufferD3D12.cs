@@ -5,18 +5,17 @@ using SharpDX.Direct3D12;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal class D3D12CommandBuffer : CommandBuffer
+    internal class CommandBufferD3D12 : CommandBuffer
     {
         private readonly int _frameCount;
         private readonly CommandListType _type;
         private int _currentFrameIndex;
 
         private readonly CommandAllocator[] _commandAllocators;
-        private readonly GraphicsCommandList _commandList;
 
-        public GraphicsCommandList CommandList => _commandList;
+        public GraphicsCommandList CommandList { get; }
 
-        public D3D12CommandBuffer(D3D12GraphicsDevice device, int frameCount, CommandListType type)
+        public CommandBufferD3D12(DeviceD3D12 device, int frameCount, CommandListType type)
             : base(device)
         {
             _frameCount = frameCount;
@@ -28,8 +27,8 @@ namespace Vortice.Graphics.D3D12
                 _commandAllocators[i] = device.D3DDevice.CreateCommandAllocator(type);
             }
 
-            _commandList = device.D3DDevice.CreateCommandList(type, _commandAllocators[_currentFrameIndex], null);
-            _commandList.Close();
+            CommandList = device.D3DDevice.CreateCommandList(type, _commandAllocators[_currentFrameIndex], null);
+            CommandList.Close();
         }
 
         /// <inheritdoc/>
@@ -40,10 +39,10 @@ namespace Vortice.Graphics.D3D12
                 _commandAllocators[i].Dispose();
             }
 
-            _commandList.Dispose();
+            CommandList.Dispose();
         }
 
-        internal override void BeginRenderPassCore(GPUFramebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
+        internal override void BeginRenderPassCore(Framebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
         {
         }
 
@@ -53,13 +52,13 @@ namespace Vortice.Graphics.D3D12
 
         protected override void CommitCore()
         {
-            _commandList.Close();
-            ((D3D12GraphicsDevice)Device).GraphicsQueue.ExecuteCommandList(_commandList);
+            CommandList.Close();
+            ((DeviceD3D12)Device).GraphicsQueue.ExecuteCommandList(CommandList);
 
             // 
             _currentFrameIndex = (_currentFrameIndex + 1) % _commandAllocators.Length;
             _commandAllocators[_currentFrameIndex].Reset();
-            _commandList.Reset(_commandAllocators[_currentFrameIndex], null);
+            CommandList.Reset(_commandAllocators[_currentFrameIndex], null);
         }
     }
 }

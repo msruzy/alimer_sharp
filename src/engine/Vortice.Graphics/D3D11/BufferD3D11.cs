@@ -8,11 +8,12 @@ using static Vortice.Graphics.D3D11.Utils;
 
 namespace Vortice.Graphics.D3D11
 {
-    internal class BufferD3D11 : GPUBuffer
+    internal class BufferD3D11 : GraphicsBuffer
     {
         public readonly Buffer Resource;
 
-        public BufferD3D11(GPUDeviceD3D11 device, in BufferDescriptor descriptor, IntPtr initialData)
+        public BufferD3D11(DeviceD3D11 device, in BufferDescriptor descriptor, IntPtr initialData)
+            : base(device, descriptor)
         {
             var description = new BufferDescription()
             {
@@ -33,15 +34,9 @@ namespace Vortice.Graphics.D3D11
         }
 
         /// <inheritdoc/>
-        public override void Destroy()
+        protected override void Destroy()
         {
             Resource.Dispose();
         }
-
-        /// <summary>
-        /// Implicit casting operator to <see cref="SharpDX.Direct3D11.Buffer"/>
-        /// </summary>
-        /// <param name="buffer">The <see cref="BufferD3D11"/> to convert from.</param>
-        public static implicit operator Buffer(BufferD3D11 buffer) => buffer.Resource;
     }
 }

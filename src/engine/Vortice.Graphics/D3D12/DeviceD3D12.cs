@@ -12,7 +12,7 @@ using DXGI = SharpDX.DXGI;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal class D3D12GraphicsDevice : GraphicsDevice
+    internal class DeviceD3D12 : GraphicsDevice
     {
         private static readonly FeatureLevel[] s_featureLevels = new FeatureLevel[]
         {
@@ -34,9 +34,7 @@ namespace Vortice.Graphics.D3D12
 
         private readonly List<IUnknown>[] _deferredReleases = new List<IUnknown>[RenderLatency];
 
-        private readonly SwapchainD3D12 _mainSwapchain;
-
-        private readonly D3D12Fence _frameFence;
+        private readonly FenceD3D12 _frameFence;
         private long _currentFrameIndex;
         private long _currentCPUFrame;
         private long _currentGPUFrame;
@@ -48,10 +46,6 @@ namespace Vortice.Graphics.D3D12
 
         /// <inheritdoc/>
         public override CommandBuffer ImmediateContext { get; }
-
-        /// <inheritdoc/>
-        public override SwapChain MainSwapchain => _mainSwapchain;
-
 
         public long CurrentCPUFrame => _currentCPUFrame;
         public long CurrentGPUFrame => _currentGPUFrame;
@@ -74,7 +68,7 @@ namespace Vortice.Graphics.D3D12
 
             try
             {
-                using (var tempFactory = new SharpDX.DXGI.Factory1())
+                using (var tempFactory = new DXGI.Factory1())
                 {
                     var adapterCount = tempFactory.GetAdapterCount1();
                     for (var i = 0; i < adapterCount; i++)
@@ -112,7 +106,7 @@ namespace Vortice.Graphics.D3D12
             return true;
         }
 
-        public D3D12GraphicsDevice(bool validation)
+        public DeviceD3D12(bool validation)
             : base(GraphicsBackend.Direct3D12)
         {
 #if DEBUG
@@ -138,7 +132,10 @@ namespace Vortice.Graphics.D3D12
             }
 
             // Create factory first.
-            DXGIFactory = new DXGI.Factory4(Validation);
+            using (var factory = new DXGI.Factory2(Validation))
+            {
+                DXGIFactory = factory.QueryInterface<DXGI.Factory4>();
+            }
 
             var adapterCount = DXGIFactory.GetAdapterCount1();
             for (var i = 0; i < adapterCount; i++)
@@ -185,7 +182,7 @@ namespace Vortice.Graphics.D3D12
                         {
                             Ids = new[]
                             {
-                                MessageId.ClearRenderTargetViewMismatchingClearValue,
+                                MessageId.ClearrendertargetviewMismatchingclearvalue,
 
                                 // These happen when capturing with VS diagnostics
                                 MessageId.MapInvalidNullRange,
@@ -201,7 +198,7 @@ namespace Vortice.Graphics.D3D12
             InitializeFeatures();
 
             // Create main graphics command queue.
-            GraphicsQueue = D3DDevice.CreateCommandQueue(CommandListType.Direct, 0);
+            GraphicsQueue = D3DDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct, CommandQueueFlags.None));
             GraphicsQueue.Name = "Main GraphicsQueue";
 
             // Create ImmediateContext.
@@ -209,11 +206,11 @@ namespace Vortice.Graphics.D3D12
             {
                 _deferredReleases[i] = new List<IUnknown>();
             }
-            ImmediateContext = new D3D12CommandBuffer(this, RenderLatency, CommandListType.Direct);
-            ((D3D12CommandBuffer)ImmediateContext).CommandList.Name = "Primary Graphics Command List";
+            ImmediateContext = new CommandBufferD3D12(this, RenderLatency, CommandListType.Direct);
+            ((CommandBufferD3D12)ImmediateContext).CommandList.Name = "Primary Graphics Command List";
 
             // Create the frame fence
-            _frameFence = new D3D12Fence(this, 0);
+            _frameFence = new FenceD3D12(this, 0);
 
             // Create descriptor allocators
             for (var i = 0; i < (int)DescriptorHeapType.NumTypes; i++)
@@ -229,7 +226,6 @@ namespace Vortice.Graphics.D3D12
             _shuttingDown = true;
             _frameFence.Dispose();
             GraphicsQueue.Dispose();
-            _mainSwapchain.Dispose();
 
             // Clear DescriptorHeap Pools.
             lock (_heapAllocationLock)
@@ -247,7 +243,7 @@ namespace Vortice.Graphics.D3D12
                 var debugDevice = D3DDevice.QueryInterfaceOrNull<DebugDevice>();
                 if (debugDevice != null)
                 {
-                    debugDevice.ReportLiveDeviceObjects(ReportingLevel.Detail);
+                    debugDevice.ReportLiveDeviceObjects(RldoFlags.Detail);
                     debugDevice.Dispose();
                 }
             }
@@ -257,13 +253,19 @@ namespace Vortice.Graphics.D3D12
 
         private void InitializeFeatures()
         {
+            var adapterDesc = DXGIAdapter.Description1;
+            Features.VendorId = adapterDesc.VendorId;
+            Features.DeviceId = adapterDesc.DeviceId;
+            Features.DeviceName = adapterDesc.Description;
+            Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
+
             FeatureLevel = D3DDevice.CheckMaxSupportedFeatureLevel(s_featureLevels);
             var D3D12Options = D3DDevice.D3D12Options;
 
             var dataShaderModel = D3DDevice.CheckShaderModel(ShaderModel.Model60);
-            var dataShaderModel1 = D3DDevice.CheckShaderModel(ShaderModel.Model61);
-            var dataShaderModel2 = D3DDevice.CheckShaderModel(ShaderModel.Model62);
-            var waveIntrinsicsSupport = D3DDevice.D3D12Options1;
+            //var dataShaderModel1 = D3DDevice.CheckShaderModel(ShaderModel.Model61);
+            //var dataShaderModel2 = D3DDevice.CheckShaderModel(ShaderModel.Model62);
+            var waveIntrinsicsSupport = D3DDevice.GetD3D12Options1();
 
             //Device.CheckFeatureSupport(Feature.D3D12Options1, ref waveIntrinsicsSupport);
             var featureDataRootSignature = new FeatureDataRootSignature
@@ -276,13 +278,13 @@ namespace Vortice.Graphics.D3D12
                 featureDataRootSignature.HighestVersion = RootSignatureVersion.Version10;
             }
 
-            var gpuVaSupport = D3DDevice.GpuVirtualAddressSupport;
+            var gpuVaSupport = D3DDevice.GetGpuVirtualAddressSupport();
         }
 
         protected override void FrameCore()
         {
             // Present the frame.
-            _mainSwapchain.Present();
+            //_mainSwapchain.Present();
 
             ++_currentCPUFrame;
 
@@ -321,35 +323,43 @@ namespace Vortice.Graphics.D3D12
                     flags = DescriptorHeapFlags.ShaderVisible;
                 }
 
-                var heap = D3DDevice.CreateDescriptorHeap(type, descriptorCount, flags, 0);
+                var heapDescription = new DescriptorHeapDescription
+                {
+                    Type = type,
+                    DescriptorCount = descriptorCount,
+                    Flags = flags,
+                    NodeMask = 0,
+                };
+
+                var heap = D3DDevice.CreateDescriptorHeap(heapDescription);
                 _descriptorHeapPool.Add(heap);
                 return heap;
             }
         }
 
-        protected override GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData)
+        protected override GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData)
         {
-            return new D3D12Buffer(this, descriptor, initialData);
+            return new BufferD3D12(this, descriptor, initialData);
         }
 
-        protected override Texture CreateTextureCore(in TextureDescription description)
+        protected override Texture CreateTextureImpl(in TextureDescription description)
         {
             return new TextureD3D12(this, description, nativeTexture: null);
         }
 
-        protected override Shader CreateShaderCore(byte[] vertex, byte[] pixel)
+        protected override Shader CreateShaderImpl(byte[] vertex, byte[] pixel)
         {
             throw new NotImplementedException();
         }
 
-        internal override GPUFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments)
+        protected override Framebuffer CreateFramebufferImpl(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
         {
-            return new D3D12Framebuffer(this, colorAttachments);
+            return new FramebufferD3D12(this, colorAttachments, depthStencilAttachment);
         }
 
-        internal override GPUSwapChain CreateSwapChain(in SwapChainDescriptor descriptor)
+        protected override SwapChain CreateSwapChainImpl(in SwapChainDescriptor descriptor)
         {
-            throw new NotImplementedException();
+            return new SwapchainD3D12(this, descriptor, 2);
         }
 
         public void DeferredRelease<T>(ref T resource, bool forceDeferred = false) where T : IUnknown

@@ -6,12 +6,12 @@ using SharpDX.Direct3D12;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal class D3D12Buffer : GraphicsBuffer
+    internal class BufferD3D12 : GraphicsBuffer
     {
         private Resource _resource;
         private readonly long _creationFrame;
 
-        public D3D12Buffer(D3D12GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
+        public BufferD3D12(DeviceD3D12 device, in BufferDescriptor descriptor, IntPtr initialData)
             : base(device, descriptor)
         {
             _creationFrame = device.CurrentCPUFrame;
@@ -20,8 +20,8 @@ namespace Vortice.Graphics.D3D12
         /// <inheritdoc/>
         protected override void Destroy()
         {
-            bool forceDeferred = _creationFrame == ((D3D12GraphicsDevice)Device).CurrentCPUFrame;
-            ((D3D12GraphicsDevice)Device).DeferredRelease(ref _resource, forceDeferred);
+            bool forceDeferred = _creationFrame == ((DeviceD3D12)Device).CurrentCPUFrame;
+            ((DeviceD3D12)Device).DeferredRelease(ref _resource, forceDeferred);
         }
     }
 }

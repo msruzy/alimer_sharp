@@ -1,22 +1,18 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using System;
-using System.Threading;
 using SharpDX.Direct3D12;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal class D3D12Framebuffer : GPUFramebuffer
+    internal class FramebufferD3D12 : Framebuffer
     {
-        public readonly D3D12GraphicsDevice Device;
-        private readonly DescriptorHandle _rtvHandle = default;
-        private readonly DescriptorHandle _dsvHandle = default;
+        private readonly DescriptorHandle _rtvHandle;
+        private readonly DescriptorHandle _dsvHandle;
 
-        public D3D12Framebuffer(D3D12GraphicsDevice device, FramebufferAttachment[] colorAttachments)
+        public FramebufferD3D12(DeviceD3D12 device, FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
+            : base(device, colorAttachments, depthStencilAttachment)
         {
-            Device = device;
-
             if (colorAttachments.Length > 0)
             {
                 _rtvHandle = device.AllocateDescriptor(DescriptorHeapType.RenderTargetView, colorAttachments.Length);
@@ -36,7 +32,7 @@ namespace Vortice.Graphics.D3D12
             }
         }
 
-        public override void Destroy()
+        protected override void Destroy()
         {
         }
     }

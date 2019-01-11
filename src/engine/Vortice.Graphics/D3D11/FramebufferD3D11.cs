@@ -6,16 +6,14 @@ using Vortice.Diagnostics;
 
 namespace Vortice.Graphics.D3D11
 {
-    internal class FramebufferD3D11 : GPUFramebuffer
+    internal class FramebufferD3D11 : Framebuffer
     {
-        public readonly GPUDeviceD3D11 Device;
         public readonly RenderTargetView[] RenderTargetViews;
         public DepthStencilView DepthStencilView;
 
-        public FramebufferD3D11(GPUDeviceD3D11 device, FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
+        public FramebufferD3D11(DeviceD3D11 device, FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
+            : base(device, colorAttachments, depthStencilAttachment)
         {
-            Device = device;
-
             if (colorAttachments.Length > 0)
             {
                 RenderTargetViews = new RenderTargetView[colorAttachments.Length];
@@ -26,7 +24,7 @@ namespace Vortice.Graphics.D3D11
                     var arraySize = texture.ArrayLayers - attachment.Slice;
                     bool isTextureMs = (int)texture.Samples > 1;
 
-                    var d3dTexture = (TextureD3D11)texture._backend;
+                    var d3dTexture = (TextureD3D11)texture;
                     var viewDesc = new RenderTargetViewDescription
                     {
                         Format = d3dTexture.DXGIFormat
@@ -105,15 +103,19 @@ namespace Vortice.Graphics.D3D11
                             break;
                     }
 
-                    RenderTargetViews[i] = new RenderTargetView(device.D3DDevice, d3dTexture, viewDesc);
+                    RenderTargetViews[i] = new RenderTargetView(device.D3DDevice, d3dTexture.Resource, viewDesc);
                 }
+            }
+            else
+            {
+                RenderTargetViews = new RenderTargetView[0];
             }
 
             if (depthStencilAttachment != null)
             {
                 var attachment = depthStencilAttachment.Value;
                 var texture = attachment.Texture;
-                var d3dTexture = (TextureD3D11)texture._backend;
+                var d3dTexture = (TextureD3D11)texture;
                 var arraySize = texture.ArrayLayers - attachment.Slice;
                 bool isTextureMs = (int)texture.Samples > 1;
 
@@ -200,12 +202,17 @@ namespace Vortice.Graphics.D3D11
                         break;
                 }
 
-                DepthStencilView = new DepthStencilView(device.D3DDevice, d3dTexture, viewDesc);
+                DepthStencilView = new DepthStencilView(device.D3DDevice, d3dTexture.Resource, viewDesc);
             }
         }
 
-        public override void Destroy()
+        protected override void Destroy()
         {
+            DepthStencilView?.Dispose();
+            for (var i = 0; i < RenderTargetViews.Length; i++)
+            {
+                RenderTargetViews[i].Dispose();
+            }
         }
     }
 }

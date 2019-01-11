@@ -8,37 +8,23 @@ namespace Vortice.Graphics
     /// <summary>
     /// Defines a graphics swap chain able to show content on window/view.
     /// </summary>
-    public class SwapChain : DisposableBase
+    public abstract class SwapChain : GraphicsResource
     {
-        internal GPUSwapChain _backend;
+        public abstract int BackBufferCount { get; }
+        public abstract int CurrentBackBuffer { get; }
 
-        /// <summary>
-        /// Gets the creation <see cref="GraphicsDevice"/>.
-        /// </summary>
-        public GraphicsDevice Device { get; protected set; }
-
-        public int BackBufferCount { get; private set; }
-
-        private Texture[] _backbufferTextures;
-        private Texture2D _depthStencilTexture;
+        private Texture _depthStencilTexture;
         private Framebuffer[] _framebuffers;
 
         /// <summary>
         /// Create a new instance of <see cref="SwapChain"/> class.
         /// </summary>
         /// <param name="device">The creation <see cref="GraphicsDevice"/></param>
-        public SwapChain(GraphicsDevice device)
+        /// <param name="descriptor">The <see cref="SwapChainDescriptor"/></param>
+        protected SwapChain(GraphicsDevice device, SwapChainDescriptor descriptor)
+            : base(device, GraphicsResourceType.SwapChain, GraphicsResourceUsage.Default)
         {
             Guard.NotNull(device, nameof(device), $"{nameof(GraphicsDevice)} cannot be null");
-
-            Device = device;
-        }
-
-        /// <summary>
-        /// Create a new instance of <see cref="SwapChain"/> class.
-        /// </summary>
-        protected SwapChain()
-        {
         }
 
         /// <summary>
@@ -47,51 +33,45 @@ namespace Vortice.Graphics
         /// <param name="descriptor">The descriptor.</param>
         public void Configure(in SwapChainDescriptor descriptor)
         {
-            if (_backend == null)
-            {
-                _backend = Device.CreateSwapChain(descriptor);
-            }
-            else
-            {
-                _backend.Configure(descriptor);
-            }
+            ConfigureImpl(descriptor);
 
-            BackBufferCount = _backend.BackBufferCount;
-            _backbufferTextures = new Texture[BackBufferCount];
             _framebuffers = new Framebuffer[BackBufferCount];
 
             bool hasDepthStencil = descriptor.PreferredDepthStencilFormat != PixelFormat.Unknown;
             if (hasDepthStencil)
             {
-                _depthStencilTexture = new Texture2D(Device,
-                    descriptor.Width,
-                    descriptor.Height,
-                    false,
-                    1,
-                    descriptor.PreferredDepthStencilFormat,
-                    TextureUsage.RenderTarget);
+                _depthStencilTexture = Device.CreateTexture(
+                    TextureDescription.Texture2D(descriptor.Width, descriptor.Height,
+                    false, 1,
+                    descriptor.PreferredDepthStencilFormat, TextureUsage.RenderTarget)
+                    );
             }
 
             FramebufferAttachment? depthStencilAttachment = null;
             for (var i = 0; i < BackBufferCount; i++)
             {
-                _backbufferTextures[i] = new Texture(Device, _backend.GetBackBufferTexture(i));
+                var backbufferTexture = GetBackBufferTexture(i);
                 if (hasDepthStencil)
                 {
                     depthStencilAttachment = new FramebufferAttachment(_depthStencilTexture);
                 }
-                _framebuffers[i] = new Framebuffer(Device, depthStencilAttachment, new FramebufferAttachment(_backbufferTextures[i]));
+
+                _framebuffers[i] = Device.CreateFramebuffer(new[] { new FramebufferAttachment(backbufferTexture) }, depthStencilAttachment);
             }
         }
 
-        public Framebuffer GetCurrentFramebuffer()
-        {
-            return _framebuffers[_backend.CurrentBackBuffer];
-        }
+        /// <summary>
+        /// Get the current frame <see cref="Framebuffer"/>.
+        /// </summary>
+        public Framebuffer CurrentFramebuffer => _framebuffers[CurrentBackBuffer];
 
         public void Present()
         {
-            _backend.Present();
+            PresentImpl();
         }
+
+        protected abstract void ConfigureImpl(in SwapChainDescriptor descriptor);
+        protected abstract Texture GetBackBufferTexture(int index);
+        protected abstract void PresentImpl();
     }
 }

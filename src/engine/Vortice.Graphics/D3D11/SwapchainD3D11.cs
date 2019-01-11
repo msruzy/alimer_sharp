@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX;
 using SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
 using System.Diagnostics;
-using static Vortice.Graphics.D3D11.Utils;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -13,22 +10,25 @@ namespace Vortice.Graphics.D3D11
     {
         public readonly TextureD3D11 BackbufferTexture;
 
-        public SwapchainD3D11(GPUDeviceD3D11 device, in SwapChainDescriptor descriptor)
-            : base(device.DXGIFactory, descriptor, device.D3DDevice, 2, 1)
+        public SwapchainD3D11(DeviceD3D11 device, in SwapChainDescriptor descriptor)
+            : base(device, descriptor, device.DXGIFactory, device.D3DDevice, 2, 1)
         {
-            var backBufferTexture = Resource.FromSwapChain<SharpDX.Direct3D11.Texture2D>(_swapChain, 0);
+            var backBufferTexture = Resource.FromSwapChain<Texture2D>(_swapChain, 0);
             BackbufferTexture = new TextureD3D11(device, backBufferTexture, BackBufferFormat);
+
+            // Configure base.
+            Configure(descriptor);
         }
 
         /// <inheritdoc/>
-        public override void Destroy()
+        protected override void Destroy()
         {
             base.Destroy();
-            BackbufferTexture.Destroy();
+            BackbufferTexture.Dispose();
         }
 
         /// <inheritdoc/>
-        public override GPUTexture GetBackBufferTexture(int index)
+        protected override Texture GetBackBufferTexture(int index)
         {
             Debug.Assert(index == 0);
             return BackbufferTexture;

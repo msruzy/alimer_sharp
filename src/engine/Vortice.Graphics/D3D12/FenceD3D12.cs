@@ -7,13 +7,13 @@ using SharpDX.Direct3D12;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal class D3D12Fence : IDisposable
+    internal class FenceD3D12 : IDisposable
     {
-        public readonly D3D12GraphicsDevice Device;
+        public readonly DeviceD3D12 Device;
         private Fence _fence;
         private readonly AutoResetEvent _fenceEvent;
 
-        public D3D12Fence(D3D12GraphicsDevice device, long initialValue)
+        public FenceD3D12(DeviceD3D12 device, long initialValue)
         {
             Device = device;
             _fence = device.D3DDevice.CreateFence(initialValue, FenceFlags.None);

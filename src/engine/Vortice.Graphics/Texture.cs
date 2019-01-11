@@ -6,10 +6,8 @@ namespace Vortice.Graphics
     /// <summary>
     /// Defines a graphics texture class.
     /// </summary>
-    public class Texture : GraphicsResource
+    public abstract class Texture : GraphicsResource
     {
-        internal readonly GPUTexture _backend;
-
         /// <summary>
         /// Gets the texture type.
         /// </summary>
@@ -68,7 +66,6 @@ namespace Vortice.Graphics
             Guard.MustBeGreaterThanOrEqualTo(description.Height, 1, nameof(description.Height));
             Guard.MustBeGreaterThanOrEqualTo(description.Depth, 1, nameof(description.Depth));
 
-            _backend = device.CreateTexture(description);
             TextureType = description.TextureType;
             Width = description.Width;
             Height = description.Height;
@@ -78,25 +75,6 @@ namespace Vortice.Graphics
             Format = description.Format;
             TextureUsage = description.TextureUsage;
             Samples = description.Samples;
-        }
-
-        internal Texture(GraphicsDevice device, GPUTexture backend)
-            : base(device, GraphicsResourceType.Texture, GraphicsResourceUsage.Default)
-        {
-            _backend = backend;
-            TextureType = backend.TextureType;
-            Width = backend.Width;
-            Height = backend.Height;
-            Depth = backend.Depth;
-            MipLevels = backend.MipLevels;
-            ArrayLayers = backend.ArrayLayers;
-            Format = backend.Format;
-            TextureUsage = backend.TextureUsage;
-            Samples = backend.Samples;
-        }
-
-        protected override void Destroy()
-        {
         }
     }
 }

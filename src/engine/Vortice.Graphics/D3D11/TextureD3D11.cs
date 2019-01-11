@@ -7,20 +7,20 @@ using static Vortice.Graphics.D3D11.Utils;
 
 namespace Vortice.Graphics.D3D11
 {
-    internal class TextureD3D11 : GPUTexture
+    internal class TextureD3D11 : Texture
     {
         public readonly Resource Resource;
         public readonly DXGI.Format DXGIFormat;
 
-        public TextureD3D11(GPUDeviceD3D11 device, SharpDX.Direct3D11.Texture2D nativeTexture, DXGI.Format dxgiFormat)
-           : base(Convert(nativeTexture.Description))
+        public TextureD3D11(DeviceD3D11 device, Texture2D nativeTexture, DXGI.Format dxgiFormat)
+           : base(device, Convert(nativeTexture.Description))
         {
             Resource = nativeTexture;
             DXGIFormat = dxgiFormat;
         }
 
-        public TextureD3D11(GPUDeviceD3D11 device, in TextureDescription description)
-        : base(description)
+        public TextureD3D11(DeviceD3D11 device, in TextureDescription description)
+            : base(device, description)
         {
             // Create new one.
             DXGIFormat = D3DConvert.Convert(description.Format);
@@ -100,18 +100,9 @@ namespace Vortice.Graphics.D3D11
         }
 
         /// <inheritdoc/>
-        public override void Destroy()
+        protected override void Destroy()
         {
             Resource.Dispose();
-        }
-
-        /// <summary>
-        /// Implicit casting operator to <see cref="SharpDX.Direct3D11.Resource"/>
-        /// </summary>
-        /// <param name="texture">The <see cref="TextureD3D11"/> to convert from.</param>
-        public static implicit operator Resource(TextureD3D11 texture)
-        {
-            return texture.Resource;
         }
     }
 }

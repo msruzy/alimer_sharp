@@ -10,16 +10,15 @@ namespace Vortice.Graphics.Tests
         protected readonly GraphicsDevice _graphicsDevice;
 
         protected GraphicsDeviceTestBase(
-            GraphicsBackend backend = GraphicsBackend.Default, 
-            bool validation = false,
-            PresentationParameters presentationParameters = null)
+            GraphicsBackend backend = GraphicsBackend.Default,
+            bool validation = false)
         {
             if (!GraphicsDevice.IsSupported(backend))
             {
                 throw new GraphicsException($"Backend {backend} is not supported");
             }
 
-            _graphicsDevice = GraphicsDevice.Create(backend, validation, presentationParameters);
+            _graphicsDevice = GraphicsDevice.Create(backend, validation);
         }
 
         public virtual void Dispose()

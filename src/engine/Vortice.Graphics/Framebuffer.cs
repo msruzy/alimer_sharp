@@ -9,10 +9,8 @@ namespace Vortice.Graphics
     /// <summary>
     /// Defines a framebuffer class.
     /// </summary>
-    public sealed class Framebuffer : GraphicsResource
+    public abstract class Framebuffer : GraphicsResource
     {
-        internal readonly GPUFramebuffer Backend;
-
         public readonly FramebufferAttachment? DepthStencilAttachment;
         public readonly IReadOnlyList<FramebufferAttachment> ColorAttachments;
 
@@ -20,19 +18,13 @@ namespace Vortice.Graphics
         /// Create a new instance of <see cref="Framebuffer"/> class.
         /// </summary>
         /// <param name="device">The creation device</param>
-        /// <param name="depthStencilAttachment">Optional depth stencil attachment.</param>
         /// <param name="colorAttachments">The color attachments.</param>
-        public Framebuffer(GraphicsDevice device, FramebufferAttachment? depthStencilAttachment, params FramebufferAttachment[] colorAttachments)
+        /// <param name="depthStencilAttachment">Optional depth stencil attachment.</param>
+        protected Framebuffer(GraphicsDevice device, FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
             : base(device, GraphicsResourceType.Framebuffer, GraphicsResourceUsage.Default)
         {
             DepthStencilAttachment = depthStencilAttachment;
             ColorAttachments = Array.AsReadOnly(colorAttachments);
-            Backend = device.CreateFramebuffer(colorAttachments, depthStencilAttachment);
-        }
-
-        protected override void Destroy()
-        {
-            Backend.Destroy();
         }
     }
 }

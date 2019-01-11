@@ -85,7 +85,7 @@ namespace Vortice.Graphics
 
                 case GraphicsBackend.Direct3D12:
 #if !VORTICE_NO_D3D12
-                    return false; //D3D12.D3D12GraphicsDevice.IsSupported();
+                    return D3D12.DeviceD3D12.IsSupported();
 #else
                     return false;
 #endif
@@ -124,20 +124,20 @@ namespace Vortice.Graphics
             {
                 case GraphicsBackend.Direct3D11:
 #if !VORTICE_NO_D3D11
-                    return new D3D11.GPUDeviceD3D11(validation);
+                    return new D3D11.DeviceD3D11(validation);
 #else
                     throw new GraphicsException($"{GraphicsBackend.Direct3D11} Backend is not supported");
 #endif
 
                 case GraphicsBackend.Direct3D12:
 #if !VORTICE_NO_D3D12
-                    return new D3D12.D3D12GraphicsDevice(validation);
+                    return new D3D12.DeviceD3D12(validation);
 #else
                     throw new GraphicsException($"{GraphicsBackend.Direct3D12} Backend is not supported");
 #endif
 
                 case GraphicsBackend.Vulkan:
-#if !VORTICE_NO_D3D12
+#if !VORTICE_NO_VULKAN
                     return new Vulkan.VulkanGraphicsDevice(validation);
 #else
                     throw new GraphicsException($"{GraphicsBackend.Vulkan} Backend is not supported");
@@ -191,6 +191,16 @@ namespace Vortice.Graphics
             WaitIdleCore();
         }
 
+        /// <summary>
+        /// Create new <see cref="SwapChain"/>.
+        /// </summary>
+        /// <param name="descriptor">The <see cref="SwapChainDescriptor"/> that describes the swap chain.</param>
+        /// <returns>New instance of <see cref="SwapChain"/>.</returns>
+        public SwapChain CreateSwapChain(in SwapChainDescriptor descriptor)
+        {
+            return CreateSwapChainImpl(descriptor);
+        }
+
         public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor, IntPtr initialData)
         {
             Guard.IsTrue(descriptor.BufferUsage != BufferUsage.Unknown, nameof(descriptor.Usage), $"BufferUsage cannot be {nameof(BufferUsage.Unknown)}");
@@ -202,7 +212,7 @@ namespace Vortice.Graphics
                 throw new GraphicsException("Immutable buffer needs valid initial data.");
             }
 
-            return CreateBufferCore(descriptor, initialData);
+            return CreateBufferImpl(descriptor, initialData);
         }
 
         public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor) => CreateBuffer(descriptor, IntPtr.Zero);
@@ -238,9 +248,25 @@ namespace Vortice.Graphics
                 initialData);
         }
 
+        public Texture CreateTexture(in TextureDescription description)
+        {
+            return CreateTextureImpl(description);
+        }
+
         public Shader CreateShader(byte[] vertex, byte[] pixel)
         {
-            return CreateShaderCore(vertex, pixel);
+            return CreateShaderImpl(vertex, pixel);
+        }
+
+        public Framebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
+        {
+            if (colorAttachments.Length == 0
+                && depthStencilAttachment == null)
+            {
+                throw new GraphicsException("Cannot create Framebuffer with no color attachments nor depth stencil attachment");
+            }
+
+            return CreateFramebufferImpl(colorAttachments, depthStencilAttachment);
         }
 
         internal void TrackResource(GraphicsResource resource)
@@ -281,12 +307,12 @@ namespace Vortice.Graphics
 
         protected abstract void WaitIdleCore();
 
-        protected abstract GraphicsBuffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData);
-        internal abstract GPUTexture CreateTexture(in TextureDescription description);
-        protected abstract Shader CreateShaderCore(byte[] vertex, byte[] pixel);
+        protected abstract GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData);
+        protected abstract Texture CreateTextureImpl(in TextureDescription description);
+        protected abstract Shader CreateShaderImpl(byte[] vertex, byte[] pixel);
 
-        internal abstract GPUFramebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment);
+        protected abstract Framebuffer CreateFramebufferImpl(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment);
 
-        internal abstract GPUSwapChain CreateSwapChain(in SwapChainDescriptor descriptor);
+        protected abstract SwapChain CreateSwapChainImpl(in SwapChainDescriptor descriptor);
     }
 }

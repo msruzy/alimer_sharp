@@ -9,9 +9,11 @@ namespace Vortice
     /// <summary>
     /// Defines an <see cref="Game"/> view.
     /// </summary>
-    public abstract class View : SwapChain
+    public abstract class View 
     {
         protected string _title;
+        private GraphicsDevice _device;
+        private SwapChain _swapChain;
 
         /// <summary>
         /// Occurs directly after <see cref="Close"/> is called, and can be handled to cancel <see cref="View"/> closure.
@@ -50,6 +52,7 @@ namespace Vortice
         }
 
         public SwapChainHandle Handle { get; private set; }
+        public SwapChain SwapChain => _swapChain;
 
         protected View(string title)
         {
@@ -93,7 +96,7 @@ namespace Vortice
 
         internal void SetDevice(GraphicsDevice device)
         {
-            Device = device;
+            _device = device;
             if (Handle != null)
             {
                 OnHandleCreated(Handle);
@@ -103,19 +106,28 @@ namespace Vortice
         protected void OnHandleCreated(SwapChainHandle handle)
         {
             Handle = handle;
-            if (Device == null)
+            if (_device == null)
                 return;
 
             var clientSize = ClientSize;
 
-            Configure(new SwapChainDescriptor
+            var descriptor = new SwapChainDescriptor
             {
                 Width = (int)clientSize.Width,
                 Height = (int)clientSize.Height,
                 PreferredColorFormat = PixelFormat.BGRA8UNorm,
                 PreferredDepthStencilFormat = PixelFormat.Depth24UNormStencil8,
                 Handle = handle
-            });
+            };
+            _swapChain = _device.CreateSwapChain(descriptor);
+        }
+
+        /// <summary>
+        /// Present view content on screen.
+        /// </summary>
+        public void Present()
+        {
+            _swapChain?.Present();
         }
 
         protected abstract void Destroy();
