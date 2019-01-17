@@ -29,7 +29,7 @@ namespace Vortice.Graphics.D3D12
 
         public static TextureUsage Convert(ResourceFlags flags)
         {
-            var usage = TextureUsage.Unknown;
+            var usage = TextureUsage.None;
 
             if ((flags & ResourceFlags.DenyShaderResource) == 0)
             {

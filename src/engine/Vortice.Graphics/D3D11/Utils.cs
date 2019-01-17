@@ -40,7 +40,7 @@ namespace Vortice.Graphics.D3D11
 
         public static TextureUsage Convert(BindFlags flags)
         {
-            var usage = TextureUsage.Unknown;
+            var usage = TextureUsage.None;
 
             if ((flags & BindFlags.ShaderResource) != 0)
             {

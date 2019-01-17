@@ -12,9 +12,9 @@ namespace Vortice.Graphics
     public enum TextureUsage
     {
         /// <summary>
-        /// Unknown usage.
+        /// None usage.
         /// </summary>
-        Unknown = 0,
+        None = 0,
 
         /// <summary>
         /// An option that enables reading or sampling from the texture.

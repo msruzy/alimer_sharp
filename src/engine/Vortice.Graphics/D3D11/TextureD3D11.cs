@@ -4,6 +4,7 @@
 using SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using static Vortice.Graphics.D3D11.Utils;
+using System.Collections.Generic;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -11,6 +12,7 @@ namespace Vortice.Graphics.D3D11
     {
         public readonly Resource Resource;
         public readonly DXGI.Format DXGIFormat;
+        private readonly Dictionary<TextureViewDescriptor, TextureViewD3D11> _views = new Dictionary<TextureViewDescriptor, TextureViewD3D11>();
 
         public TextureD3D11(DeviceD3D11 device, Texture2D nativeTexture, DXGI.Format dxgiFormat)
            : base(device, Convert(nativeTexture.Description))
@@ -103,6 +105,18 @@ namespace Vortice.Graphics.D3D11
         protected override void Destroy()
         {
             Resource.Dispose();
+        }
+
+        public TextureViewD3D11 GetView(int mostDetailedMip = 0, int mipCount = TextureViewDescriptor.MaxPossible, int firstArraySlice = 0, int arraySize = TextureViewDescriptor.MaxPossible)
+        {
+            var key = new TextureViewDescriptor(mostDetailedMip, mipCount, firstArraySlice, arraySize);
+            if (!_views.TryGetValue(key, out TextureViewD3D11 view))
+            {
+                view = new TextureViewD3D11((DeviceD3D11)Device, this, key);
+                _views.Add(key, view);
+            }
+
+            return view;
         }
     }
 }

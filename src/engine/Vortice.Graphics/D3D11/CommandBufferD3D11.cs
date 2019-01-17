@@ -15,7 +15,7 @@ namespace Vortice.Graphics.D3D11
         private readonly bool _isImmediate;
         private readonly bool _needWorkaround;
         private CommandList _commandList;
-        private FramebufferD3D11 _currentFramebuffer;
+        public readonly RenderTargetView[] RenderTargetViews = new RenderTargetView[8];
 
         public CommandList CommandList => _commandList;
 
@@ -47,8 +47,6 @@ namespace Vortice.Graphics.D3D11
 
         public void Reset()
         {
-            _currentFramebuffer = null;
-
             _commandList?.Dispose();
             _commandList = null;
             _context.ClearState();
@@ -57,24 +55,22 @@ namespace Vortice.Graphics.D3D11
         internal override void BeginRenderPassCore(in RenderPassDescriptor descriptor)
         {
             // Setup color attachments.
-            //_currentFramebuffer = (FramebufferD3D11)framebuffer;
-            _context.OutputMerger.SetTargets(_currentFramebuffer.DepthStencilView, _currentFramebuffer.RenderTargetViews);
-
             int renderTargetCount = 0;
 
-            /*for (var i = 0; i < descriptor.ColorAttachments.Length; ++i)
+            for (var i = 0; i < descriptor.ColorAttachments.Length; ++i)
             {
-                ref var colorAttachment = ref descriptor.ColorAttachments[i];
+                ref var attachment = ref descriptor.ColorAttachments[i];
 
-                var textureView = (D3D11TextureView)colorAttachment.Attachment;
+                var texture = (TextureD3D11)attachment.Texture;
+                var textureView = texture.GetView(attachment.Level, 1, attachment.Slice);
                 RenderTargetViews[i] = textureView.RenderTargetView;
 
-                switch (colorAttachment.LoadAction)
+                switch (attachment.LoadAction)
                 {
                     case LoadAction.Clear:
                         _context.ClearRenderTargetView(
                             RenderTargetViews[i],
-                            D3DConvert.Convert(colorAttachment.ClearColor)
+                            D3DConvert.Convert(attachment.ClearColor)
                             );
                         break;
 
@@ -85,31 +81,40 @@ namespace Vortice.Graphics.D3D11
                 renderTargetCount++;
             }
 
-            if (descriptor.DepthStencilAttachment != null)
+            DepthStencilView depthStencilView = null;
+            if (descriptor.DepthStencilAttachment.HasValue
+                && descriptor.DepthStencilAttachment.Value.Texture != null)
             {
-                var depthStencilAttachment = descriptor.DepthStencilAttachment.Value;
+                var attachment = descriptor.DepthStencilAttachment.Value;
 
-                var d3dTexture = (D3D11Texture)depthStencilAttachment.Texture;
-                //DepthStencilView = d3dTexture.GetDepthStencilView(depthStencilAttachment.MipLevel, depthStencilAttachment.Slice);
+                var texture = (TextureD3D11)attachment.Texture;
+                var textureView = texture.GetView(attachment.Level, 1, attachment.Slice);
+                depthStencilView = textureView.DepthStencilView;
 
-                switch (depthStencilAttachment.LoadAction)
+                DepthStencilClearFlags depthStencilClearFlags = 0;
+                if (attachment.DepthLoadAction == LoadAction.Clear)
                 {
-                    case LoadAction.Clear:
-                        _context.ClearDepthStencilView(
-                            DepthStencilView,
-                            DepthStencilClearFlags.Depth,
-                            depthStencilAttachment.ClearDepth,
-                            depthStencilAttachment.ClearStencil
-                            );
-                        break;
+                    depthStencilClearFlags |= DepthStencilClearFlags.Depth;
+                }
 
-                    default:
-                        break;
+                if (attachment.StencilLoadAction == LoadAction.Clear)
+                {
+                    depthStencilClearFlags |= DepthStencilClearFlags.Stencil;
+                }
+
+                if (depthStencilClearFlags != 0)
+                {
+                    _context.ClearDepthStencilView(
+                        depthStencilView,
+                        depthStencilClearFlags,
+                        attachment.ClearDepth,
+                        attachment.ClearStencil
+                        );
                 }
             }
 
             // Set up render targets
-            _context.OutputMerger.SetTargets(DepthStencilView, renderTargetCount, RenderTargetViews);*/
+            _context.OutputMerger.SetTargets(depthStencilView, renderTargetCount, RenderTargetViews);
         }
 
         protected override void EndRenderPassCore()

@@ -13,7 +13,7 @@ namespace Vortice.Graphics
         /// <summary>
         /// Gets the array of color attachments.
         /// </summary>
-        public RenderPassDepthStencilAttachmentDescriptor[] ColorAttachments { get; }
+        public RenderPassColorAttachmentDescriptor[] ColorAttachments { get; }
 
         /// <summary>
         /// Gets the depth-stencil attachment.
@@ -21,7 +21,7 @@ namespace Vortice.Graphics
         public RenderPassDepthStencilAttachmentDescriptor? DepthStencilAttachment { get; }
 
         public RenderPassDescriptor(
-            in RenderPassDepthStencilAttachmentDescriptor[] colorAttachments,
+            in RenderPassColorAttachmentDescriptor[] colorAttachments,
             in RenderPassDepthStencilAttachmentDescriptor? depthStencilAttachment = null)
         {
             ColorAttachments = colorAttachments;
