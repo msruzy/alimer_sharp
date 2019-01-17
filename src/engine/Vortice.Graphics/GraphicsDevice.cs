@@ -34,7 +34,7 @@ namespace Vortice.Graphics
         /// <summary>
         /// Gets the immediate <see cref="CommandBuffer"/> created with device.
         /// </summary>
-        public abstract CommandBuffer ImmediateContext { get; }
+        public abstract CommandBuffer ImmediateCommandBuffer { get; }
 
         /// <summary>
         /// Create new instance of <see cref="GraphicsDevice"/> class.

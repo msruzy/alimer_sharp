@@ -54,10 +54,10 @@ namespace Vortice.Graphics.D3D11
             _context.ClearState();
         }
 
-        internal override void BeginRenderPassCore(Framebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
+        internal override void BeginRenderPassCore(in RenderPassDescriptor descriptor)
         {
             // Setup color attachments.
-            _currentFramebuffer = (FramebufferD3D11)framebuffer;
+            //_currentFramebuffer = (FramebufferD3D11)framebuffer;
             _context.OutputMerger.SetTargets(_currentFramebuffer.DepthStencilView, _currentFramebuffer.RenderTargetViews);
 
             int renderTargetCount = 0;

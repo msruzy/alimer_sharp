@@ -40,13 +40,10 @@ namespace Vortice.Graphics
         /// <summary>
         /// Begin rendering with given descriptor.
         /// </summary>
-        /// <param name="framebuffer">The <see cref="Framebuffer"/></param>
-        /// <param name="descriptor">The <see cref="RenderPassBeginDescriptor"/></param>
-        public void BeginRenderPass(Framebuffer framebuffer, in RenderPassBeginDescriptor descriptor)
+        /// <param name="descriptor">The <see cref="RenderPassDescriptor"/></param>
+        public void BeginRenderPass(in RenderPassDescriptor descriptor)
         {
-            Guard.NotNull(framebuffer, nameof(framebuffer));
-
-            BeginRenderPassCore(framebuffer, descriptor);
+            BeginRenderPassCore(descriptor);
         }
 
         public void EndRenderPass()
@@ -60,7 +57,7 @@ namespace Vortice.Graphics
         }
 
         protected abstract void Destroy();
-        internal abstract void BeginRenderPassCore(Framebuffer framebuffer, in RenderPassBeginDescriptor descriptor);
+        internal abstract void BeginRenderPassCore(in RenderPassDescriptor descriptor);
         protected abstract void EndRenderPassCore();
         protected abstract void CommitCore();
     }

@@ -33,7 +33,7 @@ namespace Vortice.Graphics.D3D11
         private readonly bool _supportsCommandLists;
 
         /// <inheritdoc/>
-        public override CommandBuffer ImmediateContext { get; }
+        public override CommandBuffer ImmediateCommandBuffer { get; }
 
         public bool SupportsConcurrentResources => _supportsConcurrentResources;
         public bool SupportsCommandLists => _supportsCommandLists;
@@ -97,12 +97,12 @@ namespace Vortice.Graphics.D3D11
             InitializeFeatures();
 
             // Create immediate context.
-            ImmediateContext = new CommandBufferD3D11(this, D3DImmediateContext);
+            ImmediateCommandBuffer = new CommandBufferD3D11(this, D3DImmediateContext);
         }
 
         protected override void Destroy()
         {
-            ImmediateContext.Dispose();
+            ImmediateCommandBuffer.Dispose();
             D3DDevice1?.Dispose();
 
             var deviceDebug = D3DDevice.QueryInterfaceOrNull<DeviceDebug>();

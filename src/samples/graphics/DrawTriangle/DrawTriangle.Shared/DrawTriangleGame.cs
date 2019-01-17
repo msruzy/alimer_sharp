@@ -72,9 +72,9 @@ namespace DrawTriangle
             base.Draw(time);
 
             // Record commands to default context.
-            var commandBuffer = GraphicsDevice.ImmediateContext;
+            var commandBuffer = GraphicsDevice.ImmediateCommandBuffer;
             var clearColor = new Color4(0.0f, 0.2f, 0.4f);
-            commandBuffer.BeginRenderPass(MainView.SwapChain.CurrentFramebuffer, new RenderPassBeginDescriptor());
+            commandBuffer.BeginRenderPass(MainView.CurrentRenderPassDescriptor);
             commandBuffer.EndRenderPass();
             commandBuffer.Commit();
         }

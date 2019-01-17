@@ -45,7 +45,7 @@ namespace Vortice.Graphics.D3D12
         private readonly List<DescriptorHeap> _descriptorHeapPool = new List<DescriptorHeap>();
 
         /// <inheritdoc/>
-        public override CommandBuffer ImmediateContext { get; }
+        public override CommandBuffer ImmediateCommandBuffer { get; }
 
         public long CurrentCPUFrame => _currentCPUFrame;
         public long CurrentGPUFrame => _currentGPUFrame;
@@ -206,8 +206,8 @@ namespace Vortice.Graphics.D3D12
             {
                 _deferredReleases[i] = new List<IUnknown>();
             }
-            ImmediateContext = new CommandBufferD3D12(this, RenderLatency, CommandListType.Direct);
-            ((CommandBufferD3D12)ImmediateContext).CommandList.Name = "Primary Graphics Command List";
+            ImmediateCommandBuffer = new CommandBufferD3D12(this, RenderLatency, CommandListType.Direct);
+            ((CommandBufferD3D12)ImmediateCommandBuffer).CommandList.Name = "Primary Graphics Command List";
 
             // Create the frame fence
             _frameFence = new FenceD3D12(this, 0);

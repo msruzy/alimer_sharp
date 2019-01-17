@@ -9,7 +9,7 @@ namespace Vortice
     /// <summary>
     /// Defines an <see cref="Game"/> view.
     /// </summary>
-    public abstract class View 
+    public abstract class View
     {
         protected string _title;
         private GraphicsDevice _device;
@@ -53,6 +53,14 @@ namespace Vortice
 
         public SwapChainHandle Handle { get; private set; }
         public SwapChain SwapChain => _swapChain;
+
+        public RenderPassDescriptor CurrentRenderPassDescriptor
+        {
+            get
+            {
+                return new RenderPassDescriptor();
+            }
+        }
 
         protected View(string title)
         {
