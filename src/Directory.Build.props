@@ -38,6 +38,10 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
+  </ItemGroup>
+
   <!-- Detect platform -->
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <VorticePlatform>Windows</VorticePlatform>
@@ -75,8 +79,11 @@
     <SharpDXVersion>4.0.1</SharpDXVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NerdbankGitVersioningVersion>3.0.6-beta</NerdbankGitVersioningVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.4-beta" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="all" />
   </ItemGroup>
 </Project>

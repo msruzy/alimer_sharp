@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>DrawTriangle</RootNamespace>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\assets\Vortice.Assets\Vortice.Assets.csproj" />
-    <ProjectReference Include="..\..\..\..\engine\Vortice.Audio\Vortice.Audio.csproj" />
+    <ProjectReference Include="..\..\..\..\core\Vortice\Vortice.csproj" />
     <ProjectReference Include="..\..\..\..\engine\Vortice.Game\Vortice.Game.csproj" />
-    <ProjectReference Include="..\DrawTriangle.Game\DrawTriangle.Game.csproj" />
+    <ProjectReference Include="..\..\..\..\engine\Vortice.Graphics\Vortice.Graphics.csproj" />
   </ItemGroup>
 </Project>

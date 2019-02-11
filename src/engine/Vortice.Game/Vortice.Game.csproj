@@ -6,16 +6,22 @@
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RootNamespace>Vortice</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <Description>Vortice.Application library for cross platform application support</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Platforms\**\*.cs" />
-    <None Include="Platforms\**\*.cs" />
-    <Compile Include="Platforms\$(VorticePlatform)\**\*.cs" />
+    <Compile Include="*.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
+    <Compile Include="Platforms\NetStandard\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
+    <Compile Include="Platforms\UAP\*.cs" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vortice.Graphics\Vortice.Graphics.csproj" />
   </ItemGroup>
+  
 </Project>

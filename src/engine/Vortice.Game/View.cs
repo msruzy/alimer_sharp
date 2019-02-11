@@ -58,7 +58,9 @@ namespace Vortice
         {
             get
             {
-                return new RenderPassDescriptor();
+                return new RenderPassDescriptor(new[]{
+                    new RenderPassColorAttachmentDescriptor()
+                });
             }
         }
 
