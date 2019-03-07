@@ -109,11 +109,6 @@ namespace Vortice.Graphics.D3D12
         public DeviceD3D12(bool validation)
             : base(GraphicsBackend.Direct3D12)
         {
-#if DEBUG
-            Configuration.EnableObjectTracking = true;
-            Configuration.ThrowOnShaderCompileError = false;
-#endif
-
             // Just try to enable debug layer.
             if (validation)
             {

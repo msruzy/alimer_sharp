@@ -61,48 +61,7 @@ namespace Vortice.Graphics
             base.Dispose(disposing);
         }
 
-        /// <summary>
-        /// Check if given <see cref="GraphicsBackend"/> is supported.
-        /// </summary>
-        /// <param name="backend">The <see cref="GraphicsBackend"/> to check.</param>
-        /// <returns>True if supported, false otherwise.</returns>
-        public static bool IsSupported(GraphicsBackend backend)
-        {
-            if (backend == GraphicsBackend.Default)
-            {
-                backend = GetDefaultGraphicsPlatform(Platform.PlatformType);
-            }
-
-            switch (backend)
-            {
-                case GraphicsBackend.Direct3D11:
-#if !VORTICE_NO_D3D11
-                    return Platform.PlatformType == PlatformType.Windows
-                        || Platform.PlatformType == PlatformType.UWP;
-#else
-                    return false;
-#endif
-
-                case GraphicsBackend.Direct3D12:
-#if !VORTICE_NO_D3D12
-                    return false;
-                    //return D3D12.DeviceD3D12.IsSupported();
-#else
-                    return false;
-#endif
-
-                case GraphicsBackend.Vulkan:
-#if !VORTICE_NO_VULKAN
-                    return Vulkan.VulkanGraphicsDevice.IsSupported();
-#else
-                    return false;
-#endif
-
-                default:
-                    return false;
-            }
-        }
-
+        
         /// <summary>
         /// Create new instance of <see cref="GraphicsDevice"/>
         /// </summary>
@@ -111,16 +70,6 @@ namespace Vortice.Graphics
         /// <returns>New instance of <see cref="GraphicsDevice"/>.</returns>
         public static GraphicsDevice Create(GraphicsBackend preferredBackend, bool validation)
         {
-            if (preferredBackend == GraphicsBackend.Default)
-            {
-                preferredBackend = GetDefaultGraphicsPlatform(Platform.PlatformType);
-            }
-
-            if (!IsSupported(preferredBackend))
-            {
-                throw new GraphicsException($"Backend {preferredBackend} is not supported");
-            }
-
             switch (preferredBackend)
             {
                 case GraphicsBackend.Direct3D11:
@@ -149,36 +98,7 @@ namespace Vortice.Graphics
             }
         }
 
-        /// <summary>
-        /// Gets the best <see cref="GraphicsBackend"/> for given platform.
-        /// </summary>
-        /// <param name="platformType">The <see cref="PlatformType"/> to detect.</param>
-        /// <returns></returns>
-        private static GraphicsBackend GetDefaultGraphicsPlatform(PlatformType platformType)
-        {
-            switch (platformType)
-            {
-                case PlatformType.Windows:
-                case PlatformType.UWP:
-                    if (IsSupported(GraphicsBackend.Direct3D12))
-                    {
-                        return GraphicsBackend.Direct3D12;
-                    }
-
-                    return GraphicsBackend.Direct3D11;
-
-                case PlatformType.Android:
-                case PlatformType.Linux:
-                    return GraphicsBackend.OpenGLES;
-
-                case PlatformType.iOS:
-                case PlatformType.macOS:
-                    return GraphicsBackend.OpenGL;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
+        
         /// <summary>
         /// Present current frame and advance to next frame.
         /// </summary>

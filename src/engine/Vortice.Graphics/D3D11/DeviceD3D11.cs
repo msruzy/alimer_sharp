@@ -41,10 +41,6 @@ namespace Vortice.Graphics.D3D11
         public DeviceD3D11(bool validation)
             : base(GraphicsBackend.Direct3D11)
         {
-#if DEBUG
-            SharpDX.Configuration.EnableObjectTracking = true;
-            SharpDX.Configuration.ThrowOnShaderCompileError = false;
-#endif
             // Create factory first.
             DXGIFactory = new DXGI.Factory1();
             var adapterCount = DXGIFactory.GetAdapterCount1();

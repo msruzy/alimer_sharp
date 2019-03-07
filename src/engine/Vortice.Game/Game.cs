@@ -32,6 +32,7 @@ namespace Vortice
         private int _nextLastUpdateCountIndex;
         private readonly float _updateCountAverageSlowLimit;
 
+        private GraphicsDeviceFactory _graphicsDeviceFactory;
         private GraphicsDevice _graphicsDevice;
 
         /// <summary>
@@ -260,6 +261,8 @@ namespace Vortice
             try
             {
                 // Create GPU device first.
+                _graphicsDeviceFactory = GraphicsDeviceFactory.Create(GraphicsBackend.Direct3D11, validation: true);
+                var adapter = _graphicsDeviceFactory.GetAdapter();
                 _graphicsDevice = GraphicsDevice.Create(GraphicsBackend.Default, validation: true);
                 MainView.SetDevice(_graphicsDevice);
 
