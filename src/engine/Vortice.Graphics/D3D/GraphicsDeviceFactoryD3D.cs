@@ -1,53 +1,43 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX;
-using SharpDX.Direct3D12;
-using SharpDX.DXGI;
-using Vortice.Diagnostics;
+using SharpD3D12.Debug;
+using static SharpDXGI.DXGI;
+using static SharpD3D12.D3D12;
+using System.Diagnostics;
+using SharpDXGI;
 
 namespace Vortice.Graphics
 {
     internal class GraphicsDeviceFactoryD3D : GraphicsDeviceFactory
     {
-        public readonly Factory1 DXGIFactory;
+        public readonly IDXGIFactory1 DXGIFactory;
 
         public GraphicsDeviceFactoryD3D(GraphicsBackend backend, bool validation)
             : base(backend, validation)
         {
-#if DEBUG
-            Configuration.EnableObjectTracking = true;
-            Configuration.ThrowOnShaderCompileError = false;
-#endif
 
             switch (backend)
             {
                 case GraphicsBackend.Direct3D11:
-                    DXGIFactory = new Factory1();
+                    Debug.Assert(CreateDXGIFactory1(out DXGIFactory).Success);
                     break;
 
                 case GraphicsBackend.Direct3D12:
                     // Just try to enable debug layer.
-                    if (validation)
+                    if (validation
+                        && D3D12GetDebugInterface<ID3D12Debug>(out var debug).Success)
                     {
-                        try
-                        {
-                            // Enable the D3D12 debug layer.
-                            DebugInterface.Get().EnableDebugLayer();
-
-                            Validation = true;
-                        }
-                        catch (SharpDXException)
-                        {
-                            Log.Warn("Direct3D Debug Device required but not available.");
-                            Validation = false;
-                        }
+                        // Enable the D3D12 debug layer.
+                        debug.EnableDebugLayer();
+                    }
+                    else
+                    {
+                        validation = false;
                     }
 
-                    using (var factory = new Factory2(Validation))
-                    {
-                        DXGIFactory = factory.QueryInterface<Factory4>();
-                    }
+                    Debug.Assert(CreateDXGIFactory2(validation, out IDXGIFactory2 dxgiFactory2).Success);
+                    DXGIFactory = dxgiFactory2;
                     break;
             }
         }

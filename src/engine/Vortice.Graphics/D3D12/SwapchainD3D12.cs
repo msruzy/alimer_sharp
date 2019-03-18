@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX.Direct3D12;
+using SharpD3D12;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -18,7 +18,7 @@ namespace Vortice.Graphics.D3D12
             _backbufferTextures = new TextureD3D12[backbufferCount];
             for (int i = 0; i < backbufferCount; i++)
             {
-                var backBufferTexture = _swapChain.GetBackBuffer<Resource>(i);
+                var backBufferTexture = _swapChain.GetBuffer<ID3D12Resource>(i);
                 var d3dTextureDesc = backBufferTexture.Description;
                 var textureDescription = TextureDescription.Texture2D(
                     (int)d3dTextureDesc.Width,

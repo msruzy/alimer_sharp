@@ -2,31 +2,31 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using SharpDX.Direct3D11;
+using SharpD3D11;
 
 namespace Vortice.Graphics.D3D11
 {
     internal class CommandBufferD3D11 : CommandBuffer
     {
-        private readonly Device _nativeDevice;
-        private readonly DeviceContext _context;
-        private readonly DeviceContext1 _context1;
-        private readonly UserDefinedAnnotation _annotation;
+        private readonly ID3D11Device _nativeDevice;
+        private readonly ID3D11DeviceContext _context;
+        private readonly ID3D11DeviceContext1 _context1;
+        //private readonly UserDefinedAnnotation _annotation;
         private readonly bool _isImmediate;
         private readonly bool _needWorkaround;
-        private CommandList _commandList;
-        public readonly RenderTargetView[] RenderTargetViews = new RenderTargetView[8];
+        private ID3D11CommandList _commandList;
+        public readonly ID3D11RenderTargetView[] RenderTargetViews = new ID3D11RenderTargetView[8];
 
-        public CommandList CommandList => _commandList;
+        public ID3D11CommandList CommandList => _commandList;
 
-        public CommandBufferD3D11(DeviceD3D11 device, DeviceContext context)
+        public CommandBufferD3D11(DeviceD3D11 device, ID3D11DeviceContext context)
             : base(device)
         {
             _nativeDevice = device.D3DDevice;
             _context = context;
-            _context1 = _context.QueryInterfaceOrNull<DeviceContext1>();
-            _annotation = _context.QueryInterfaceOrNull<UserDefinedAnnotation>();
-            _isImmediate = context.TypeInfo == DeviceContextType.Immediate;
+            _context1 = _context.QueryInterfaceOrNull<ID3D11DeviceContext1>();
+            //_annotation = _context.QueryInterfaceOrNull<ID3D11UserDefinedAnnotation>();
+            _isImmediate = context.Type == DeviceContextType.Immediate;
 
             if (!_isImmediate)
             {
@@ -40,7 +40,7 @@ namespace Vortice.Graphics.D3D11
         {
             Reset();
 
-            _annotation?.Dispose();
+            //_annotation?.Dispose();
             _context1?.Dispose();
             _context.Dispose();
         }
@@ -81,7 +81,7 @@ namespace Vortice.Graphics.D3D11
                 renderTargetCount++;
             }
 
-            DepthStencilView depthStencilView = null;
+            ID3D11DepthStencilView depthStencilView = null;
             if (descriptor.DepthStencilAttachment.HasValue
                 && descriptor.DepthStencilAttachment.Value.Texture != null)
             {
@@ -114,12 +114,12 @@ namespace Vortice.Graphics.D3D11
             }
 
             // Set up render targets
-            _context.OutputMerger.SetTargets(depthStencilView, renderTargetCount, RenderTargetViews);
+            //_context.OutputMerger.SetTargets(depthStencilView, renderTargetCount, RenderTargetViews);
         }
 
         protected override void EndRenderPassCore()
         {
-            _context.OutputMerger.ResetTargets();
+            //_context.OutputMerger.ResetTargets();
         }
 
         protected override void CommitCore()

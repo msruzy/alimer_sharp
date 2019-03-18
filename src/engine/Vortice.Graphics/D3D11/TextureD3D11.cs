@@ -1,20 +1,20 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX.Direct3D11;
-using DXGI = SharpDX.DXGI;
 using static Vortice.Graphics.D3D11.Utils;
 using System.Collections.Generic;
+using SharpD3D11;
+using SharpDXGI;
 
 namespace Vortice.Graphics.D3D11
 {
     internal class TextureD3D11 : Texture
     {
-        public readonly Resource Resource;
-        public readonly DXGI.Format DXGIFormat;
+        public readonly ID3D11Resource Resource;
+        public readonly Format DXGIFormat;
         private readonly Dictionary<TextureViewDescriptor, TextureViewD3D11> _views = new Dictionary<TextureViewDescriptor, TextureViewD3D11>();
 
-        public TextureD3D11(DeviceD3D11 device, Texture2D nativeTexture, DXGI.Format dxgiFormat)
+        public TextureD3D11(DeviceD3D11 device, ID3D11Texture2D nativeTexture, Format dxgiFormat)
            : base(device, Convert(nativeTexture.Description))
         {
             Resource = nativeTexture;
@@ -28,7 +28,7 @@ namespace Vortice.Graphics.D3D11
             DXGIFormat = D3DConvert.Convert(description.Format);
 
             var cpuFlags = CpuAccessFlags.None;
-            var resourceUsage = ResourceUsage.Default;
+            var resourceUsage = SharpD3D11.Usage.Default;
             var bindFlags = Convert(description.TextureUsage, description.Format);
             var optionFlags = ResourceOptionFlags.None;
 
@@ -55,7 +55,7 @@ namespace Vortice.Graphics.D3D11
                             OptionFlags = optionFlags,
                         };
 
-                        Resource = new Texture1D(device.D3DDevice, d3dTextureDesc);
+                        Resource = device.D3DDevice.CreateTexture1D(d3dTextureDesc);
                     }
                     break;
 
@@ -72,11 +72,11 @@ namespace Vortice.Graphics.D3D11
                             BindFlags = bindFlags,
                             CpuAccessFlags = cpuFlags,
                             Usage = resourceUsage,
-                            SampleDescription = new DXGI.SampleDescription((int)description.Samples, 0),
+                            SampleDescription = new SampleDescription((int)description.Samples, 0),
                             OptionFlags = optionFlags,
                         };
 
-                        Resource = new SharpDX.Direct3D11.Texture2D(device.D3DDevice, d3dTextureDesc);
+                        Resource = device.D3DDevice.CreateTexture2D(d3dTextureDesc);
                     }
                     break;
 
@@ -95,7 +95,7 @@ namespace Vortice.Graphics.D3D11
                             OptionFlags = optionFlags,
                         };
 
-                        Resource = new Texture3D(device.D3DDevice, d3dTextureDesc);
+                        Resource = device.D3DDevice.CreateTexture3D(d3dTextureDesc);
                     }
                     break;
             }

@@ -2,13 +2,13 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using SharpDX.Direct3D12;
+using SharpD3D12;
 
 namespace Vortice.Graphics.D3D12
 {
     internal class BufferD3D12 : GraphicsBuffer
     {
-        private Resource _resource;
+        private ID3D12Resource _resource;
         private readonly long _creationFrame;
 
         public BufferD3D12(DeviceD3D12 device, in BufferDescriptor descriptor, IntPtr initialData)

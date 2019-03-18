@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D12;
+using SharpD3D12;
+using SharpDXGI.Direct3D;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -78,14 +78,14 @@ namespace Vortice.Graphics.D3D12
             return flags;
         }
 
-        public static unsafe FeatureLevel CheckMaxSupportedFeatureLevel(this Device device, params FeatureLevel[] levels)
+        public static unsafe FeatureLevel CheckMaxSupportedFeatureLevel(this ID3D12Device device, params FeatureLevel[] levels)
         {
             fixed (FeatureLevel* levelsPtr = &levels[0])
             {
                 var featureData = new FeatureDataFeatureLevels
                 {
-                    FeatureLevelCount = levels.Length,
-                    FeatureLevelsRequestedPointer = new IntPtr(levelsPtr)
+                    NumFeatureLevels = levels.Length,
+                    PFeatureLevelsRequested = new IntPtr(levelsPtr)
                 };
 
                 device.CheckFeatureSupport(Feature.FeatureLevels, ref featureData);
@@ -93,7 +93,7 @@ namespace Vortice.Graphics.D3D12
             }
         }
 
-        public static unsafe FeatureDataShaderModel CheckShaderModel(this Device device, ShaderModel highestShaderModel)
+        public static unsafe FeatureDataShaderModel CheckShaderModel(this ID3D12Device device, ShaderModel highestShaderModel)
         {
             var featureData = new FeatureDataShaderModel
             {
@@ -103,14 +103,14 @@ namespace Vortice.Graphics.D3D12
             return featureData;
         }
 
-        public static unsafe FeatureDataD3D12Options1 GetD3D12Options1(this Device device)
+        public static unsafe FeatureDataD3D12Options1 GetD3D12Options1(this ID3D12Device device)
         {
             var featureData = new FeatureDataD3D12Options1();
             device.CheckFeatureSupport(Feature.D3D12Options1, ref featureData);
             return featureData;
         }
 
-        public static unsafe FeatureDataGpuVirtualAddressSupport GetGpuVirtualAddressSupport(this Device device)
+        public static unsafe FeatureDataGpuVirtualAddressSupport GetGpuVirtualAddressSupport(this ID3D12Device device)
         {
             var featureData = new FeatureDataGpuVirtualAddressSupport();
             device.CheckFeatureSupport(Feature.GpuVirtualAddressSupport, ref featureData);

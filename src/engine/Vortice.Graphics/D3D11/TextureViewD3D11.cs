@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX.Direct3D11;
 using System;
+using SharpD3D11;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -10,8 +10,8 @@ namespace Vortice.Graphics.D3D11
     {
         public readonly DeviceD3D11 Device;
         public readonly TextureD3D11 Resource;
-        public readonly RenderTargetView RenderTargetView;
-        public readonly DepthStencilView DepthStencilView;
+        public readonly ID3D11RenderTargetView RenderTargetView;
+        public readonly ID3D11DepthStencilView DepthStencilView;
 
         public TextureViewD3D11(DeviceD3D11 device, TextureD3D11 resource, TextureViewDescriptor descriptor)
         {
@@ -23,11 +23,11 @@ namespace Vortice.Graphics.D3D11
                 // TODO: Use TextureViewDescriptor
                 if (!PixelFormatUtil.IsDepthStencilFormat(resource.Format))
                 {
-                    RenderTargetView = new RenderTargetView(device.D3DDevice, resource.Resource);
+                    RenderTargetView = device.D3DDevice.CreateRenderTargetView(resource.Resource);
                 }
                 else
                 {
-                    DepthStencilView = new DepthStencilView(device.D3DDevice, resource.Resource);
+                    DepthStencilView = device.D3DDevice.CreateDepthStencilView(resource.Resource);
                 }
             }
         }

@@ -3,17 +3,17 @@
 
 using System;
 using System.Threading;
-using SharpDX.Direct3D12;
+using SharpD3D12;
 
 namespace Vortice.Graphics.D3D12
 {
     internal class FenceD3D12 : IDisposable
     {
         public readonly DeviceD3D12 Device;
-        private Fence _fence;
+        private ID3D12Fence _fence;
         private readonly AutoResetEvent _fenceEvent;
 
-        public FenceD3D12(DeviceD3D12 device, long initialValue)
+        public FenceD3D12(DeviceD3D12 device, ulong initialValue)
         {
             Device = device;
             _fence = device.D3DDevice.CreateFence(initialValue, FenceFlags.None);
@@ -26,26 +26,26 @@ namespace Vortice.Graphics.D3D12
             _fenceEvent.Dispose();
         }
 
-        public void Signal(CommandQueue queue, long fenceValue)
+        public void Signal(ID3D12CommandQueue queue, ulong fenceValue)
         {
             queue.Signal(_fence, fenceValue);
         }
 
-        public void Wait(long fenceValue)
+        public void Wait(ulong fenceValue)
         {
             if (_fence.CompletedValue < fenceValue)
             {
-                _fence.SetEventOnCompletion(fenceValue, _fenceEvent.SafeWaitHandle.DangerousGetHandle());
+                _fence.SetEventOnCompletion(fenceValue, _fenceEvent);
                 _fenceEvent.WaitOne();
             }
         }
 
-        public bool IsSignaled(long fenceValue)
+        public bool IsSignaled(ulong fenceValue)
         {
             return _fence.CompletedValue >= fenceValue;
         }
 
-        public void Clear(long fenceValue)
+        public void Clear(ulong fenceValue)
         {
             _fence.Signal(fenceValue);
         }

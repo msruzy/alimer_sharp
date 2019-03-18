@@ -76,10 +76,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <SharpDXVersion>4.0.1</SharpDXVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <NerdbankGitVersioningVersion>3.0.6-beta</NerdbankGitVersioningVersion>
   </PropertyGroup>
 

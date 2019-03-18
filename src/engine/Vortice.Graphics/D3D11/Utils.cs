@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX.Direct3D11;
+using SharpD3D11;
 
 namespace Vortice.Graphics.D3D11
 {

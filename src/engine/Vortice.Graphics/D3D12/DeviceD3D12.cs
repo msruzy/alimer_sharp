@@ -4,11 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using SharpDX;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D12;
+using SharpD3D12;
+using SharpDXGI;
+using SharpDXGI.Direct3D;
+using SharpGen.Runtime;
 using Vortice.Diagnostics;
-using DXGI = SharpDX.DXGI;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -24,11 +24,11 @@ namespace Vortice.Graphics.D3D12
 
         private static bool? s_isSupported;
         public const int RenderLatency = 2;
-        public readonly DXGI.Factory4 DXGIFactory;
-        public readonly DXGI.Adapter1 DXGIAdapter;
-        public readonly Device D3DDevice;
+        public readonly IDXGIFactory4 DXGIFactory;
+        public readonly IDXGIAdapter1 DXGIAdapter;
+        public readonly ID3D12Device D3DDevice;
 
-        public readonly CommandQueue GraphicsQueue;
+        public readonly ID3D12CommandQueue GraphicsQueue;
 
         public FeatureLevel FeatureLevel { get; private set; }
 
@@ -42,7 +42,7 @@ namespace Vortice.Graphics.D3D12
 
         private readonly DescriptorAllocator[] _descriptorAllocator = new DescriptorAllocator[(int)DescriptorHeapType.NumTypes];
         private readonly object _heapAllocationLock = new object();
-        private readonly List<DescriptorHeap> _descriptorHeapPool = new List<DescriptorHeap>();
+        private readonly List<ID3D12DescriptorHeap> _descriptorHeapPool = new List<ID3D12DescriptorHeap>();
 
         /// <inheritdoc/>
         public override CommandBuffer ImmediateCommandBuffer { get; }
@@ -208,7 +208,7 @@ namespace Vortice.Graphics.D3D12
             _frameFence = new FenceD3D12(this, 0);
 
             // Create descriptor allocators
-            for (var i = 0; i < (int)DescriptorHeapType.NumTypes; i++)
+            for (var i = 0; i < (int)DescriptorHeapType.Count; i++)
             {
                 _descriptorAllocator[i] = new DescriptorAllocator(this, (DescriptorHeapType)i);
             }
@@ -306,7 +306,7 @@ namespace Vortice.Graphics.D3D12
             return _descriptorAllocator[(int)type].Allocate(count);
         }
 
-        public DescriptorHeap RequestNewHeap(DescriptorHeapType type, int descriptorCount)
+        public ID3D12DescriptorHeap RequestNewHeap(DescriptorHeapType type, int descriptorCount)
         {
             lock (_heapAllocationLock)
             {

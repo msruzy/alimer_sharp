@@ -2,11 +2,10 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using SharpDX;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
+using SharpD3D11;
+using SharpDXGI;
+using SharpDXGI.Direct3D;
 using Vortice.Diagnostics;
-using DXGI = SharpDX.DXGI;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -22,12 +21,12 @@ namespace Vortice.Graphics.D3D11
 
         private static bool? _isSupported;
 
-        public readonly DXGI.Factory1 DXGIFactory;
-        public readonly DXGI.Adapter1 DXGIAdapter;
-        public readonly Device D3DDevice;
-        public readonly Device1 D3DDevice1;
+        public readonly IDXGIFactory1 DXGIFactory;
+        public readonly IDXGIAdapter1 DXGIAdapter;
+        public readonly ID3D11Device D3DDevice;
+        public readonly ID3D11Device1 D3DDevice1;
         public readonly FeatureLevel FeatureLevel;
-        public readonly DeviceContext D3DImmediateContext;
+        public readonly ID3D11DeviceContext D3DImmediateContext;
 
         private readonly bool _supportsConcurrentResources;
         private readonly bool _supportsCommandLists;
@@ -42,15 +41,15 @@ namespace Vortice.Graphics.D3D11
             : base(GraphicsBackend.Direct3D11)
         {
             // Create factory first.
-            DXGIFactory = new DXGI.Factory1();
-            var adapterCount = DXGIFactory.GetAdapterCount1();
-            for (var i = 0; i < adapterCount; i++)
+            DXGI.CreateDXGIFactory(out DXGIFactory);
+            var adapters = DXGIFactory.EnumAdapters1();
+            for (var i = 0; i < adapters.Length; i++)
             {
-                var adapter = DXGIFactory.GetAdapter1(i);
+                var adapter = adapters[0];
                 var desc = adapter.Description1;
 
                 // Don't select the Basic Render Driver adapter.
-                if ((desc.Flags & DXGI.AdapterFlags.Software) != DXGI.AdapterFlags.None)
+                if ((desc.Flags & AdapterFlag.Software) != AdapterFlag.None)
                 {
                     continue;
                 }

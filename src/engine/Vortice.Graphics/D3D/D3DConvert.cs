@@ -1,15 +1,16 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
+using System.Drawing;
+using System.Numerics;
+using SharpDXGI;
 
 namespace Vortice.Graphics
 {
     internal static class D3DConvert
     {
-        public static RawColor4 Convert(in Color4 color) => new RawColor4(color.R, color.G, color.B, color.A);
-        public static Color4 Convert(in RawColor4 color) => new Color4(color.R, color.G, color.B, color.A);
+        public static Vector4 Convert(in Color4 color) => new Vector4(color.R, color.G, color.B, color.A);
+        //public static Color4 Convert(in RawColor4 color) => new Color4(color.R, color.G, color.B, color.A);
 
         public static Format Convert(PixelFormat format)
         {

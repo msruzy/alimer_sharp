@@ -1,11 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using SharpDX.Direct3D12;
+using SharpD3D12;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -17,7 +13,7 @@ namespace Vortice.Graphics.D3D12
         public readonly DescriptorHeapType Type;
         public readonly bool IsShaderVisible;
 
-        private DescriptorHeap _currentHeap;
+        private ID3D12DescriptorHeap _currentHeap;
         private CpuDescriptorHandle _currentCpuHandle;
         private GpuDescriptorHandle _currentGpuHandle;
         private int _descriptorSize;

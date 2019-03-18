@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDX.Direct3D12;
+using SharpD3D12;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -11,9 +11,9 @@ namespace Vortice.Graphics.D3D12
         private readonly CommandListType _type;
         private int _currentFrameIndex;
 
-        private readonly CommandAllocator[] _commandAllocators;
+        private readonly ID3D12CommandAllocator[] _commandAllocators;
 
-        public GraphicsCommandList CommandList { get; }
+        public ID3D12GraphicsCommandList CommandList { get; }
 
         public CommandBufferD3D12(DeviceD3D12 device, int frameCount, CommandListType type)
             : base(device)
@@ -21,7 +21,7 @@ namespace Vortice.Graphics.D3D12
             _frameCount = frameCount;
             _type = type;
 
-            _commandAllocators = new CommandAllocator[frameCount];
+            _commandAllocators = new ID3D12CommandAllocator[frameCount];
             for (var i = 0; i < frameCount; ++i)
             {
                 _commandAllocators[i] = device.D3DDevice.CreateCommandAllocator(type);
