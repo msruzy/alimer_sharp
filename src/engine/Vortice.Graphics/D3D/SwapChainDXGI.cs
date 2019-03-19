@@ -62,7 +62,7 @@ namespace Vortice.Graphics
                                 Scaling = Scaling.Stretch,
                                 SwapEffect = allowTearing ? SwapEffect.FlipDiscard : SwapEffect.Discard,
                                 AlphaMode = AlphaMode.Ignore,
-                                Flags = allowTearing ? SwapChainFlag.AllowTearing : SwapChainFlag.None,
+                                Flags = allowTearing ? SwapChainFlags.AllowTearing : SwapChainFlags.None,
                             };
 
                             var fullscreenDescription = new SwapChainFullscreenDescription
@@ -75,6 +75,8 @@ namespace Vortice.Graphics
                                 win32Handle.HWnd,
                                 swapchainDesc,
                                 fullscreenDescription);
+
+                            dxgiFactory2.Dispose();
                         }
                         else
                         {

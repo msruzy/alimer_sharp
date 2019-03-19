@@ -11,7 +11,7 @@ namespace Vortice.Graphics.D3D11
         private readonly ID3D11Device _nativeDevice;
         private readonly ID3D11DeviceContext _context;
         private readonly ID3D11DeviceContext1 _context1;
-        //private readonly UserDefinedAnnotation _annotation;
+        private readonly ID3DUserDefinedAnnotation _annotation;
         private readonly bool _isImmediate;
         private readonly bool _needWorkaround;
         private ID3D11CommandList _commandList;
@@ -22,11 +22,11 @@ namespace Vortice.Graphics.D3D11
         public CommandBufferD3D11(DeviceD3D11 device, ID3D11DeviceContext context)
             : base(device)
         {
-            _nativeDevice = device.D3DDevice;
+            _nativeDevice = device.Device;
             _context = context;
             _context1 = _context.QueryInterfaceOrNull<ID3D11DeviceContext1>();
-            //_annotation = _context.QueryInterfaceOrNull<ID3D11UserDefinedAnnotation>();
-            _isImmediate = context.Type == DeviceContextType.Immediate;
+            _annotation = _context.QueryInterfaceOrNull<ID3DUserDefinedAnnotation>();
+            _isImmediate = context.GetContextType() == DeviceContextType.Immediate;
 
             if (!_isImmediate)
             {
@@ -40,7 +40,7 @@ namespace Vortice.Graphics.D3D11
         {
             Reset();
 
-            //_annotation?.Dispose();
+            _annotation?.Dispose();
             _context1?.Dispose();
             _context.Dispose();
         }
@@ -54,6 +54,7 @@ namespace Vortice.Graphics.D3D11
 
         internal override void BeginRenderPassCore(in RenderPassDescriptor descriptor)
         {
+            return;
             // Setup color attachments.
             int renderTargetCount = 0;
 

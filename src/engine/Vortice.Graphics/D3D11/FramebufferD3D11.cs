@@ -103,7 +103,7 @@ namespace Vortice.Graphics.D3D11
                             break;
                     }
 
-                    RenderTargetViews[i] = device.D3DDevice.CreateRenderTargetView(d3dTexture.Resource, viewDesc);
+                    RenderTargetViews[i] = device.Device.CreateRenderTargetView(d3dTexture.Resource, viewDesc);
                 }
             }
             else
@@ -130,14 +130,14 @@ namespace Vortice.Graphics.D3D11
                     case TextureType.Texture1D:
                         if (arraySize > 1)
                         {
-                            viewDesc.Dimension = DepthStencilViewDimension.Texture1DArray;
+                            viewDesc.ViewDimension = DepthStencilViewDimension.Texture1DArray;
                             viewDesc.Texture1DArray.MipSlice = attachment.MipLevel;
                             viewDesc.Texture1DArray.FirstArraySlice = attachment.Slice;
                             viewDesc.Texture1DArray.ArraySize = arraySize;
                         }
                         else
                         {
-                            viewDesc.Dimension = DepthStencilViewDimension.Texture1D;
+                            viewDesc.ViewDimension = DepthStencilViewDimension.Texture1D;
                             viewDesc.Texture1D.MipSlice = attachment.MipLevel;
                         }
                         break;
@@ -146,13 +146,13 @@ namespace Vortice.Graphics.D3D11
                         {
                             if (isTextureMs)
                             {
-                                viewDesc.Dimension = DepthStencilViewDimension.Texture2DMultisampledArray;
+                                viewDesc.ViewDimension = DepthStencilViewDimension.Texture2DMultisampledArray;
                                 viewDesc.Texture2DMSArray.FirstArraySlice = attachment.Slice;
                                 viewDesc.Texture2DMSArray.ArraySize = arraySize;
                             }
                             else
                             {
-                                viewDesc.Dimension = DepthStencilViewDimension.Texture2DArray;
+                                viewDesc.ViewDimension = DepthStencilViewDimension.Texture2DArray;
                                 viewDesc.Texture2DArray.MipSlice = attachment.MipLevel;
                                 viewDesc.Texture2DArray.FirstArraySlice = attachment.Slice;
                                 viewDesc.Texture2DArray.ArraySize = arraySize;
@@ -162,11 +162,11 @@ namespace Vortice.Graphics.D3D11
                         {
                             if (isTextureMs)
                             {
-                                viewDesc.Dimension = DepthStencilViewDimension.Texture2DMultisampled;
+                                viewDesc.ViewDimension = DepthStencilViewDimension.Texture2DMultisampled;
                             }
                             else
                             {
-                                viewDesc.Dimension = DepthStencilViewDimension.Texture2D;
+                                viewDesc.ViewDimension = DepthStencilViewDimension.Texture2D;
                                 viewDesc.Texture2D.MipSlice = attachment.MipLevel;
                             }
                         }
@@ -176,13 +176,13 @@ namespace Vortice.Graphics.D3D11
                     case TextureType.TextureCube:
                         if (isTextureMs)
                         {
-                            viewDesc.Dimension = DepthStencilViewDimension.Texture2DMultisampledArray;
+                            viewDesc.ViewDimension = DepthStencilViewDimension.Texture2DMultisampledArray;
                             viewDesc.Texture2DMSArray.FirstArraySlice = attachment.Slice * 6;
                             viewDesc.Texture2DMSArray.ArraySize = arraySize * 6;
                         }
                         else
                         {
-                            viewDesc.Dimension = DepthStencilViewDimension.Texture2DArray;
+                            viewDesc.ViewDimension = DepthStencilViewDimension.Texture2DArray;
                             viewDesc.Texture2DArray.MipSlice = attachment.MipLevel * 6;
                             viewDesc.Texture2DArray.FirstArraySlice = attachment.Slice * 6;
                             viewDesc.Texture2DArray.ArraySize = arraySize * 6;
@@ -190,19 +190,19 @@ namespace Vortice.Graphics.D3D11
                         break;
 
                     case TextureType.Texture3D:
-                        viewDesc.Dimension = DepthStencilViewDimension.Texture2DArray;
+                        viewDesc.ViewDimension = DepthStencilViewDimension.Texture2DArray;
                         viewDesc.Texture2DArray.MipSlice = attachment.MipLevel;
                         viewDesc.Texture2DArray.FirstArraySlice = attachment.Slice;
                         viewDesc.Texture2DArray.ArraySize = texture.Depth;
                         break;
 
                     default:
-                        viewDesc.Dimension = DepthStencilViewDimension.Unknown;
+                        viewDesc.ViewDimension = DepthStencilViewDimension.Unknown;
                         Log.Error("Invalid texture type");
                         break;
                 }
 
-                DepthStencilView = new DepthStencilView(device.D3DDevice, d3dTexture.Resource, viewDesc);
+                DepthStencilView = device.Device.CreateDepthStencilView(d3dTexture.Resource, viewDesc);
             }
         }
 

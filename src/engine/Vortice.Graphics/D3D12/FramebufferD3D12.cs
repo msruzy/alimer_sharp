@@ -22,7 +22,7 @@ namespace Vortice.Graphics.D3D12
 
                     var renderTargetViewDesc = new RenderTargetViewDescription
                     {
-                        Dimension = RenderTargetViewDimension.Texture2D,
+                        ViewDimension = RenderTargetViewDimension.Texture2D,
                         Format = ((TextureD3D12)colorAttachments[i].Texture).DXGIFormat
                     };
 

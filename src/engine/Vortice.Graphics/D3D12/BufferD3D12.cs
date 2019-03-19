@@ -9,7 +9,7 @@ namespace Vortice.Graphics.D3D12
     internal class BufferD3D12 : GraphicsBuffer
     {
         private ID3D12Resource _resource;
-        private readonly long _creationFrame;
+        private readonly ulong _creationFrame;
 
         public BufferD3D12(DeviceD3D12 device, in BufferDescriptor descriptor, IntPtr initialData)
             : base(device, descriptor)

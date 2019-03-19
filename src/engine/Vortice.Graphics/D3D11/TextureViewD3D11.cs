@@ -23,11 +23,11 @@ namespace Vortice.Graphics.D3D11
                 // TODO: Use TextureViewDescriptor
                 if (!PixelFormatUtil.IsDepthStencilFormat(resource.Format))
                 {
-                    RenderTargetView = device.D3DDevice.CreateRenderTargetView(resource.Resource);
+                    RenderTargetView = device.Device.CreateRenderTargetView(resource.Resource);
                 }
                 else
                 {
-                    DepthStencilView = device.D3DDevice.CreateDepthStencilView(resource.Resource);
+                    DepthStencilView = device.Device.CreateDepthStencilView(resource.Resource);
                 }
             }
         }

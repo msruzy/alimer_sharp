@@ -33,6 +33,11 @@ namespace Vortice.Graphics
             Validation = validation;
         }
 
+        public GraphicsDevice CreateDevice(PowerPreference powerPreference = PowerPreference.Default)
+        {
+            return CreateDeviceImpl(powerPreference);
+        }
+
         /// <summary>
         /// Create new instance of <see cref="GraphicsDeviceFactory"/>
         /// </summary>
@@ -144,5 +149,7 @@ namespace Vortice.Graphics
                     return false;
             }
         }
+
+        protected abstract GraphicsDevice CreateDeviceImpl(PowerPreference powerPreference);
     }
 }

@@ -2,10 +2,13 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 using SharpD3D11;
+using SharpD3D11.Debug;
 using SharpDXGI;
 using SharpDXGI.Direct3D;
 using Vortice.Diagnostics;
+using static SharpD3D11.D3D11;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -23,10 +26,13 @@ namespace Vortice.Graphics.D3D11
 
         public readonly IDXGIFactory1 DXGIFactory;
         public readonly IDXGIAdapter1 DXGIAdapter;
-        public readonly ID3D11Device D3DDevice;
-        public readonly ID3D11Device1 D3DDevice1;
+
+        public readonly ID3D11Device Device;
         public readonly FeatureLevel FeatureLevel;
-        public readonly ID3D11DeviceContext D3DImmediateContext;
+        public readonly ID3D11DeviceContext DeviceContext;
+
+        // Device1
+        public readonly ID3D11Device1 Device1;
 
         private readonly bool _supportsConcurrentResources;
         private readonly bool _supportsCommandLists;
@@ -37,11 +43,10 @@ namespace Vortice.Graphics.D3D11
         public bool SupportsConcurrentResources => _supportsConcurrentResources;
         public bool SupportsCommandLists => _supportsCommandLists;
 
-        public DeviceD3D11(bool validation)
+        public DeviceD3D11(IDXGIFactory1 factory, bool validation)
             : base(GraphicsBackend.Direct3D11)
         {
-            // Create factory first.
-            DXGI.CreateDXGIFactory(out DXGIFactory);
+            DXGIFactory = factory;
             var adapters = DXGIFactory.EnumAdapters1();
             for (var i = 0; i < adapters.Length; i++)
             {
@@ -49,7 +54,7 @@ namespace Vortice.Graphics.D3D11
                 var desc = adapter.Description1;
 
                 // Don't select the Basic Render Driver adapter.
-                if ((desc.Flags & AdapterFlag.Software) != AdapterFlag.None)
+                if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
                 {
                     continue;
                 }
@@ -61,53 +66,61 @@ namespace Vortice.Graphics.D3D11
                     creationFlags |= DeviceCreationFlags.Debug;
                 }
 
-                try
-                {
-                    D3DDevice = new Device(adapter, creationFlags, s_featureLevels);
-                }
-                catch (SharpDXException)
+                if (D3D11CreateDevice(
+                    null,
+                    DriverType.Hardware,
+                    creationFlags,
+                    s_featureLevels,
+                    out Device,
+                    out FeatureLevel,
+                    out DeviceContext).Failure)
                 {
                     // Remove debug flag not being supported.
                     creationFlags &= ~DeviceCreationFlags.Debug;
 
-                    D3DDevice = new Device(adapter, creationFlags, s_featureLevels);
+                    Debug.Assert(D3D11CreateDevice(
+                        null,
+                        DriverType.Hardware,
+                        creationFlags,
+                        s_featureLevels,
+                        out Device,
+                         out FeatureLevel,
+                        out DeviceContext).Success);
                 }
 
                 DXGIAdapter = adapter;
                 break;
             }
-            
-            FeatureLevel = D3DDevice.FeatureLevel;
-            D3DImmediateContext = D3DDevice.ImmediateContext;
-            D3DDevice1 = D3DDevice.QueryInterfaceOrNull<Device1>();
-            if (D3DDevice1 != null)
-            {
-                D3DImmediateContext = D3DImmediateContext.QueryInterface<DeviceContext1>();
-            }
+
+            Device1 = Device.QueryInterfaceOrNull<ID3D11Device1>();
 
             // Detect multithreading
-            D3DDevice1.CheckThreadingSupport(out _supportsConcurrentResources, out _supportsCommandLists);
+            var featureDataThreading = default(FeatureDataThreading);
+            if (Device.CheckFeatureSupport(SharpD3D11.Feature.Threading, ref featureDataThreading))
+            {
+                _supportsConcurrentResources = featureDataThreading.DriverConcurrentCreates;
+                _supportsCommandLists = featureDataThreading.DriverCommandLists;
+            }
 
             // Init device features.
             InitializeFeatures();
 
             // Create immediate context.
-            ImmediateCommandBuffer = new CommandBufferD3D11(this, D3DImmediateContext);
+            ImmediateCommandBuffer = new CommandBufferD3D11(this, DeviceContext);
         }
 
         protected override void Destroy()
         {
             ImmediateCommandBuffer.Dispose();
-            D3DDevice1?.Dispose();
-
-            var deviceDebug = D3DDevice.QueryInterfaceOrNull<DeviceDebug>();
+            var deviceDebug = Device.QueryInterfaceOrNull<ID3D11Debug>();
             if (deviceDebug != null)
             {
-                deviceDebug.ReportLiveDeviceObjects(ReportingLevel.Summary);
+                deviceDebug.ReportLiveDeviceObjects(ReportLiveDeviceObjectFlags.Summary);
                 deviceDebug.Dispose();
             }
 
-            D3DDevice.Dispose();
+            Device1?.Dispose();
+            Device.Dispose();
         }
 
         private void InitializeFeatures()
@@ -127,12 +140,12 @@ namespace Vortice.Graphics.D3D11
 
         protected override void FrameCore()
         {
-            D3DImmediateContext.Flush();
+            DeviceContext.Flush();
         }
 
         protected override void WaitIdleCore()
         {
-            D3DImmediateContext.Flush();
+            DeviceContext.Flush();
         }
 
         protected override GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData)

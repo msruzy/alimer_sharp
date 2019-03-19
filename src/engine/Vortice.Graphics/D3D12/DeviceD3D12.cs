@@ -9,6 +9,9 @@ using SharpDXGI;
 using SharpDXGI.Direct3D;
 using SharpGen.Runtime;
 using Vortice.Diagnostics;
+using static SharpDXGI.DXGI;
+using static SharpD3D12.D3D12;
+using SharpD3D12.Debug;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -36,19 +39,19 @@ namespace Vortice.Graphics.D3D12
 
         private readonly FenceD3D12 _frameFence;
         private long _currentFrameIndex;
-        private long _currentCPUFrame;
-        private long _currentGPUFrame;
+        private ulong _currentCPUFrame;
+        private ulong _currentGPUFrame;
         private bool _shuttingDown;
 
-        private readonly DescriptorAllocator[] _descriptorAllocator = new DescriptorAllocator[(int)DescriptorHeapType.NumTypes];
+        private readonly DescriptorAllocator[] _descriptorAllocator = new DescriptorAllocator[(int)DescriptorHeapType.Count];
         private readonly object _heapAllocationLock = new object();
         private readonly List<ID3D12DescriptorHeap> _descriptorHeapPool = new List<ID3D12DescriptorHeap>();
 
         /// <inheritdoc/>
         public override CommandBuffer ImmediateCommandBuffer { get; }
 
-        public long CurrentCPUFrame => _currentCPUFrame;
-        public long CurrentGPUFrame => _currentGPUFrame;
+        public ulong CurrentCPUFrame => _currentCPUFrame;
+        public ulong CurrentGPUFrame => _currentGPUFrame;
 
         /// <summary>
         /// Check if given DirectX12 backend is supported.
@@ -66,104 +69,70 @@ namespace Vortice.Graphics.D3D12
                 return false;
             }
 
-            try
-            {
-                using (var tempFactory = new DXGI.Factory1())
-                {
-                    var adapterCount = tempFactory.GetAdapterCount1();
-                    for (var i = 0; i < adapterCount; i++)
-                    {
-                        var adapter = tempFactory.GetAdapter1(i);
-                        var desc = adapter.Description1;
-
-                        // Don't select the Basic Render Driver adapter.
-                        if ((desc.Flags & SharpDX.DXGI.AdapterFlags.Software) != SharpDX.DXGI.AdapterFlags.None)
-                        {
-                            continue;
-                        }
-
-                        try
-                        {
-                            var tempDevice = new Device(adapter, FeatureLevel.Level_11_0);
-                            tempDevice.Dispose();
-
-                            s_isSupported = true;
-                            return true;
-                        }
-                        catch (SharpDX.SharpDXException)
-                        {
-                        }
-                    }
-                }
-            }
-            catch (Exception)
+            if (CreateDXGIFactory1(out IDXGIFactory1 tempFactory).Failure)
             {
                 s_isSupported = false;
                 return false;
             }
 
-            s_isSupported = true;
-            return true;
-        }
-
-        public DeviceD3D12(bool validation)
-            : base(GraphicsBackend.Direct3D12)
-        {
-            // Just try to enable debug layer.
-            if (validation)
+            var adapters = tempFactory.EnumAdapters1();
+            for (var i = 0; i < adapters.Length; i++)
             {
-                try
-                {
-                    // Enable the D3D12 debug layer.
-                    DebugInterface.Get().EnableDebugLayer();
-
-                    Validation = true;
-                }
-                catch (SharpDXException)
-                {
-                    Log.Warn("Direct3D Debug Device required but not available.");
-                    Validation = false;
-                }
-            }
-
-            // Create factory first.
-            using (var factory = new DXGI.Factory2(Validation))
-            {
-                DXGIFactory = factory.QueryInterface<DXGI.Factory4>();
-            }
-
-            var adapterCount = DXGIFactory.GetAdapterCount1();
-            for (var i = 0; i < adapterCount; i++)
-            {
-                var adapter = DXGIFactory.GetAdapter1(i);
+                var adapter = adapters[i];
                 var desc = adapter.Description1;
 
                 // Don't select the Basic Render Driver adapter.
-                if ((desc.Flags & DXGI.AdapterFlags.Software) != DXGI.AdapterFlags.None)
+                if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
                 {
                     continue;
                 }
 
-                var tempDevice = new Device(adapter, FeatureLevel.Level_11_0);
-                tempDevice.Dispose();
-
-                DXGIAdapter = adapter;
+                if (ID3D12Device.IsSupported(adapter, FeatureLevel.Level_11_0))
+                {
+                    s_isSupported = true;
+                    return true;
+                }
             }
 
-            try
+
+            s_isSupported = true;
+            return true;
+        }
+
+        public DeviceD3D12(IDXGIFactory4 factory)
+            : base(GraphicsBackend.Direct3D12)
+        {
+            DXGIFactory = factory;
+
+            var adapters = DXGIFactory.EnumAdapters1();
+            for (var i = 0; i < adapters.Length; i++)
             {
-                D3DDevice = new Device(DXGIAdapter, FeatureLevel.Level_11_0);
+                var adapter = adapters[i];
+                var desc = adapter.Description1;
+
+                // Don't select the Basic Render Driver adapter.
+                if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
+                {
+                    continue;
+                }
+
+                if (D3D12CreateDevice(adapter, FeatureLevel.Level_11_0, out var device).Success)
+                {
+                    DXGIAdapter = adapter;
+                    D3DDevice = device;
+                }
             }
-            catch (SharpDXException)
+
+            if (D3DDevice == null)
             {
                 // Create the Direct3D 12 with WARP adapter.
-                var warpAdapter = DXGIFactory.GetWarpAdapter();
-                D3DDevice = new Device(warpAdapter, FeatureLevel.Level_11_0);
+                DXGIAdapter = DXGIFactory.GetWarpAdapter<IDXGIAdapter1>();
+                Debug.Assert(D3D12CreateDevice(DXGIAdapter, FeatureLevel.Level_11_0, out D3DDevice).Success);
             }
 
             if (Validation)
             {
-                var infoQueue = D3DDevice.QueryInterfaceOrNull<InfoQueue>();
+                var infoQueue = D3DDevice.QueryInterfaceOrNull<ID3D12InfoQueue>();
                 if (infoQueue != null)
                 {
 #if DEBUG
@@ -171,17 +140,18 @@ namespace Vortice.Graphics.D3D12
                     infoQueue.SetBreakOnSeverity(MessageSeverity.Error, true);
 #endif
 
-                    infoQueue.AddStorageFilterEntries(new InfoQueueFilter
+                    infoQueue.AddStorageFilterEntries(new SharpD3D12.Debug.InfoQueueFilter
                     {
-                        DenyList = new InfoQueueFilterDescription
+                        DenyList = new SharpD3D12.Debug.InfoQueueFilterDescription
                         {
                             Ids = new[]
                             {
-                                MessageId.ClearrendertargetviewMismatchingclearvalue,
+                                MessageId.ClearRenderTargetViewMismatchingClearValue,
 
                                 // These happen when capturing with VS diagnostics
-                                MessageId.MapInvalidNullRange,
-                                MessageId.UnmapInvalidNullRange
+                                // TODO: Cleanup and SharpD3D12 side.
+                                MessageId.MessageIdMapInvalidNullrange,
+                                MessageId.MessageIdUnmapInvalidNullrange
                             }
                         }
                     });
@@ -193,8 +163,8 @@ namespace Vortice.Graphics.D3D12
             InitializeFeatures();
 
             // Create main graphics command queue.
-            GraphicsQueue = D3DDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct, CommandQueueFlags.None));
-            GraphicsQueue.Name = "Main GraphicsQueue";
+            GraphicsQueue = D3DDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
+            GraphicsQueue.SetName("Main GraphicsQueue");
 
             // Create ImmediateContext.
             for (int i = 0; i < RenderLatency; i++)
@@ -202,7 +172,7 @@ namespace Vortice.Graphics.D3D12
                 _deferredReleases[i] = new List<IUnknown>();
             }
             ImmediateCommandBuffer = new CommandBufferD3D12(this, RenderLatency, CommandListType.Direct);
-            ((CommandBufferD3D12)ImmediateCommandBuffer).CommandList.Name = "Primary Graphics Command List";
+            ((CommandBufferD3D12)ImmediateCommandBuffer).CommandList.SetName("Primary Graphics Command List");
 
             // Create the frame fence
             _frameFence = new FenceD3D12(this, 0);
@@ -235,10 +205,10 @@ namespace Vortice.Graphics.D3D12
 
             if (Validation)
             {
-                var debugDevice = D3DDevice.QueryInterfaceOrNull<DebugDevice>();
+                var debugDevice = D3DDevice.QueryInterfaceOrNull<ID3D12DebugDevice>();
                 if (debugDevice != null)
                 {
-                    debugDevice.ReportLiveDeviceObjects(RldoFlags.Detail);
+                    debugDevice.ReportLiveDeviceObjects(ReportLiveDeviceObjectFlags.Detail);
                     debugDevice.Dispose();
                 }
             }
@@ -255,7 +225,7 @@ namespace Vortice.Graphics.D3D12
             Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
 
             FeatureLevel = D3DDevice.CheckMaxSupportedFeatureLevel(s_featureLevels);
-            var D3D12Options = D3DDevice.D3D12Options;
+            //var D3D12Options = D3DDevice.D3D12Options;
 
             var dataShaderModel = D3DDevice.CheckShaderModel(ShaderModel.Model60);
             //var dataShaderModel1 = D3DDevice.CheckShaderModel(ShaderModel.Model61);
@@ -268,7 +238,7 @@ namespace Vortice.Graphics.D3D12
                 HighestVersion = RootSignatureVersion.Version11
             };
 
-            if (!D3DDevice.CheckFeatureSupport(Feature.RootSignature, ref featureDataRootSignature))
+            if (!D3DDevice.CheckFeatureSupport(SharpD3D12.Feature.RootSignature, ref featureDataRootSignature))
             {
                 featureDataRootSignature.HighestVersion = RootSignatureVersion.Version10;
             }
@@ -287,7 +257,7 @@ namespace Vortice.Graphics.D3D12
             _frameFence.Signal(GraphicsQueue, _currentCPUFrame);
 
             // Wait for the GPU to catch up before we stomp an executing command buffer
-            long gpuLag = _currentCPUFrame - _currentGPUFrame;
+            ulong gpuLag = _currentCPUFrame - _currentGPUFrame;
             Debug.Assert(gpuLag <= RenderLatency);
             if (gpuLag >= RenderLatency)
             {

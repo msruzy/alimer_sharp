@@ -26,10 +26,10 @@ namespace Vortice.Graphics.D3D11
 
             if ((descriptor.BufferUsage & BufferUsage.Indirect) != 0)
             {
-                description.OptionFlags |= ResourceOptionFlags.DrawindirectArgs;
+                description.OptionFlags |= ResourceOptionFlags.DrawIndirectArgs;
             }
 
-            Resource = device.D3DDevice.CreateBuffer(description/*, initialData*/);
+            Resource = device.Device.CreateBuffer(description, initialData);
         }
 
         /// <inheritdoc/>

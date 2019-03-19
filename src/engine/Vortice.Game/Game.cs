@@ -262,8 +262,8 @@ namespace Vortice
             {
                 // Create GPU device first.
                 _graphicsDeviceFactory = GraphicsDeviceFactory.Create(GraphicsBackend.Direct3D11, validation: true);
-                var adapter = _graphicsDeviceFactory.GetAdapter();
-                _graphicsDevice = GraphicsDevice.Create(GraphicsBackend.Default, validation: true);
+                //var adapter = _graphicsDeviceFactory.ad();
+                _graphicsDevice = _graphicsDeviceFactory.CreateDevice(PowerPreference.Default);
                 MainView.SetDevice(_graphicsDevice);
 
                 // Enter main loop.

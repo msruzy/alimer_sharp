@@ -60,44 +60,6 @@ namespace Vortice.Graphics
 
             base.Dispose(disposing);
         }
-
-        
-        /// <summary>
-        /// Create new instance of <see cref="GraphicsDevice"/>
-        /// </summary>
-        /// <param name="preferredBackend">The preferred of <see cref="GraphicsBackend"/></param>
-        /// <param name="validation">Whether to enable validation if supported.</param>
-        /// <returns>New instance of <see cref="GraphicsDevice"/>.</returns>
-        public static GraphicsDevice Create(GraphicsBackend preferredBackend, bool validation)
-        {
-            switch (preferredBackend)
-            {
-                case GraphicsBackend.Direct3D11:
-#if !VORTICE_NO_D3D11
-                    return new D3D11.DeviceD3D11(validation);
-#else
-                    throw new GraphicsException($"{GraphicsBackend.Direct3D11} Backend is not supported");
-#endif
-
-                case GraphicsBackend.Direct3D12:
-#if !VORTICE_NO_D3D12
-                    return new D3D12.DeviceD3D12(validation);
-#else
-                    throw new GraphicsException($"{GraphicsBackend.Direct3D12} Backend is not supported");
-#endif
-
-                case GraphicsBackend.Vulkan:
-#if !VORTICE_NO_VULKAN
-                    return new Vulkan.VulkanGraphicsDevice(validation);
-#else
-                    throw new GraphicsException($"{GraphicsBackend.Vulkan} Backend is not supported");
-#endif
-
-                default:
-                    throw new GraphicsException($"Invalid {preferredBackend} backend");
-            }
-        }
-
         
         /// <summary>
         /// Present current frame and advance to next frame.

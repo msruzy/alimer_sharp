@@ -16,7 +16,6 @@ namespace Vortice.Graphics
         public GraphicsDeviceFactoryD3D(GraphicsBackend backend, bool validation)
             : base(backend, validation)
         {
-
             switch (backend)
             {
                 case GraphicsBackend.Direct3D11:
@@ -33,12 +32,24 @@ namespace Vortice.Graphics
                     }
                     else
                     {
-                        validation = false;
+                        Validation = false;
                     }
 
-                    Debug.Assert(CreateDXGIFactory2(validation, out IDXGIFactory2 dxgiFactory2).Success);
-                    DXGIFactory = dxgiFactory2;
+                    Debug.Assert(CreateDXGIFactory2(Validation, out IDXGIFactory4 dxgiFactory4).Success);
+                    DXGIFactory = dxgiFactory4;
                     break;
+            }
+        }
+
+        protected override GraphicsDevice CreateDeviceImpl(PowerPreference powerPreference)
+        {
+            if (Backend == GraphicsBackend.Direct3D11)
+            {
+                return new D3D11.DeviceD3D11(DXGIFactory, Validation);
+            }
+            else
+            {
+                return new D3D12.DeviceD3D12((IDXGIFactory4)DXGIFactory);
             }
         }
     }

@@ -34,10 +34,10 @@ namespace Vortice.Graphics.D3D12
                 || _remainingFreeHandles < count)
             {
                 _currentHeap = Device.RequestNewHeap(Type, DescriptorsPerHeap);
-                _currentCpuHandle = _currentHeap.CPUDescriptorHandleForHeapStart;
+                _currentCpuHandle = _currentHeap.GetCPUDescriptorHandleForHeapStart();
                 if (IsShaderVisible)
                 {
-                    _currentGpuHandle = _currentHeap.GPUDescriptorHandleForHeapStart;
+                    _currentGpuHandle = _currentHeap.GetGPUDescriptorHandleForHeapStart();
                 }
 
                 _remainingFreeHandles = DescriptorsPerHeap;
@@ -55,7 +55,7 @@ namespace Vortice.Graphics.D3D12
             if (IsShaderVisible)
             {
                 var gpuHandle = _currentGpuHandle;
-                _currentGpuHandle.Ptr += count * _descriptorSize;
+                _currentGpuHandle.Ptr += (ulong)(count * _descriptorSize);
                 return new DescriptorHandle(_currentHeap, _descriptorSize, cpuHandle, gpuHandle);
             }
 
