@@ -55,7 +55,8 @@ namespace Vortice.Windows
             {
                 dwOSVersionInfoSize = (uint)Unsafe.SizeOf<RTL_OSVERSIONINFOEX>()
             };
-            Debug.Assert(RtlGetVersion(ref osvi) == 0);
+            var result = RtlGetVersion(ref osvi);
+            Debug.Assert(result == 0);
             return (int)osvi.dwMajorVersion;
         }
 
@@ -65,7 +66,8 @@ namespace Vortice.Windows
             {
                 dwOSVersionInfoSize = (uint)Unsafe.SizeOf<RTL_OSVERSIONINFOEX>()
             };
-            Debug.Assert(RtlGetVersion(ref osvi) == 0);
+            var result = RtlGetVersion(ref osvi);
+            Debug.Assert(result == 0);
             return (int)osvi.dwMinorVersion;
         }
 
@@ -75,7 +77,8 @@ namespace Vortice.Windows
             {
                 dwOSVersionInfoSize = (uint)Unsafe.SizeOf<RTL_OSVERSIONINFOEX>()
             };
-            Debug.Assert(RtlGetVersion(ref osvi) == 0);
+            var result = RtlGetVersion(ref osvi);
+            Debug.Assert(result == 0);
             return (int)osvi.dwBuildNumber;
         }
     }

@@ -19,7 +19,10 @@ namespace Vortice.Graphics
             switch (backend)
             {
                 case GraphicsBackend.Direct3D11:
-                    Debug.Assert(CreateDXGIFactory1(out DXGIFactory).Success);
+                    if (CreateDXGIFactory1(out DXGIFactory).Failure)
+                    {
+                        throw new GraphicsException("Cannot create IDXGIFactory1");
+                    }
                     break;
 
                 case GraphicsBackend.Direct3D12:
@@ -35,7 +38,11 @@ namespace Vortice.Graphics
                         Validation = false;
                     }
 
-                    Debug.Assert(CreateDXGIFactory2(Validation, out IDXGIFactory4 dxgiFactory4).Success);
+                    if (CreateDXGIFactory2(Validation, out IDXGIFactory4 dxgiFactory4).Failure)
+                    {
+                        throw new GraphicsException("Cannot create IDXGIFactory4");
+                    }
+
                     DXGIFactory = dxgiFactory4;
                     break;
             }

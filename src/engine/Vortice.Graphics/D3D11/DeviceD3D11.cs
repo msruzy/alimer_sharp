@@ -78,14 +78,12 @@ namespace Vortice.Graphics.D3D11
                     // Remove debug flag not being supported.
                     creationFlags &= ~DeviceCreationFlags.Debug;
 
-                    Debug.Assert(D3D11CreateDevice(
-                        null,
-                        DriverType.Hardware,
-                        creationFlags,
-                        s_featureLevels,
-                        out Device,
-                         out FeatureLevel,
-                        out DeviceContext).Success);
+                    if (D3D11CreateDevice(null, DriverType.Hardware,
+                        creationFlags, s_featureLevels,
+                        out Device, out FeatureLevel, out DeviceContext).Failure)
+                    {
+                        throw new GraphicsException("Cannot create D3D11 Device");
+                    }
                 }
 
                 DXGIAdapter = adapter;

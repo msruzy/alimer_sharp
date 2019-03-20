@@ -127,7 +127,10 @@ namespace Vortice.Graphics.D3D12
             {
                 // Create the Direct3D 12 with WARP adapter.
                 DXGIAdapter = DXGIFactory.GetWarpAdapter<IDXGIAdapter1>();
-                Debug.Assert(D3D12CreateDevice(DXGIAdapter, FeatureLevel.Level_11_0, out D3DDevice).Success);
+                if (D3D12CreateDevice(DXGIAdapter, FeatureLevel.Level_11_0, out D3DDevice).Failure)
+                {
+                    throw new GraphicsException("Cannot create D3D12 device");
+                }
             }
 
             if (Validation)
