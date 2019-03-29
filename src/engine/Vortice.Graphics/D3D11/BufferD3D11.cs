@@ -3,7 +3,7 @@
 
 using System;
 using static Vortice.Graphics.D3D11.Utils;
-using SharpD3D11;
+using SharpDirect3D11;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -17,7 +17,7 @@ namespace Vortice.Graphics.D3D11
             var description = new BufferDescription()
             {
                 ByteWidth = descriptor.SizeInBytes,
-                Usage = (SharpD3D11.Usage)descriptor.Usage,
+                Usage = (SharpDirect3D11.Usage)descriptor.Usage,
                 BindFlags = Convert(descriptor.BufferUsage),
                 CpuAccessFlags = Convert(descriptor.Usage),
                 OptionFlags = ResourceOptionFlags.None,

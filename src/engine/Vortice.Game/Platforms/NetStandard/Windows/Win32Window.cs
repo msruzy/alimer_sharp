@@ -3,6 +3,7 @@
 
 using System;
 using Vortice.Graphics;
+using Vortice.Mathematics;
 using static Vortice.Windows.User32;
 
 namespace Vortice.Windows
@@ -20,13 +21,14 @@ namespace Vortice.Windows
         /// <inheritdoc/>
         public override bool IsMinimized => IsIconic(_hwnd);
 
-        public override Size ClientSize
+        /// <inheritdoc/>
+        public override RectangleF Bounds
         {
             get
 
             {
                 GetClientRect(_hwnd, out var rect);
-                return new Size(rect.Right, rect.Bottom)/* / Scaling*/;
+                return new RectangleF(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
             }
         }
 

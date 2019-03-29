@@ -3,7 +3,7 @@
 
 using static Vortice.Graphics.D3D11.Utils;
 using System.Collections.Generic;
-using SharpD3D11;
+using SharpDirect3D11;
 using SharpDXGI;
 
 namespace Vortice.Graphics.D3D11
@@ -28,7 +28,7 @@ namespace Vortice.Graphics.D3D11
             DXGIFormat = D3DConvert.Convert(description.Format);
 
             var cpuFlags = CpuAccessFlags.None;
-            var resourceUsage = SharpD3D11.Usage.Default;
+            var resourceUsage = SharpDirect3D11.Usage.Default;
             var bindFlags = Convert(description.TextureUsage, description.Format);
             var optionFlags = ResourceOptionFlags.None;
 

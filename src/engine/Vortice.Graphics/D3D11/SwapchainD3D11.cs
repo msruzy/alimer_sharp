@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System.Diagnostics;
-using SharpD3D11;
+using SharpDirect3D11;
 
 namespace Vortice.Graphics.D3D11
 {

@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using SharpD3D11;
+using SharpDirect3D11;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -69,10 +69,7 @@ namespace Vortice.Graphics.D3D11
                 switch (attachment.LoadAction)
                 {
                     case LoadAction.Clear:
-                        _context.ClearRenderTargetView(
-                            RenderTargetViews[i],
-                            D3DConvert.Convert(attachment.ClearColor)
-                            );
+                        _context.ClearRenderTargetView(RenderTargetViews[i], attachment.ClearColor);
                         break;
 
                     default:

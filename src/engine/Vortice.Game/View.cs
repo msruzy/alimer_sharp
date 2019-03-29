@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using Vortice.Graphics;
+using Vortice.Mathematics;
 
 namespace Vortice
 {
@@ -31,9 +32,10 @@ namespace Vortice
         public virtual bool IsMinimized => false;
 
         /// <summary>
-        /// Gets the view client size.
+        /// Gets the bounding rectangle of the window.
         /// </summary>
-        public abstract Size ClientSize { get; }
+        /// <value>The bounding rectangle of the window, in device-independent pixels (DIPs).</value>
+        public abstract RectangleF Bounds { get; }
 
         /// <summary>
         /// The text that is displayed in the title bar of the window (if it has a title bar).
@@ -119,12 +121,12 @@ namespace Vortice
             if (_device == null)
                 return;
 
-            var clientSize = ClientSize;
+            var bounds = Bounds;
 
             var descriptor = new SwapChainDescriptor
             {
-                Width = (int)clientSize.Width,
-                Height = (int)clientSize.Height,
+                Width = (int)bounds.Width,
+                Height = (int)bounds.Height,
                 PreferredColorFormat = PixelFormat.BGRA8UNorm,
                 PreferredDepthStencilFormat = PixelFormat.Depth24UNormStencil8,
                 Handle = handle

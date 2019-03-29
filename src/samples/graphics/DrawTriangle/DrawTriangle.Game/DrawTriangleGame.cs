@@ -5,6 +5,7 @@ using System.Numerics;
 using Vortice;
 using Vortice.Assets.Graphics;
 using Vortice.Graphics;
+using Vortice.Mathematics;
 
 namespace DrawTriangle
 {

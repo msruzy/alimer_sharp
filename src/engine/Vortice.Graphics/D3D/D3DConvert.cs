@@ -9,9 +9,6 @@ namespace Vortice.Graphics
 {
     internal static class D3DConvert
     {
-        public static Vector4 Convert(in Color4 color) => new Vector4(color.R, color.G, color.B, color.A);
-        //public static Color4 Convert(in RawColor4 color) => new Color4(color.R, color.G, color.B, color.A);
-
         public static Format Convert(PixelFormat format)
         {
             switch (format)

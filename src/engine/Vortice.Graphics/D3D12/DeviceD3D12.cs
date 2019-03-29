@@ -4,14 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using SharpD3D12;
+using SharpDirect3D12;
 using SharpDXGI;
 using SharpDXGI.Direct3D;
 using SharpGen.Runtime;
 using Vortice.Diagnostics;
 using static SharpDXGI.DXGI;
-using static SharpD3D12.D3D12;
-using SharpD3D12.Debug;
+using static SharpDirect3D12.D3D12;
+using SharpDirect3D12.Debug;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -127,6 +127,7 @@ namespace Vortice.Graphics.D3D12
             {
                 // Create the Direct3D 12 with WARP adapter.
                 DXGIAdapter = DXGIFactory.GetWarpAdapter<IDXGIAdapter1>();
+
                 if (D3D12CreateDevice(DXGIAdapter, FeatureLevel.Level_11_0, out D3DDevice).Failure)
                 {
                     throw new GraphicsException("Cannot create D3D12 device");
@@ -143,18 +144,21 @@ namespace Vortice.Graphics.D3D12
                     infoQueue.SetBreakOnSeverity(MessageSeverity.Error, true);
 #endif
 
-                    infoQueue.AddStorageFilterEntries(new SharpD3D12.Debug.InfoQueueFilter
+                    infoQueue.AddStorageFilterEntries(new SharpDirect3D12.Debug.InfoQueueFilter
                     {
-                        DenyList = new SharpD3D12.Debug.InfoQueueFilterDescription
+                        DenyList = new SharpDirect3D12.Debug.InfoQueueFilterDescription
                         {
                             Ids = new[]
                             {
-                                MessageId.ClearRenderTargetViewMismatchingClearValue,
+                                MessageId.ClearrendertargetviewMismatchingclearvalue,
+                                //MessageId.ClearRenderTargetViewMismatchingClearValue,
 
                                 // These happen when capturing with VS diagnostics
-                                // TODO: Cleanup and SharpD3D12 side.
-                                MessageId.MessageIdMapInvalidNullrange,
-                                MessageId.MessageIdUnmapInvalidNullrange
+                                // TODO: Cleanup and SharpDirect3D12 side.
+                                MessageId.MapInvalidNullrange,
+                                MessageId.UnmapInvalidNullrange,
+                                //MessageId.MessageIdMapInvalidNullrange,
+                                //MessageId.MessageIdUnmapInvalidNullrange
                             }
                         }
                     });
@@ -236,12 +240,13 @@ namespace Vortice.Graphics.D3D12
             var waveIntrinsicsSupport = D3DDevice.GetD3D12Options1();
 
             //Device.CheckFeatureSupport(Feature.D3D12Options1, ref waveIntrinsicsSupport);
+
             var featureDataRootSignature = new FeatureDataRootSignature
             {
                 HighestVersion = RootSignatureVersion.Version11
             };
 
-            if (!D3DDevice.CheckFeatureSupport(SharpD3D12.Feature.RootSignature, ref featureDataRootSignature))
+            if (!D3DDevice.CheckFeatureSupport(SharpDirect3D12.Feature.RootSignature, ref featureDataRootSignature))
             {
                 featureDataRootSignature.HighestVersion = RootSignatureVersion.Version10;
             }

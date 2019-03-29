@@ -3,12 +3,12 @@
 
 using System;
 using System.Diagnostics;
-using SharpD3D11;
-using SharpD3D11.Debug;
+using SharpDirect3D11;
+using SharpDirect3D11.Debug;
 using SharpDXGI;
 using SharpDXGI.Direct3D;
 using Vortice.Diagnostics;
-using static SharpD3D11.D3D11;
+using static SharpDirect3D11.D3D11;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -93,8 +93,8 @@ namespace Vortice.Graphics.D3D11
             Device1 = Device.QueryInterfaceOrNull<ID3D11Device1>();
 
             // Detect multithreading
-            var featureDataThreading = default(FeatureDataThreading);
-            if (Device.CheckFeatureSupport(SharpD3D11.Feature.Threading, ref featureDataThreading))
+            FeatureDataThreading featureDataThreading = default;
+            if (Device.CheckFeatureSupport(SharpDirect3D11.Feature.Threading, ref featureDataThreading))
             {
                 _supportsConcurrentResources = featureDataThreading.DriverConcurrentCreates;
                 _supportsCommandLists = featureDataThreading.DriverCommandLists;

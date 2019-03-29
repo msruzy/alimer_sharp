@@ -10,6 +10,7 @@ using static Vortice.Windows.User32;
 using static Vortice.Windows.ShCore;
 using System.Runtime.CompilerServices;
 using Vortice.Diagnostics;
+using Vortice.Mathematics;
 
 namespace Vortice.Windows
 {

@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using Vortice.Graphics;
+using Vortice.Mathematics;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -13,13 +14,13 @@ namespace Vortice
     {
         private CoreWindow _coreWindow;
         private bool _activated;
-        private Size _clientSize;
+        private RectangleF _bounds;
         //private SwapChainHandle _swapChainHandle;
 
         public CoreApplicationView CoreApplicationView { get; internal set; }
 
         /// <inheritdoc/>
-        public override Size ClientSize => _clientSize;
+        public override RectangleF Bounds => _bounds;
 
         public UAPView(string title)
             : base(title)
@@ -90,8 +91,7 @@ namespace Vortice
 
         private void UpdateSize(CoreWindow window)
         {
-            var bounds = window.Bounds;
-            _clientSize = new Size((float)bounds.Width, (float)bounds.Height);
+            _bounds = window.Bounds.ToRectangleF();
         }
 
         private void ApplicationView_Activated(CoreApplicationView sender, IActivatedEventArgs args)

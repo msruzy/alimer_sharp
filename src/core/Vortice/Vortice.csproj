@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="Vortice.Mathematics" Version="1.0.0-alpha04" />
   </ItemGroup>
 
 </Project>

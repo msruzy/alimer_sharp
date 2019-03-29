@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using Vortice.Mathematics;
 
 namespace Vortice.Windows
 {
@@ -433,7 +434,7 @@ namespace Vortice.Windows
 
         [return: MarshalAs(UnmanagedType.U1)]
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool AdjustWindowRect([In] [Out] ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu);
+        public static extern bool AdjustWindowRect([In] [Out] ref RECT lpRect, WindowStyles dwStyle, bool hasMenu);
 
         [return: MarshalAs(UnmanagedType.U1)]
         [DllImport(LibraryName, ExactSpelling = true)]
