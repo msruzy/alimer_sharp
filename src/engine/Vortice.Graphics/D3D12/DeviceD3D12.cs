@@ -150,8 +150,7 @@ namespace Vortice.Graphics.D3D12
                         {
                             Ids = new[]
                             {
-                                MessageId.ClearrendertargetviewMismatchingclearvalue,
-                                //MessageId.ClearRenderTargetViewMismatchingClearValue,
+                                MessageId.ClearRenderTargetViewMismatchingClearValue,
 
                                 // These happen when capturing with VS diagnostics
                                 // TODO: Cleanup and SharpDirect3D12 side.
@@ -231,27 +230,11 @@ namespace Vortice.Graphics.D3D12
             Features.DeviceName = adapterDesc.Description;
             Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
 
-            FeatureLevel = D3DDevice.CheckMaxSupportedFeatureLevel(s_featureLevels);
-            //var D3D12Options = D3DDevice.D3D12Options;
-
-            var dataShaderModel = D3DDevice.CheckShaderModel(ShaderModel.Model60);
-            //var dataShaderModel1 = D3DDevice.CheckShaderModel(ShaderModel.Model61);
-            //var dataShaderModel2 = D3DDevice.CheckShaderModel(ShaderModel.Model62);
-            var waveIntrinsicsSupport = D3DDevice.GetD3D12Options1();
+            D3DDevice.CheckMaxSupportedFeatureLevel(s_featureLevels, out var maxSupportedFeatureLevel);
+            FeatureLevel = maxSupportedFeatureLevel;
 
             //Device.CheckFeatureSupport(Feature.D3D12Options1, ref waveIntrinsicsSupport);
-
-            var featureDataRootSignature = new FeatureDataRootSignature
-            {
-                HighestVersion = RootSignatureVersion.Version11
-            };
-
-            if (!D3DDevice.CheckFeatureSupport(SharpDirect3D12.Feature.RootSignature, ref featureDataRootSignature))
-            {
-                featureDataRootSignature.HighestVersion = RootSignatureVersion.Version10;
-            }
-
-            var gpuVaSupport = D3DDevice.GetGpuVirtualAddressSupport();
+            var HighestRootSignatureVersion = D3DDevice.CheckHighestRootSignatureVersion(RootSignatureVersion.Version11);
         }
 
         protected override void FrameCore()
