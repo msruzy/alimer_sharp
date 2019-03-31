@@ -6,7 +6,7 @@
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;uap10.0.16299</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.2</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <Description>Vortice.Graphics library for cross platform application support</Description>
     <ExcludeVulkan>True</ExcludeVulkan>
     <DefineConstants Condition="'$(ExcludeD3D11)' == 'true'">$(DefineConstants);VORTICE_NO_D3D11</DefineConstants>
