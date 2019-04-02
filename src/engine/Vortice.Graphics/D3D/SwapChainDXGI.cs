@@ -139,11 +139,6 @@ namespace Vortice.Graphics
         public Format BackBufferFormat { get; } = Format.B8G8R8A8_UNorm;
 
         /// <inheritdoc/>
-        protected override void ConfigureImpl(in SwapChainDescriptor descriptor)
-        {
-        }
-
-        /// <inheritdoc/>
         protected override void Destroy()
         {
             _swapChain.Dispose();

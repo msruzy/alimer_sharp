@@ -59,6 +59,8 @@ namespace DrawTriangle
             var pixel = ShaderCompiler.Compile(shaderSource, ShaderStages.Pixel, ShaderLanguage.DXC);
 
             //_shader = GraphicsDevice.CreateShader(vertex, pixel);
+
+            MainView.ClearColor = new Color4(0.0f, 0.2f, 0.4f);
         }
 
         protected override void Draw(GameTime time)
@@ -67,7 +69,6 @@ namespace DrawTriangle
 
             // Record commands to default context.
             var commandBuffer = GraphicsDevice.ImmediateCommandBuffer;
-            var clearColor = new Color4(0.0f, 0.2f, 0.4f);
             commandBuffer.BeginRenderPass(MainView.CurrentRenderPassDescriptor);
             commandBuffer.EndRenderPass();
             commandBuffer.Commit();

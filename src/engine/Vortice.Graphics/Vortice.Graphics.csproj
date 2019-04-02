@@ -24,8 +24,8 @@
   <ItemGroup>
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
-    <PackageReference Include="SharpDirect3D11" Version="1.0.0-alpha02" Condition="'$(ExcludeD3D11)' != 'true'" />
-    <PackageReference Include="SharpDirect3D12" Version="1.0.0-alpha02" Condition="'$(ExcludeD3D12)' != 'true'" />
+    <PackageReference Include="SharpDirect3D11" Version="1.0.0-alpha04" Condition="'$(ExcludeD3D11)' != 'true'" />
+    <PackageReference Include="SharpDirect3D12" Version="1.0.0-alpha04" Condition="'$(ExcludeD3D12)' != 'true'" />
     <ProjectReference Include="..\..\core\Vortice\Vortice.csproj" />
   </ItemGroup>
 

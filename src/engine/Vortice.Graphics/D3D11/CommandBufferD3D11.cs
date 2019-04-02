@@ -54,7 +54,6 @@ namespace Vortice.Graphics.D3D11
 
         internal override void BeginRenderPassCore(in RenderPassDescriptor descriptor)
         {
-            return;
             // Setup color attachments.
             int renderTargetCount = 0;
 

@@ -13,8 +13,8 @@ namespace Vortice.Graphics
         public abstract int BackBufferCount { get; }
         public abstract int CurrentBackBuffer { get; }
 
+        private Texture[] _textures;
         private Texture _depthStencilTexture;
-        private Framebuffer[] _framebuffers;
 
         /// <summary>
         /// Create a new instance of <see cref="SwapChain"/> class.
@@ -33,9 +33,11 @@ namespace Vortice.Graphics
         /// <param name="descriptor">The descriptor.</param>
         public void Configure(in SwapChainDescriptor descriptor)
         {
-            ConfigureImpl(descriptor);
-
-            _framebuffers = new Framebuffer[BackBufferCount];
+            _textures = new Texture[BackBufferCount];
+            for (var i = 0; i < BackBufferCount; i++)
+            {
+                _textures[i] = GetBackBufferTexture(i);
+            }
 
             bool hasDepthStencil = descriptor.PreferredDepthStencilFormat != PixelFormat.Unknown;
             if (hasDepthStencil)
@@ -46,31 +48,23 @@ namespace Vortice.Graphics
                     descriptor.PreferredDepthStencilFormat, TextureUsage.RenderTarget)
                     );
             }
-
-            FramebufferAttachment? depthStencilAttachment = null;
-            for (var i = 0; i < BackBufferCount; i++)
-            {
-                var backbufferTexture = GetBackBufferTexture(i);
-                if (hasDepthStencil)
-                {
-                    depthStencilAttachment = new FramebufferAttachment(_depthStencilTexture);
-                }
-
-                _framebuffers[i] = Device.CreateFramebuffer(new[] { new FramebufferAttachment(backbufferTexture) }, depthStencilAttachment);
-            }
         }
 
         /// <summary>
-        /// Get the current frame <see cref="Framebuffer"/>.
+        /// Get the current frame <see cref="Texture"/>.
         /// </summary>
-        public Framebuffer CurrentFramebuffer => _framebuffers[CurrentBackBuffer];
+        public Texture CurrentTexture => _textures[CurrentBackBuffer];
+
+        /// <summary>
+        /// Get the depth/stencil texture.
+        /// </summary>
+        public Texture DepthStencilTexture => _depthStencilTexture;
 
         public void Present()
         {
             PresentImpl();
         }
 
-        protected abstract void ConfigureImpl(in SwapChainDescriptor descriptor);
         protected abstract Texture GetBackBufferTexture(int index);
         protected abstract void PresentImpl();
     }

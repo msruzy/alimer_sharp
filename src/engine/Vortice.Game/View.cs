@@ -54,14 +54,24 @@ namespace Vortice
         }
 
         public SwapChainHandle Handle { get; private set; }
+
         public SwapChain SwapChain => _swapChain;
+
+        public Color4 ClearColor { get; set; } = new Color4(0.0f, 0.0f, 0.0f, 1.0f);
 
         public RenderPassDescriptor CurrentRenderPassDescriptor
         {
             get
             {
+                var currentTexture = _swapChain.CurrentTexture;
                 return new RenderPassDescriptor(new[]{
-                    new RenderPassColorAttachmentDescriptor()
+                    new RenderPassColorAttachmentDescriptor
+                    {
+                        Texture = currentTexture,
+                        LoadAction = LoadAction.Clear,
+                        StoreAction = StoreAction.Store,
+                        ClearColor = ClearColor
+                    }
                 });
             }
         }
