@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using Vortice.Mathematics;
 
 namespace Vortice.Graphics
 {
@@ -13,15 +14,20 @@ namespace Vortice.Graphics
         /// <summary>
         /// Gets the creation <see cref="GraphicsDevice"/>.
         /// </summary>
-        public GraphicsDevice Device { get; }
+        public GraphicsDevice Device => CommandQueue.Device;
+
+        /// <summary>
+        /// Gets the creation <see cref="CommandQueue"/>.
+        /// </summary>
+        public CommandQueue CommandQueue { get; }
 
         /// <summary>
         /// Create a new instance of <see cref="CommandBuffer"/> class.
         /// </summary>
-        /// <param name="device">The creation device</param>
-        protected CommandBuffer(GraphicsDevice device)
+        /// <param name="commandQueue">The creation <see cref="CommandQueue"/></param>
+        protected CommandBuffer(CommandQueue commandQueue)
         {
-            Device = device;
+            CommandQueue = commandQueue;
         }
 
         /// <inheritdoc/>
@@ -51,14 +57,47 @@ namespace Vortice.Graphics
             EndRenderPassCore();
         }
 
+        public void SetViewport(ViewportF viewport)
+        {
+            SetViewportImpl(viewport);
+        }
+
+        public void SetViewports(params ViewportF[] viewports)
+        {
+            SetViewportsImpl(viewports, viewports.Length);
+        }
+
+        public void SetViewports(ViewportF[] viewports, int count)
+        {
+            SetViewportsImpl(viewports, count);
+        }
+
+        public void SetScissorRect(Rectangle rect)
+        {
+            SetScissorRectImpl(rect);
+        }
+
+        public void SetScissorRects(Rectangle[] scissorRects, int count)
+        {
+            SetScissorRectsImpl(scissorRects, count);
+        }
+
+        public void SetScissorRects(params Rectangle[] scissorRects)
+        {
+            SetScissorRectsImpl(scissorRects, scissorRects.Length);
+        }
+
         public void Commit()
         {
-            CommitCore();
+            CommandQueue.Submit(this);
         }
 
         protected abstract void Destroy();
         internal abstract void BeginRenderPassCore(in RenderPassDescriptor descriptor);
         protected abstract void EndRenderPassCore();
-        protected abstract void CommitCore();
+        protected abstract void SetViewportImpl(ViewportF viewport);
+        protected abstract void SetViewportsImpl(ViewportF[] viewports, int count);
+        protected abstract void SetScissorRectImpl(Rectangle scissorRect);
+        protected abstract void SetScissorRectsImpl(Rectangle[] scissorRects, int count);
     }
 }

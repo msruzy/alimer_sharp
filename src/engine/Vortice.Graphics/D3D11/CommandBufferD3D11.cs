@@ -3,26 +3,26 @@
 
 using System;
 using SharpDirect3D11;
+using Vortice.Mathematics;
 
 namespace Vortice.Graphics.D3D11
 {
     internal class CommandBufferD3D11 : CommandBuffer
     {
-        private readonly ID3D11Device _nativeDevice;
+        private static readonly ID3D11RenderTargetView[] _nullRTVViews = new ID3D11RenderTargetView[BlendDescription.SimultaneousRenderTargetCount];
         private readonly ID3D11DeviceContext _context;
         private readonly ID3D11DeviceContext1 _context1;
         private readonly ID3DUserDefinedAnnotation _annotation;
         private readonly bool _isImmediate;
         private readonly bool _needWorkaround;
         private ID3D11CommandList _commandList;
-        public readonly ID3D11RenderTargetView[] RenderTargetViews = new ID3D11RenderTargetView[8];
+        private readonly ID3D11RenderTargetView[] _rtvViews = new ID3D11RenderTargetView[BlendDescription.SimultaneousRenderTargetCount];
 
         public ID3D11CommandList CommandList => _commandList;
 
-        public CommandBufferD3D11(DeviceD3D11 device, ID3D11DeviceContext context)
-            : base(device)
+        public CommandBufferD3D11(CommandQueueD3D11 commandQueue, ID3D11DeviceContext context)
+            : base(commandQueue)
         {
-            _nativeDevice = device.Device;
             _context = context;
             _context1 = _context.QueryInterfaceOrNull<ID3D11DeviceContext1>();
             _annotation = _context.QueryInterfaceOrNull<ID3DUserDefinedAnnotation>();
@@ -31,7 +31,7 @@ namespace Vortice.Graphics.D3D11
             if (!_isImmediate)
             {
                 // The runtime emulates command lists.
-                _needWorkaround = !device.SupportsCommandLists;
+                _needWorkaround = !((DeviceD3D11)commandQueue.Device).SupportsCommandLists;
             }
         }
 
@@ -63,12 +63,12 @@ namespace Vortice.Graphics.D3D11
 
                 var texture = (TextureD3D11)attachment.Texture;
                 var textureView = texture.GetView(attachment.Level, 1, attachment.Slice);
-                RenderTargetViews[i] = textureView.RenderTargetView;
+                _rtvViews[i] = textureView.RenderTargetView;
 
                 switch (attachment.LoadAction)
                 {
                     case LoadAction.Clear:
-                        _context.ClearRenderTargetView(RenderTargetViews[i], attachment.ClearColor);
+                        _context.ClearRenderTargetView(_rtvViews[i], attachment.ClearColor);
                         break;
 
                     default:
@@ -111,24 +111,31 @@ namespace Vortice.Graphics.D3D11
             }
 
             // Set up render targets
-            //_context.OutputMerger.SetTargets(depthStencilView, renderTargetCount, RenderTargetViews);
+            _context.OMSetRenderTargets(renderTargetCount, _rtvViews, depthStencilView);
         }
 
         protected override void EndRenderPassCore()
         {
-            //_context.OutputMerger.ResetTargets();
+            _context.OMSetRenderTargets(8, _nullRTVViews, null);
         }
 
-        protected override void CommitCore()
+        protected override void SetViewportImpl(ViewportF viewport)
         {
-            if (_isImmediate)
-            {
-                _context.Flush();
-            }
-            else
-            {
-                _commandList = _context.FinishCommandList(false);
-            }
+            _context.RSSetViewport(viewport);
+        }
+
+        protected override void SetViewportsImpl(ViewportF[] viewports, int count)
+        {
+            _context.RSSetViewports(count, viewports);
+        }
+
+        protected override void SetScissorRectImpl(Rectangle scissorRect)
+        {
+            //_context.RSSetScissorRect(scissorRect);
+        }
+
+        protected override void SetScissorRectsImpl(Rectangle[] scissorRects, int count)
+        {
         }
     }
 }

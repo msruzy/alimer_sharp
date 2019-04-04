@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using SharpDirect3D12;
+using Vortice.Mathematics;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -16,7 +17,7 @@ namespace Vortice.Graphics.D3D12
         public ID3D12GraphicsCommandList CommandList { get; }
 
         public CommandBufferD3D12(DeviceD3D12 device, int frameCount, CommandListType type)
-            : base(device)
+            : base(null)
         {
             _frameCount = frameCount;
             _type = type;
@@ -50,15 +51,34 @@ namespace Vortice.Graphics.D3D12
         {
         }
 
-        protected override void CommitCore()
+        protected override void SetViewportImpl(ViewportF viewport)
         {
-            CommandList.Close();
-            ((DeviceD3D12)Device).GraphicsQueue.ExecuteCommandList(CommandList);
-
-            // 
-            _currentFrameIndex = (_currentFrameIndex + 1) % _commandAllocators.Length;
-            _commandAllocators[_currentFrameIndex].Reset();
-            CommandList.Reset(_commandAllocators[_currentFrameIndex], null);
+            CommandList.RSSetViewport(viewport);
         }
+
+        protected override void SetViewportsImpl(ViewportF[] viewports, int count)
+        {
+            CommandList.RSSetViewports(count, viewports);
+        }
+
+        protected override void SetScissorRectImpl(Rectangle scissorRect)
+        {
+            //CommandList.RSSetScissorRect(scissorRect);
+        }
+
+        protected override void SetScissorRectsImpl(Rectangle[] scissorRects, int count)
+        {
+        }
+
+        //protected override void CommitCore()
+        //{
+        //    CommandList.Close();
+        //    ((DeviceD3D12)Device).GraphicsQueue.ExecuteCommandList(CommandList);
+
+        //    // 
+        //    _currentFrameIndex = (_currentFrameIndex + 1) % _commandAllocators.Length;
+        //    _commandAllocators[_currentFrameIndex].Reset();
+        //    CommandList.Reset(_commandAllocators[_currentFrameIndex], null);
+        //}
     }
 }

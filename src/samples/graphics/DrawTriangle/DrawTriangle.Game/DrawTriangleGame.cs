@@ -12,7 +12,8 @@ namespace DrawTriangle
     public sealed class DrawTriangleGame : Game
     {
         private GraphicsBuffer _vertexBuffer;
-        private Shader _shader;
+        private Shader _vertexShader;
+        private Shader _pixelShader;
 
         protected override void LoadContent()
         {
@@ -55,10 +56,14 @@ namespace DrawTriangle
         }
 ";
 
-            var vertex = ShaderCompiler.Compile(shaderSource, ShaderStages.Vertex, ShaderLanguage.DXC);
-            var pixel = ShaderCompiler.Compile(shaderSource, ShaderStages.Pixel, ShaderLanguage.DXC);
+            _vertexShader = GraphicsDevice.CreateShader(ShaderStages.Vertex, ShaderCompiler.Compile(shaderSource, ShaderStages.Vertex, ShaderLanguage.DXC));
+            _pixelShader = GraphicsDevice.CreateShader(ShaderStages.Pixel, ShaderCompiler.Compile(shaderSource, ShaderStages.Pixel, ShaderLanguage.DXC));
 
-            //_shader = GraphicsDevice.CreateShader(vertex, pixel);
+            var pipeline = GraphicsDevice.CreateRenderPipeline(new RenderPipelineDescriptor
+            {
+                VertexShader = _vertexShader,
+                PixelShader = _pixelShader
+            });
 
             MainView.ClearColor = new Color4(0.0f, 0.2f, 0.4f);
         }
@@ -68,7 +73,7 @@ namespace DrawTriangle
             base.Draw(time);
 
             // Record commands to default context.
-            var commandBuffer = GraphicsDevice.ImmediateCommandBuffer;
+            var commandBuffer = GraphicsDevice.GetCommandQueue().GetCommandBuffer();
             commandBuffer.BeginRenderPass(MainView.CurrentRenderPassDescriptor);
             commandBuffer.EndRenderPass();
             commandBuffer.Commit();

@@ -3,6 +3,7 @@
 
 using SharpDirect3D12;
 
+#if TODO
 namespace Vortice.Graphics.D3D12
 {
     internal class FramebufferD3D12 : Framebuffer
@@ -37,3 +38,5 @@ namespace Vortice.Graphics.D3D12
         }
     }
 }
+
+#endif

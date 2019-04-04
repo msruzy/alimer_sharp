@@ -4,6 +4,7 @@
 using SharpDirect3D11;
 using Vortice.Diagnostics;
 
+#if TODO
 namespace Vortice.Graphics.D3D11
 {
     internal class FramebufferD3D11 : Framebuffer
@@ -216,3 +217,5 @@ namespace Vortice.Graphics.D3D11
         }
     }
 }
+
+#endif

@@ -55,7 +55,7 @@ namespace Vortice.Graphics.D3D11
                             OptionFlags = optionFlags,
                         };
 
-                        Resource = device.Device.CreateTexture1D(d3dTextureDesc);
+                        Resource = device.D3D11Device.CreateTexture1D(d3dTextureDesc);
                     }
                     break;
 
@@ -76,7 +76,7 @@ namespace Vortice.Graphics.D3D11
                             OptionFlags = optionFlags,
                         };
 
-                        Resource = device.Device.CreateTexture2D(d3dTextureDesc);
+                        Resource = device.D3D11Device.CreateTexture2D(d3dTextureDesc);
                     }
                     break;
 
@@ -95,7 +95,7 @@ namespace Vortice.Graphics.D3D11
                             OptionFlags = optionFlags,
                         };
 
-                        Resource = device.Device.CreateTexture3D(d3dTextureDesc);
+                        Resource = device.D3D11Device.CreateTexture3D(d3dTextureDesc);
                     }
                     break;
             }

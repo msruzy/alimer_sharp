@@ -10,17 +10,17 @@ namespace Vortice.Graphics
     /// </summary>
     public abstract class Shader : GraphicsResource
     {
-        public bool IsCompute { get; }
+        public ShaderStages Stage { get; }
 
         /// <summary>
-        /// Create a new instance of <see cref="GraphicsBuffer"/> class.
+        /// Create a new instance of <see cref="Shader"/> class.
         /// </summary>
-        /// <param name="device">The creation device</param>
-        /// <param name="isCompute">Is compute shader</param>
-        protected Shader(GraphicsDevice device, bool isCompute)
+        /// <param name="device">The creation device.</param>
+        /// <param name="stage">The shader stage.</param>
+        protected Shader(GraphicsDevice device, ShaderStages stage)
             : base(device, GraphicsResourceType.Shader, GraphicsResourceUsage.Default)
         {
-            IsCompute = isCompute;
+            Stage = stage;
         }
     }
 }

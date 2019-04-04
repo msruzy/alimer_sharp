@@ -47,9 +47,6 @@ namespace Vortice.Graphics.D3D12
         private readonly object _heapAllocationLock = new object();
         private readonly List<ID3D12DescriptorHeap> _descriptorHeapPool = new List<ID3D12DescriptorHeap>();
 
-        /// <inheritdoc/>
-        public override CommandBuffer ImmediateCommandBuffer { get; }
-
         public ulong CurrentCPUFrame => _currentCPUFrame;
         public ulong CurrentGPUFrame => _currentGPUFrame;
 
@@ -177,8 +174,8 @@ namespace Vortice.Graphics.D3D12
             {
                 _deferredReleases[i] = new List<IUnknown>();
             }
-            ImmediateCommandBuffer = new CommandBufferD3D12(this, RenderLatency, CommandListType.Direct);
-            ((CommandBufferD3D12)ImmediateCommandBuffer).CommandList.SetName("Primary Graphics Command List");
+            //ImmediateCommandBuffer = new CommandBufferD3D12(this, RenderLatency, CommandListType.Direct);
+            //((CommandBufferD3D12)ImmediateCommandBuffer).CommandList.SetName("Primary Graphics Command List");
 
             // Create the frame fence
             _frameFence = new FenceD3D12(this, 0);
@@ -293,6 +290,11 @@ namespace Vortice.Graphics.D3D12
             }
         }
 
+        protected override SwapChain CreateSwapChainImpl(in SwapChainDescriptor descriptor)
+        {
+            return new SwapchainD3D12(this, descriptor, 2);
+        }
+
         protected override GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData)
         {
             return new BufferD3D12(this, descriptor, initialData);
@@ -303,19 +305,14 @@ namespace Vortice.Graphics.D3D12
             return new TextureD3D12(this, description, nativeTexture: null);
         }
 
-        protected override Shader CreateShaderImpl(byte[] vertex, byte[] pixel)
+        protected override Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode)
         {
             throw new NotImplementedException();
         }
 
-        protected override Framebuffer CreateFramebufferImpl(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
+        protected override Pipeline CreateRenderPipelineImpl(in RenderPipelineDescriptor descriptor)
         {
-            return new FramebufferD3D12(this, colorAttachments, depthStencilAttachment);
-        }
-
-        protected override SwapChain CreateSwapChainImpl(in SwapChainDescriptor descriptor)
-        {
-            return new SwapchainD3D12(this, descriptor, 2);
+            throw new NotImplementedException();
         }
 
         public void DeferredRelease<T>(ref T resource, bool forceDeferred = false) where T : IUnknown

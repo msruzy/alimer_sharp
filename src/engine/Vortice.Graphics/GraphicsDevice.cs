@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -15,6 +16,9 @@ namespace Vortice.Graphics
     {
         private readonly object _resourceSyncRoot = new object();
         private readonly List<GraphicsResource> _resources = new List<GraphicsResource>();
+        protected CommandQueue _graphicsCommandQueue;
+        protected CommandQueue _computeCommandQueue;
+        protected CommandQueue _copyCommandQueue;
 
         /// <summary>
         /// Gets the device <see cref="GraphicsBackend"/>.
@@ -30,11 +34,6 @@ namespace Vortice.Graphics
         /// Gets the features of this device.
         /// </summary>
         public GraphicsDeviceFeatures Features { get; }
-
-        /// <summary>
-        /// Gets the immediate <see cref="CommandBuffer"/> created with device.
-        /// </summary>
-        public abstract CommandBuffer ImmediateCommandBuffer { get; }
 
         /// <summary>
         /// Create new instance of <see cref="GraphicsDevice"/> class.
@@ -60,7 +59,7 @@ namespace Vortice.Graphics
 
             base.Dispose(disposing);
         }
-        
+
         /// <summary>
         /// Present current frame and advance to next frame.
         /// </summary>
@@ -72,6 +71,22 @@ namespace Vortice.Graphics
         public void WaitIdle()
         {
             WaitIdleCore();
+        }
+
+        public CommandQueue GetCommandQueue(CommandQueueType type = CommandQueueType.Graphics)
+        {
+            switch (type)
+            {
+                case CommandQueueType.Graphics:
+                    return _graphicsCommandQueue;
+                case CommandQueueType.Compute:
+                    return _computeCommandQueue;
+                case CommandQueueType.Copy:
+                    return _copyCommandQueue;
+                default:
+                    Debug.Fail("Invalid command queue type.");
+                    return null;
+            }
         }
 
         /// <summary>
@@ -100,7 +115,7 @@ namespace Vortice.Graphics
 
         public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor) => CreateBuffer(descriptor, IntPtr.Zero);
 
-        public GraphicsBuffer CreateBuffer<T>(BufferDescriptor descriptor, T[] initialData) where T : struct
+        public unsafe GraphicsBuffer CreateBuffer<T>(BufferDescriptor descriptor, T[] initialData) where T : struct
         {
             Guard.NotNull(initialData, nameof(initialData));
             Guard.MustBeGreaterThan(initialData.Length, 0, nameof(initialData));
@@ -111,10 +126,8 @@ namespace Vortice.Graphics
                 descriptor.SizeInBytes = Unsafe.SizeOf<T>() * initialData.Length;
             }
 
-            var handle = GCHandle.Alloc(initialData, GCHandleType.Pinned);
-            var buffer = CreateBuffer(descriptor, handle.AddrOfPinnedObject());
-            handle.Free();
-            return buffer;
+            var span = initialData.AsSpan();
+            return CreateBuffer(descriptor, (IntPtr)Unsafe.AsPointer(ref span.GetPinnableReference()));
         }
 
         /// <summary>
@@ -136,20 +149,17 @@ namespace Vortice.Graphics
             return CreateTextureImpl(description);
         }
 
-        public Shader CreateShader(byte[] vertex, byte[] pixel)
+        public Shader CreateShader(ShaderStages stage, byte[] byteCode)
         {
-            return CreateShaderImpl(vertex, pixel);
+            Guard.IsTrue(stage != ShaderStages.None, nameof(stage), "Invalid shader stage");
+            Guard.NotNullOrEmpty(byteCode, nameof(byteCode));
+
+            return CreateShaderImpl(stage, byteCode);
         }
 
-        public Framebuffer CreateFramebuffer(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment)
+        public Pipeline CreateRenderPipeline(in RenderPipelineDescriptor descriptor)
         {
-            if (colorAttachments.Length == 0
-                && depthStencilAttachment == null)
-            {
-                throw new GraphicsException("Cannot create Framebuffer with no color attachments nor depth stencil attachment");
-            }
-
-            return CreateFramebufferImpl(colorAttachments, depthStencilAttachment);
+            return CreateRenderPipelineImpl(descriptor);
         }
 
         internal void TrackResource(GraphicsResource resource)
@@ -190,12 +200,10 @@ namespace Vortice.Graphics
 
         protected abstract void WaitIdleCore();
 
+        protected abstract SwapChain CreateSwapChainImpl(in SwapChainDescriptor descriptor);
         protected abstract GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData);
         protected abstract Texture CreateTextureImpl(in TextureDescription description);
-        protected abstract Shader CreateShaderImpl(byte[] vertex, byte[] pixel);
-
-        protected abstract Framebuffer CreateFramebufferImpl(FramebufferAttachment[] colorAttachments, FramebufferAttachment? depthStencilAttachment);
-
-        protected abstract SwapChain CreateSwapChainImpl(in SwapChainDescriptor descriptor);
+        protected abstract Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode);
+        protected abstract Pipeline CreateRenderPipelineImpl(in RenderPipelineDescriptor descriptor);
     }
 }
