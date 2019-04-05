@@ -8,6 +8,10 @@ namespace Vortice.Graphics
     /// </summary>
     public struct RenderPipelineDescriptor
     {
+        public const int SimultaneousRenderTargetCount = 8;
+
+        private RenderPipelineColorAttachmentDescriptor[] _colorAttachments;
+
         public Shader VertexShader { get; set; }
 
         public Shader PixelShader { get; set; }
@@ -20,8 +24,8 @@ namespace Vortice.Graphics
 
         public RenderPipelineColorAttachmentDescriptor[] ColorAttachments
         {
-            get => _RTVFormats ?? (_RTVFormats = new Format[BlendDescription.SimultaneousRenderTargetCount]);
-            set => _RTVFormats = value;
+            get => _colorAttachments ?? (_colorAttachments = new RenderPipelineColorAttachmentDescriptor[SimultaneousRenderTargetCount]);
+            set => _colorAttachments = value;
         }
 
         public PixelFormat DepthStencilFormat { get; set; }

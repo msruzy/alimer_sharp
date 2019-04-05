@@ -119,23 +119,24 @@ namespace Vortice.Graphics.D3D11
             _context.OMSetRenderTargets(8, _nullRTVViews, null);
         }
 
-        protected override void SetViewportImpl(ViewportF viewport)
+        protected override void SetViewportImpl(Viewport viewport)
         {
             _context.RSSetViewport(viewport);
         }
 
-        protected override void SetViewportsImpl(ViewportF[] viewports, int count)
+        protected override void SetViewportsImpl(Viewport[] viewports, int count)
         {
             _context.RSSetViewports(count, viewports);
         }
 
-        protected override void SetScissorRectImpl(Rectangle scissorRect)
+        protected override void SetScissorRectImpl(RectI scissorRect)
         {
-            //_context.RSSetScissorRect(scissorRect);
+            _context.RSSetScissorRect(scissorRect);
         }
 
-        protected override void SetScissorRectsImpl(Rectangle[] scissorRects, int count)
+        protected override void SetScissorRectsImpl(RectI[] scissorRects, int count)
         {
+            _context.RSSetScissorRects(count, scissorRects);
         }
     }
 }

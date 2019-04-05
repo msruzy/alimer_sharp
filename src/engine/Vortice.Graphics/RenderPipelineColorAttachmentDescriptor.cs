@@ -2,7 +2,6 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using Vortice.Mathematics;
 
 namespace Vortice.Graphics
 {
@@ -15,6 +14,8 @@ namespace Vortice.Graphics
         /// The pixel format of the color attachment’s texture.
         /// </summary>
         public PixelFormat PixelFormat;
+
+        public ColorWriteMask WriteMask;
 
         /// <summary>
         /// Compares two <see cref="RenderPipelineColorAttachmentDescriptor"/> objects for equality.

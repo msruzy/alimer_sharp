@@ -51,23 +51,24 @@ namespace Vortice.Graphics.D3D12
         {
         }
 
-        protected override void SetViewportImpl(ViewportF viewport)
+        protected override void SetViewportImpl(Viewport viewport)
         {
             CommandList.RSSetViewport(viewport);
         }
 
-        protected override void SetViewportsImpl(ViewportF[] viewports, int count)
+        protected override void SetViewportsImpl(Viewport[] viewports, int count)
         {
             CommandList.RSSetViewports(count, viewports);
         }
 
-        protected override void SetScissorRectImpl(Rectangle scissorRect)
+        protected override void SetScissorRectImpl(RectI scissorRect)
         {
-            //CommandList.RSSetScissorRect(scissorRect);
+            CommandList.RSSetScissorRect(scissorRect);
         }
 
-        protected override void SetScissorRectsImpl(Rectangle[] scissorRects, int count)
+        protected override void SetScissorRectsImpl(RectI[] scissorRects, int count)
         {
+            CommandList.RSSetScissorRects(count, scissorRects);
         }
 
         //protected override void CommitCore()

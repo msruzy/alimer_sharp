@@ -57,32 +57,32 @@ namespace Vortice.Graphics
             EndRenderPassCore();
         }
 
-        public void SetViewport(ViewportF viewport)
+        public void SetViewport(Viewport viewport)
         {
             SetViewportImpl(viewport);
         }
 
-        public void SetViewports(params ViewportF[] viewports)
+        public void SetViewports(params Viewport[] viewports)
         {
             SetViewportsImpl(viewports, viewports.Length);
         }
 
-        public void SetViewports(ViewportF[] viewports, int count)
+        public void SetViewports(Viewport[] viewports, int count)
         {
             SetViewportsImpl(viewports, count);
         }
 
-        public void SetScissorRect(Rectangle rect)
+        public void SetScissorRect(RectI rect)
         {
             SetScissorRectImpl(rect);
         }
 
-        public void SetScissorRects(Rectangle[] scissorRects, int count)
+        public void SetScissorRects(RectI[] scissorRects, int count)
         {
             SetScissorRectsImpl(scissorRects, count);
         }
 
-        public void SetScissorRects(params Rectangle[] scissorRects)
+        public void SetScissorRects(params RectI[] scissorRects)
         {
             SetScissorRectsImpl(scissorRects, scissorRects.Length);
         }
@@ -95,9 +95,9 @@ namespace Vortice.Graphics
         protected abstract void Destroy();
         internal abstract void BeginRenderPassCore(in RenderPassDescriptor descriptor);
         protected abstract void EndRenderPassCore();
-        protected abstract void SetViewportImpl(ViewportF viewport);
-        protected abstract void SetViewportsImpl(ViewportF[] viewports, int count);
-        protected abstract void SetScissorRectImpl(Rectangle scissorRect);
-        protected abstract void SetScissorRectsImpl(Rectangle[] scissorRects, int count);
+        protected abstract void SetViewportImpl(Viewport viewport);
+        protected abstract void SetViewportsImpl(Viewport[] viewports, int count);
+        protected abstract void SetScissorRectImpl(RectI scissorRect);
+        protected abstract void SetScissorRectsImpl(RectI[] scissorRects, int count);
     }
 }

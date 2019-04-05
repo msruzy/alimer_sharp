@@ -21,7 +21,7 @@ namespace Vortice.Graphics.D3D11
         public CommandQueueD3D11(DeviceD3D11 device, CommandQueueType queueType)
             : base(device, queueType)
         {
-            _context = device.D3D11Device.CreateDeferredContext(0);
+            _context = device.D3D11Device.CreateDeferredContext();
         }
 
         protected override CommandBuffer CreateCommandBuffer()
