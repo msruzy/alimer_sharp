@@ -150,11 +150,8 @@ namespace Vortice.Graphics.D3D12
                                 MessageId.ClearRenderTargetViewMismatchingClearValue,
 
                                 // These happen when capturing with VS diagnostics
-                                // TODO: Cleanup and SharpDirect3D12 side.
-                                MessageId.MapInvalidNullrange,
-                                MessageId.UnmapInvalidNullrange,
-                                //MessageId.MessageIdMapInvalidNullrange,
-                                //MessageId.MessageIdUnmapInvalidNullrange
+                                MessageId.MapInvalidNullRange,
+                                MessageId.UnmapInvalidNullRange,
                             }
                         }
                     });
