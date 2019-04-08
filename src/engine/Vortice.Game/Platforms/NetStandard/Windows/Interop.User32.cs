@@ -239,7 +239,7 @@ namespace Vortice.Windows
         public IntPtr WParam;
         public IntPtr LParam;
         public uint Time;
-        public Point Point;
+        public PointI Point;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -382,7 +382,7 @@ namespace Vortice.Windows
 		}
 
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool GetCursorPos(out Point point);
+        public static extern bool GetCursorPos(out PointI point);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetCursorPos(int x, int y);
@@ -482,7 +482,7 @@ namespace Vortice.Windows
         public static extern bool GetMonitorInfo([In] IntPtr hMonitor, ref MonitorInfo lpmi);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr MonitorFromPoint(Point pt, MONITOR dwFlags);
+        public static extern IntPtr MonitorFromPoint(PointI pt, MONITOR dwFlags);
 
         [DllImport("user32.dll")]
         public static extern IntPtr MonitorFromRect(RectI rect, MONITOR dwFlags);
