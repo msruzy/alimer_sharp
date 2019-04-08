@@ -27,7 +27,7 @@ namespace Vortice.Graphics
         ShaderWrite = 1 << 1,
 
         /// <summary>
-        /// An option that enables using the texture as a color, depth, or stencil render target in a <see cref="Framebuffer"/>.
+        /// An option that enables using the texture as a color, depth, or stencil render target in a <see cref="RenderPassDescriptor"/>.
         /// </summary>
         RenderTarget = 1 << 2,
     }

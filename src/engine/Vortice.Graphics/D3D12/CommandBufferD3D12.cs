@@ -25,10 +25,10 @@ namespace Vortice.Graphics.D3D12
             _commandAllocators = new ID3D12CommandAllocator[frameCount];
             for (var i = 0; i < frameCount; ++i)
             {
-                _commandAllocators[i] = device.D3DDevice.CreateCommandAllocator(type);
+                _commandAllocators[i] = device.D3D12Device.CreateCommandAllocator(type);
             }
 
-            CommandList = device.D3DDevice.CreateCommandList(type, _commandAllocators[_currentFrameIndex], null);
+            CommandList = device.D3D12Device.CreateCommandList(type, _commandAllocators[_currentFrameIndex], null);
             CommandList.Close();
         }
 

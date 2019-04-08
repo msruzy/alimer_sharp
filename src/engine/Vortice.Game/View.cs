@@ -35,7 +35,7 @@ namespace Vortice
         /// Gets the bounding rectangle of the window.
         /// </summary>
         /// <value>The bounding rectangle of the window, in device-independent pixels (DIPs).</value>
-        public abstract RectangleF Bounds { get; }
+        public abstract Rect Bounds { get; }
 
         /// <summary>
         /// The text that is displayed in the title bar of the window (if it has a title bar).

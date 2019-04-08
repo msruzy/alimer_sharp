@@ -29,7 +29,7 @@ namespace Vortice.Graphics.D3D12
         public const int RenderLatency = 2;
         public readonly IDXGIFactory4 DXGIFactory;
         public readonly IDXGIAdapter1 DXGIAdapter;
-        public readonly ID3D12Device D3DDevice;
+        public readonly ID3D12Device D3D12Device;
 
         public readonly ID3D12CommandQueue GraphicsQueue;
 
@@ -116,16 +116,16 @@ namespace Vortice.Graphics.D3D12
                 if (D3D12CreateDevice(adapter, FeatureLevel.Level_11_0, out var device).Success)
                 {
                     DXGIAdapter = adapter;
-                    D3DDevice = device;
+                    D3D12Device = device;
                 }
             }
 
-            if (D3DDevice == null)
+            if (D3D12Device == null)
             {
                 // Create the Direct3D 12 with WARP adapter.
                 DXGIAdapter = DXGIFactory.GetWarpAdapter<IDXGIAdapter1>();
 
-                if (D3D12CreateDevice(DXGIAdapter, FeatureLevel.Level_11_0, out D3DDevice).Failure)
+                if (D3D12CreateDevice(DXGIAdapter, FeatureLevel.Level_11_0, out D3D12Device).Failure)
                 {
                     throw new GraphicsException("Cannot create D3D12 device");
                 }
@@ -133,7 +133,7 @@ namespace Vortice.Graphics.D3D12
 
             if (Validation)
             {
-                var infoQueue = D3DDevice.QueryInterfaceOrNull<ID3D12InfoQueue>();
+                var infoQueue = D3D12Device.QueryInterfaceOrNull<ID3D12InfoQueue>();
                 if (infoQueue != null)
                 {
 #if DEBUG
@@ -166,7 +166,7 @@ namespace Vortice.Graphics.D3D12
             InitializeFeatures();
 
             // Create main graphics command queue.
-            GraphicsQueue = D3DDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
+            GraphicsQueue = D3D12Device.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
             GraphicsQueue.SetName("Main GraphicsQueue");
 
             // Create ImmediateContext.
@@ -208,7 +208,7 @@ namespace Vortice.Graphics.D3D12
 
             if (Validation)
             {
-                var debugDevice = D3DDevice.QueryInterfaceOrNull<ID3D12DebugDevice>();
+                var debugDevice = D3D12Device.QueryInterfaceOrNull<ID3D12DebugDevice>();
                 if (debugDevice != null)
                 {
                     debugDevice.ReportLiveDeviceObjects(ReportLiveDeviceObjectFlags.Detail);
@@ -216,7 +216,7 @@ namespace Vortice.Graphics.D3D12
                 }
             }
 
-            D3DDevice.Dispose();
+            D3D12Device.Dispose();
         }
 
         private void InitializeFeatures()
@@ -227,11 +227,11 @@ namespace Vortice.Graphics.D3D12
             Features.DeviceName = adapterDesc.Description;
             Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
 
-            D3DDevice.CheckMaxSupportedFeatureLevel(s_featureLevels, out var maxSupportedFeatureLevel);
+            D3D12Device.CheckMaxSupportedFeatureLevel(s_featureLevels, out var maxSupportedFeatureLevel);
             FeatureLevel = maxSupportedFeatureLevel;
 
             //Device.CheckFeatureSupport(Feature.D3D12Options1, ref waveIntrinsicsSupport);
-            var HighestRootSignatureVersion = D3DDevice.CheckHighestRootSignatureVersion(RootSignatureVersion.Version11);
+            var HighestRootSignatureVersion = D3D12Device.CheckHighestRootSignatureVersion(RootSignatureVersion.Version11);
         }
 
         protected override void FrameCore()
@@ -284,7 +284,7 @@ namespace Vortice.Graphics.D3D12
                     NodeMask = 0,
                 };
 
-                var heap = D3DDevice.CreateDescriptorHeap(heapDescription);
+                var heap = D3D12Device.CreateDescriptorHeap(heapDescription);
                 _descriptorHeapPool.Add(heap);
                 return heap;
             }
@@ -307,12 +307,12 @@ namespace Vortice.Graphics.D3D12
 
         protected override Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode)
         {
-            throw new NotImplementedException();
+            return new ShaderD3D12(this, stage, byteCode);
         }
 
         protected override Pipeline CreateRenderPipelineImpl(in RenderPipelineDescriptor descriptor)
         {
-            throw new NotImplementedException();
+            return new PipelineD3D12(this, descriptor);
         }
 
         public void DeferredRelease<T>(ref T resource, bool forceDeferred = false) where T : IUnknown
@@ -329,7 +329,7 @@ namespace Vortice.Graphics.D3D12
 
             if ((_currentCPUFrame == _currentGPUFrame && !forceDeferred)
                 || _shuttingDown
-                || D3DDevice == null)
+                || D3D12Device == null)
             {
                 // Free-for-all!
                 var count = resource.Release();

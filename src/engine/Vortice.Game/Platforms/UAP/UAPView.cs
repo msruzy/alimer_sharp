@@ -14,13 +14,13 @@ namespace Vortice
     {
         private CoreWindow _coreWindow;
         private bool _activated;
-        private RectangleF _bounds;
+        private Rect _bounds;
         //private SwapChainHandle _swapChainHandle;
 
         public CoreApplicationView CoreApplicationView { get; internal set; }
 
         /// <inheritdoc/>
-        public override RectangleF Bounds => _bounds;
+        public override Rect Bounds => _bounds;
 
         public UAPView(string title)
             : base(title)
@@ -91,7 +91,7 @@ namespace Vortice
 
         private void UpdateSize(CoreWindow window)
         {
-            _bounds = window.Bounds.ToRectangleF();
+            _bounds = window.Bounds;
         }
 
         private void ApplicationView_Activated(CoreApplicationView sender, IActivatedEventArgs args)

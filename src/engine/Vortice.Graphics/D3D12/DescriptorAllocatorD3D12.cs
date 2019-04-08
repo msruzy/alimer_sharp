@@ -44,7 +44,7 @@ namespace Vortice.Graphics.D3D12
 
                 if (_descriptorSize == 0)
                 {
-                    _descriptorSize = Device.D3DDevice.GetDescriptorHandleIncrementSize(Type);
+                    _descriptorSize = Device.D3D12Device.GetDescriptorHandleIncrementSize(Type);
                 }
             }
 

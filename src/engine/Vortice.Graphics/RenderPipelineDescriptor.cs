@@ -28,6 +28,6 @@ namespace Vortice.Graphics
             set => _colorAttachments = value;
         }
 
-        public PixelFormat DepthStencilFormat { get; set; }
+        public PixelFormat DepthStencilAttachmentFormat { get; set; }
     }
 }

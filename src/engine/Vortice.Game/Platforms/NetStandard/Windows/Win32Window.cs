@@ -22,13 +22,13 @@ namespace Vortice.Windows
         public override bool IsMinimized => IsIconic(_hwnd);
 
         /// <inheritdoc/>
-        public override RectangleF Bounds
+        public override Rect Bounds
         {
             get
 
             {
                 GetClientRect(_hwnd, out var rect);
-                return new RectangleF(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
+                return rect;
             }
         }
 
@@ -84,11 +84,7 @@ namespace Vortice.Windows
 
             if (width > 0 && height > 0)
             {
-                var rect = new RECT
-                {
-                    Right = (int)(width * ContentScale),
-                    Bottom = (int)(height * ContentScale)
-                };
+                var rect = RectI.Create((int)(width * ContentScale), (int)(height * ContentScale));
 
                 // Adjust according to window styles
                 AdjustWindowRectEx(

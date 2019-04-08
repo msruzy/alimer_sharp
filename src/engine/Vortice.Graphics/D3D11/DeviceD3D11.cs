@@ -22,8 +22,6 @@ namespace Vortice.Graphics.D3D11
             FeatureLevel.Level_10_0
         };
 
-        private static bool? _isSupported;
-
         public readonly IDXGIFactory1 DXGIFactory;
         public readonly IDXGIAdapter1 DXGIAdapter;
 

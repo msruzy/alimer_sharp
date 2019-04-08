@@ -264,8 +264,8 @@ namespace Vortice.Windows
     public struct MonitorInfo
     {
         public uint Size;
-        public RECT MonitorRect;
-        public RECT WorkRect;
+        public RectI MonitorRect;
+        public RectI WorkRect;
         public MonitorInfoFlag Flags;
     }
     #endregion
@@ -434,11 +434,11 @@ namespace Vortice.Windows
 
         [return: MarshalAs(UnmanagedType.U1)]
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool AdjustWindowRect([In] [Out] ref RECT lpRect, WindowStyles dwStyle, bool hasMenu);
+        public static extern bool AdjustWindowRect([In] [Out] ref RectI lpRect, WindowStyles dwStyle, bool hasMenu);
 
         [return: MarshalAs(UnmanagedType.U1)]
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool AdjustWindowRectEx([In] [Out] ref RECT lpRect, WindowStyles dwStyle, bool bMenu,
+        public static extern bool AdjustWindowRectEx([In] [Out] ref RectI lpRect, WindowStyles dwStyle, bool bMenu,
             WindowExStyles exStyle);
 
         [DllImport(LibraryName, CharSet = CharSet.Unicode)]
@@ -485,7 +485,7 @@ namespace Vortice.Windows
         public static extern IntPtr MonitorFromPoint(Point pt, MONITOR dwFlags);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr MonitorFromRect(RECT rect, MONITOR dwFlags);
+        public static extern IntPtr MonitorFromRect(RectI rect, MONITOR dwFlags);
 
         [DllImport("user32.dll")]
         public static extern IntPtr MonitorFromWindow(IntPtr hwnd, MONITOR dwFlags);
@@ -494,7 +494,7 @@ namespace Vortice.Windows
         public static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lprcClip,
                                                       MonitorEnumDelegate lpfnEnum, IntPtr dwData);
 
-        public delegate bool MonitorEnumDelegate(IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData);
+        public delegate bool MonitorEnumDelegate(IntPtr hMonitor, IntPtr hdcMonitor, ref RectI lprcMonitor, IntPtr dwData);
 
         #endregion
 
@@ -508,16 +508,16 @@ namespace Vortice.Windows
 		public static extern void PostQuitMessage(int nExitCode);
 
         [DllImport("user32.dll")]
-        public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+        public static extern bool GetWindowRect(IntPtr hwnd, out RectI lpRect);
 
         [DllImport("user32.dll")]
-        public static extern bool GetUpdateRect(IntPtr hwnd, out RECT lpRect, bool bErase);
+        public static extern bool GetUpdateRect(IntPtr hwnd, out RectI lpRect, bool bErase);
 
         [DllImport("user32.dll")]
-        public static extern bool InvalidateRect(IntPtr hWnd, ref RECT lpRect, bool bErase);
+        public static extern bool InvalidateRect(IntPtr hWnd, ref RectI lpRect, bool bErase);
 
         [DllImport("user32.dll")]
-        public static extern bool GetClientRect(IntPtr hwnd, out RECT lpRect);
+        public static extern bool GetClientRect(IntPtr hwnd, out RectI lpRect);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);

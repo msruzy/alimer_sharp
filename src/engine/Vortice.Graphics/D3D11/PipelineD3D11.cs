@@ -18,7 +18,9 @@ namespace Vortice.Graphics.D3D11
             D3D11PixelShader = (ID3D11PixelShader)((ShaderD3D11)descriptor.PixelShader).D3D11Shader;
 
             var vsByteCode = ((ShaderD3D11)descriptor.VertexShader).Bytecode;
-            var inputElements = new InputElementDescription[0];
+            var inputElements = new InputElementDescription[2];
+            inputElements[0] = new InputElementDescription("POSITION", 0, SharpDXGI.Format.R32G32B32_Float, 0, 0);
+            inputElements[1] = new InputElementDescription("COLOR", 0, SharpDXGI.Format.R32G32B32A32_Float, 12, 0);
             D3D11InputLayout = device.D3D11Device.CreateInputLayout(inputElements, vsByteCode);
         }
 
