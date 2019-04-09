@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using SharpDXGI;
 using Vortice.Graphics;
 using Vortice.Mathematics;
 using static Vortice.Windows.User32;
@@ -84,7 +85,7 @@ namespace Vortice.Windows
 
             if (width > 0 && height > 0)
             {
-                var rect = RectI.Create((int)(width * ContentScale), (int)(height * ContentScale));
+                var rect = new InteropRect(0, 0, (int)(width * ContentScale), (int)(height * ContentScale));
 
                 // Adjust according to window styles
                 AdjustWindowRectEx(

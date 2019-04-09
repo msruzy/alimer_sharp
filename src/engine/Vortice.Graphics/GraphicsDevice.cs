@@ -157,9 +157,9 @@ namespace Vortice.Graphics
             return CreateShaderImpl(stage, byteCode);
         }
 
-        public Pipeline CreateRenderPipeline(in RenderPipelineDescriptor descriptor)
+        public RenderPipelineState CreateRenderPipelineState(in RenderPipelineDescriptor descriptor)
         {
-            return CreateRenderPipelineImpl(descriptor);
+            return CreateRenderPipelineStateImpl(descriptor);
         }
 
         internal void TrackResource(GraphicsResource resource)
@@ -204,6 +204,6 @@ namespace Vortice.Graphics
         protected abstract GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData);
         protected abstract Texture CreateTextureImpl(in TextureDescription description);
         protected abstract Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode);
-        protected abstract Pipeline CreateRenderPipelineImpl(in RenderPipelineDescriptor descriptor);
+        protected abstract RenderPipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor);
     }
 }

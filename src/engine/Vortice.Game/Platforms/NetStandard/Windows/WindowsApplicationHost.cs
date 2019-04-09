@@ -360,12 +360,12 @@ namespace Vortice.Windows
             return (int)intPtr.ToInt64();
         }
 
-        private static PointI MakePoint(IntPtr lparam)
+        private static Point MakePoint(IntPtr lparam)
         {
             var lp = lparam.ToInt32();
             var x = lp & 0xff;
             var y = (lp >> 16) & 0xff;
-            return new PointI(x, y);
+            return new Point(x, y);
         }
     }
 }

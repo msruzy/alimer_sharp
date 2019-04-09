@@ -307,10 +307,8 @@ namespace Vortice.Graphics.D3D12
             return new ShaderD3D12(this, stage, byteCode);
         }
 
-        protected override Pipeline CreateRenderPipelineImpl(in RenderPipelineDescriptor descriptor)
-        {
-            return new PipelineD3D12(this, descriptor);
-        }
+        protected override RenderPipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor) =>
+            new RenderPipelineStateD3D12(this, descriptor);
 
         public void DeferredRelease<T>(ref T resource, bool forceDeferred = false) where T : IUnknown
         {

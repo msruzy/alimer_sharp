@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
+using System;
+
 namespace Vortice.Graphics
 {
     /// <summary>
@@ -76,5 +78,9 @@ namespace Vortice.Graphics
             TextureUsage = description.TextureUsage;
             Samples = description.Samples;
         }
+
+        public int GetLevelWidth(int mipLevel = 0) => Math.Max(1, Width >> mipLevel);
+        public int GetLevelHeight(int mipLevel = 0) => Math.Max(1, Height >> mipLevel);
+        public int GetLevelDepth(int mipLevel = 0) => Math.Max(1, Depth >> mipLevel);
     }
 }

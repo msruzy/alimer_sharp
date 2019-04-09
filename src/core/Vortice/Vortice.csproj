@@ -18,8 +18,4 @@
     <Compile Include="Platforms\$(VorticePlatform)\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Vortice.Mathematics" Version="1.0.0-alpha06" />
-  </ItemGroup>
-
 </Project>

@@ -59,7 +59,7 @@ namespace DrawTriangle
             _vertexShader = GraphicsDevice.CreateShader(ShaderStages.Vertex, ShaderCompiler.Compile(shaderSource, ShaderStages.Vertex, ShaderLanguage.DXC));
             _pixelShader = GraphicsDevice.CreateShader(ShaderStages.Pixel, ShaderCompiler.Compile(shaderSource, ShaderStages.Pixel, ShaderLanguage.DXC));
 
-            var pipeline = GraphicsDevice.CreateRenderPipeline(new RenderPipelineDescriptor
+            var pipeline = GraphicsDevice.CreateRenderPipelineState(new RenderPipelineDescriptor
             {
                 VertexShader = _vertexShader,
                 PixelShader = _pixelShader
@@ -74,8 +74,8 @@ namespace DrawTriangle
 
             // Record commands to default context.
             var commandBuffer = GraphicsDevice.GetCommandQueue().GetCommandBuffer();
-            commandBuffer.BeginRenderPass(MainView.CurrentRenderPassDescriptor);
-            commandBuffer.EndRenderPass();
+            var passEncoder = commandBuffer.BeginRenderPass(MainView.CurrentRenderPassDescriptor);
+            passEncoder.EndPass();
             commandBuffer.Commit();
         }
 

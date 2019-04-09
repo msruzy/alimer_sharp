@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SharpDXGI;
 using Vortice.Mathematics;
 
 namespace Vortice.Windows
@@ -239,7 +240,7 @@ namespace Vortice.Windows
         public IntPtr WParam;
         public IntPtr LParam;
         public uint Time;
-        public PointI Point;
+        public Point Point;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -264,8 +265,8 @@ namespace Vortice.Windows
     public struct MonitorInfo
     {
         public uint Size;
-        public RectI MonitorRect;
-        public RectI WorkRect;
+        public InteropRect MonitorRect;
+        public InteropRect WorkRect;
         public MonitorInfoFlag Flags;
     }
     #endregion
@@ -382,7 +383,7 @@ namespace Vortice.Windows
 		}
 
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool GetCursorPos(out PointI point);
+        public static extern bool GetCursorPos(out Point point);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetCursorPos(int x, int y);
@@ -434,11 +435,11 @@ namespace Vortice.Windows
 
         [return: MarshalAs(UnmanagedType.U1)]
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool AdjustWindowRect([In] [Out] ref RectI lpRect, WindowStyles dwStyle, bool hasMenu);
+        public static extern bool AdjustWindowRect([In] [Out] ref InteropRect lpRect, WindowStyles dwStyle, bool hasMenu);
 
         [return: MarshalAs(UnmanagedType.U1)]
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool AdjustWindowRectEx([In] [Out] ref RectI lpRect, WindowStyles dwStyle, bool bMenu,
+        public static extern bool AdjustWindowRectEx([In] [Out] ref InteropRect lpRect, WindowStyles dwStyle, bool bMenu,
             WindowExStyles exStyle);
 
         [DllImport(LibraryName, CharSet = CharSet.Unicode)]
@@ -482,10 +483,10 @@ namespace Vortice.Windows
         public static extern bool GetMonitorInfo([In] IntPtr hMonitor, ref MonitorInfo lpmi);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr MonitorFromPoint(PointI pt, MONITOR dwFlags);
+        public static extern IntPtr MonitorFromPoint(Point pt, MONITOR dwFlags);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr MonitorFromRect(RectI rect, MONITOR dwFlags);
+        public static extern IntPtr MonitorFromRect(InteropRect rect, MONITOR dwFlags);
 
         [DllImport("user32.dll")]
         public static extern IntPtr MonitorFromWindow(IntPtr hwnd, MONITOR dwFlags);
@@ -494,7 +495,7 @@ namespace Vortice.Windows
         public static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lprcClip,
                                                       MonitorEnumDelegate lpfnEnum, IntPtr dwData);
 
-        public delegate bool MonitorEnumDelegate(IntPtr hMonitor, IntPtr hdcMonitor, ref RectI lprcMonitor, IntPtr dwData);
+        public delegate bool MonitorEnumDelegate(IntPtr hMonitor, IntPtr hdcMonitor, ref InteropRect lprcMonitor, IntPtr dwData);
 
         #endregion
 
@@ -508,16 +509,16 @@ namespace Vortice.Windows
 		public static extern void PostQuitMessage(int nExitCode);
 
         [DllImport("user32.dll")]
-        public static extern bool GetWindowRect(IntPtr hwnd, out RectI lpRect);
+        public static extern bool GetWindowRect(IntPtr hwnd, out InteropRect lpRect);
 
         [DllImport("user32.dll")]
-        public static extern bool GetUpdateRect(IntPtr hwnd, out RectI lpRect, bool bErase);
+        public static extern bool GetUpdateRect(IntPtr hwnd, out InteropRect lpRect, bool bErase);
 
         [DllImport("user32.dll")]
-        public static extern bool InvalidateRect(IntPtr hWnd, ref RectI lpRect, bool bErase);
+        public static extern bool InvalidateRect(IntPtr hWnd, ref InteropRect lpRect, bool bErase);
 
         [DllImport("user32.dll")]
-        public static extern bool GetClientRect(IntPtr hwnd, out RectI lpRect);
+        public static extern bool GetClientRect(IntPtr hwnd, out InteropRect lpRect);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);

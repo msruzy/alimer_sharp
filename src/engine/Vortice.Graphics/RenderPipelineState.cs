@@ -1,20 +1,18 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
-
 namespace Vortice.Graphics
 {
     /// <summary>
-    /// Defines a graphics pipeline class.
+    /// Defines a rendering pipeline state to be bound in <see cref="RenderPassCommandEncoder"/>.
     /// </summary>
-    public abstract class Pipeline : GraphicsResource
+    public abstract class RenderPipelineState : GraphicsResource
     {
         /// <summary>
-        /// Create a new instance of <see cref="Pipeline"/> class.
+        /// Create a new instance of <see cref="RenderPipelineState"/> class.
         /// </summary>
         /// <param name="device">The creation device</param>
-        protected Pipeline(GraphicsDevice device)
+        protected RenderPipelineState(GraphicsDevice device)
             : base(device, GraphicsResourceType.Pipeline, GraphicsResourceUsage.Default)
         {
         }

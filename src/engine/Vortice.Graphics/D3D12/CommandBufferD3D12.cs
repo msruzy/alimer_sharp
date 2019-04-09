@@ -43,33 +43,35 @@ namespace Vortice.Graphics.D3D12
             CommandList.Dispose();
         }
 
-        internal override void BeginRenderPassCore(in RenderPassDescriptor descriptor)
+        protected override RenderPassCommandEncoder BeginRenderPassCore(in RenderPassDescriptor descriptor)
         {
+            return null;
         }
 
-        protected override void EndRenderPassCore()
+        protected override ComputePassCommandEncoder BeginComputePassCore()
         {
+            return null;
         }
 
-        protected override void SetViewportImpl(Viewport viewport)
-        {
-            CommandList.RSSetViewport(viewport);
-        }
+        //protected override void SetViewportImpl(Viewport viewport)
+        //{
+        //    CommandList.RSSetViewport(viewport);
+        //}
 
-        protected override void SetViewportsImpl(Viewport[] viewports, int count)
-        {
-            CommandList.RSSetViewports(count, viewports);
-        }
+        //protected override void SetViewportsImpl(Viewport[] viewports, int count)
+        //{
+        //    CommandList.RSSetViewports(count, viewports);
+        //}
 
-        protected override void SetScissorRectImpl(RectI scissorRect)
-        {
-            CommandList.RSSetScissorRect(scissorRect);
-        }
+        //protected override void SetScissorRectImpl(Rect scissorRect)
+        //{
+        //    CommandList.RSSetScissorRect(scissorRect);
+        //}
 
-        protected override void SetScissorRectsImpl(RectI[] scissorRects, int count)
-        {
-            CommandList.RSSetScissorRects(count, scissorRects);
-        }
+        //protected override void SetScissorRectsImpl(Rect[] scissorRects, int count)
+        //{
+        //    //CommandList.RSSetScissorRects(count, scissorRects);
+        //}
 
         //protected override void CommitCore()
         //{

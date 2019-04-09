@@ -150,7 +150,7 @@ namespace Vortice.Graphics.D3D11
 
         protected override GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData)
         {
-           return new BufferD3D11(this, descriptor, initialData);
+            return new BufferD3D11(this, descriptor, initialData);
         }
 
         protected override Texture CreateTextureImpl(in TextureDescription description)
@@ -158,14 +158,10 @@ namespace Vortice.Graphics.D3D11
             return new TextureD3D11(this, description);
         }
 
-        protected override Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode)
-        {
-           return new ShaderD3D11(this, stage, byteCode);
-        }
+        protected override Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode) =>
+            new ShaderD3D11(this, stage, byteCode);
 
-        protected override Pipeline CreateRenderPipelineImpl(in RenderPipelineDescriptor descriptor)
-        {
-            return new PipelineD3D11(this, descriptor);
-        }
+        protected override RenderPipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor) =>
+            new RenderPipelineStateD3D11(this, descriptor);
     }
 }

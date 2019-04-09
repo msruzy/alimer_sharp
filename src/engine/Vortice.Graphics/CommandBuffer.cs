@@ -21,6 +21,8 @@ namespace Vortice.Graphics
         /// </summary>
         public CommandQueue CommandQueue { get; }
 
+        public bool IsEncodingPass { get; internal set; }
+
         /// <summary>
         /// Create a new instance of <see cref="CommandBuffer"/> class.
         /// </summary>
@@ -36,7 +38,6 @@ namespace Vortice.Graphics
             if (disposing
                 && !IsDisposed)
             {
-                //DestroyAllResources();
                 Destroy();
             }
 
@@ -47,57 +48,39 @@ namespace Vortice.Graphics
         /// Begin rendering with given descriptor.
         /// </summary>
         /// <param name="descriptor">The <see cref="RenderPassDescriptor"/></param>
-        public void BeginRenderPass(in RenderPassDescriptor descriptor)
+        /// <returns>Instance of <see cref="RenderPassCommandEncoder"/> for encoding commands.</returns>
+        public RenderPassCommandEncoder BeginRenderPass(in RenderPassDescriptor descriptor)
         {
-            BeginRenderPassCore(descriptor);
+            if (IsEncodingPass)
+            {
+                throw new GraphicsException($"Cannot {nameof(BeginRenderPass)} while inside another encoder pass");
+            }
+
+            return BeginRenderPassCore(descriptor);
         }
 
-        public void EndRenderPass()
+        public ComputePassCommandEncoder BeginComputePass()
         {
-            EndRenderPassCore();
-        }
+            if (IsEncodingPass)
+            {
+                throw new GraphicsException($"Cannot {nameof(BeginComputePass)} while inside another encoder pass");
+            }
 
-        public void SetViewport(Viewport viewport)
-        {
-            SetViewportImpl(viewport);
-        }
-
-        public void SetViewports(params Viewport[] viewports)
-        {
-            SetViewportsImpl(viewports, viewports.Length);
-        }
-
-        public void SetViewports(Viewport[] viewports, int count)
-        {
-            SetViewportsImpl(viewports, count);
-        }
-
-        public void SetScissorRect(RectI rect)
-        {
-            SetScissorRectImpl(rect);
-        }
-
-        public void SetScissorRects(RectI[] scissorRects, int count)
-        {
-            SetScissorRectsImpl(scissorRects, count);
-        }
-
-        public void SetScissorRects(params RectI[] scissorRects)
-        {
-            SetScissorRectsImpl(scissorRects, scissorRects.Length);
+            return BeginComputePassCore();
         }
 
         public void Commit()
         {
+            if (IsEncodingPass)
+            {
+                throw new GraphicsException($"Cannot commit command buffer while encoder are recording");
+            }
+
             CommandQueue.Submit(this);
         }
 
         protected abstract void Destroy();
-        internal abstract void BeginRenderPassCore(in RenderPassDescriptor descriptor);
-        protected abstract void EndRenderPassCore();
-        protected abstract void SetViewportImpl(Viewport viewport);
-        protected abstract void SetViewportsImpl(Viewport[] viewports, int count);
-        protected abstract void SetScissorRectImpl(RectI scissorRect);
-        protected abstract void SetScissorRectsImpl(RectI[] scissorRects, int count);
+        protected abstract RenderPassCommandEncoder BeginRenderPassCore(in RenderPassDescriptor descriptor);
+        protected abstract ComputePassCommandEncoder BeginComputePassCore();
     }
 }

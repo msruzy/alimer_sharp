@@ -14,6 +14,31 @@ namespace Vortice.Graphics
         /// <summary>
         /// None write mask.
         /// </summary>
-        None = 0
+        None = 0,
+
+        /// <summary>
+        /// The red color channel is enabled.
+        /// </summary>
+        Red = 1,
+
+        /// <summary>
+        /// The green color channel is enabled.
+        /// </summary>
+        Green = 2,
+
+        /// <summary>
+        /// The blue color channel is enabled.
+        /// </summary>
+        Blue = 4,
+
+        /// <summary>
+        /// The alpha color channel is enabled.
+        /// </summary>
+        Alpha = 8,
+
+        /// <summary>
+        /// All color channels are enabled.
+        /// </summary>
+        All = 15,
     }
 }

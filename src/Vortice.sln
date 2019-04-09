@@ -18,7 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6CAD8296
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
 		nuget.config = nuget.config
-		version.json = version.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "engine", "engine", "{FAB2ABB8-1CEF-452B-A86E-995AB9907B37}"
