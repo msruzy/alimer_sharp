@@ -40,41 +40,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vortice.Mathematics" Version="1.0.0-alpha07" />
+    <PackageReference Include="Vortice.Mathematics" Version="1.0.0-pre019" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
   </ItemGroup>
-
-  <!-- Detect platform -->
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <VorticePlatform>Windows</VorticePlatform>
-    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_DESKTOP</DefineConstants>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <VorticePlatform>NetStandard</VorticePlatform>
-    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_NET_STANDARD</DefineConstants>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
-    <VorticePlatform>UAP</VorticePlatform>
-    <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
-    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_NET_STANDARD;VORTICE_PLATFORM_UWP</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">
-    <VorticePlatform>Android</VorticePlatform>
-    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_ANDROID</DefineConstants>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('xamarinios'))">
-    <VorticePlatform>iOS</VorticePlatform>
-    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_IOS</DefineConstants>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('xamarinmac'))">
-    <VorticePlatform>macOS</VorticePlatform>
-    <DefineConstants>$(DefineConstants);VORTICE_PLATFORM_MACOS</DefineConstants>
-  </PropertyGroup>
 
 </Project>

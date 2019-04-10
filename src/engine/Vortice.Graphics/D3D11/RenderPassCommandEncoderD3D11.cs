@@ -4,6 +4,7 @@
 using System;
 using SharpDirect3D11;
 using SharpDXGI;
+using SharpDXGI.Direct3D;
 using Vortice.Mathematics;
 
 namespace Vortice.Graphics.D3D11
@@ -20,6 +21,7 @@ namespace Vortice.Graphics.D3D11
         private ID3D11HullShader _boundHullShader;
         private ID3D11DomainShader _boundDomainShader;
         private ID3D11PixelShader _boundPixelShader;
+        private ID3D11DepthStencilState _boundDepthStencilState;
 
         public RenderPassCommandEncoderD3D11(CommandBufferD3D11 commandBuffer)
             : base(commandBuffer)
@@ -99,8 +101,8 @@ namespace Vortice.Graphics.D3D11
             D3D11Context.OMSetRenderTargets(renderTargetCount, _rtvViews, depthStencilView);
 
             // Apply viewport and scissor for render target.
-            D3D11Context.RSSetViewport(new Viewport(width, height));
-            D3D11Context.RSSetScissorRect(new InteropRect(0, 0, width, height));
+            SetViewport(new Viewport(width, height));
+            SetScissorRect(new Rect(width, height));
             _blendColor = default;
         }
 
@@ -132,6 +134,16 @@ namespace Vortice.Graphics.D3D11
                 _boundPixelShader = pixelShader;
                 D3D11Context.PSSetShader(pixelShader);
             }
+
+            var depthStencilState = pipelineStateD3D11.DepthStencilState;
+            if (_boundDepthStencilState != depthStencilState)
+            {
+                _boundDepthStencilState = depthStencilState;
+                D3D11Context.OMSetDepthStencilState(depthStencilState, 0);
+            }
+
+            var rasterizerState = pipelineStateD3D11.RasterizerState;
+            D3D11Context.RSSetState(rasterizerState);
         }
 
         /// <inheritdoc/>
@@ -140,24 +152,37 @@ namespace Vortice.Graphics.D3D11
             _blendColor = blendColor;
         }
 
-        protected override void SetViewportImpl(Viewport viewport)
+        /// <inheritdoc/>
+        public override void SetViewport(ref Viewport viewport)
         {
             D3D11Context.RSSetViewport(viewport);
         }
 
-        protected override void SetViewportsImpl(Viewport[] viewports, int count)
-        {
-            D3D11Context.RSSetViewports(count, viewports);
-        }
-
-        protected override void SetScissorRectImpl(Rect scissorRect)
+        public override void SetScissorRect(ref Rect scissorRect)
         {
             D3D11Context.RSSetScissorRect(scissorRect);
         }
 
-        protected override void SetScissorRectsImpl(Rect[] scissorRects, int count)
+        protected override void SetVertexBufferImpl(int slot, GraphicsBuffer buffer)
         {
-            //D3D11Context.RSSetScissorRects(count, scissorRects);
+            var d3dBuffers = new[] { ((BufferD3D11)buffer).Resource };
+            var strides = new[] { 28 };
+            var offsets = new[] { 0 };
+            D3D11Context.IASetVertexBuffers(1, 1, d3dBuffers, strides, offsets);
+        }
+
+        protected override void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance)
+        {
+            PrepareDraw();
+            D3D11Context.IASetPrimitiveTopology(PrimitiveTopology.TriangleList);
+            if (instanceCount <= 1)
+            {
+                D3D11Context.Draw(vertexCount, firstVertex);
+            }
+            else
+            {
+                D3D11Context.DrawInstanced(vertexCount, instanceCount, firstVertex, firstInstance);
+            }
         }
 
         private void PrepareDraw()

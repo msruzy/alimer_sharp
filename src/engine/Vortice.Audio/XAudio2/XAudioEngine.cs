@@ -13,7 +13,7 @@ namespace Vortice.Audio.XAudio
 
         public XAudioEngine(bool validation = true)
         {
-#if VORTICE_PLATFORM_UWP
+#if WINDOWS_UWP
             validation = false;
 #endif
 

@@ -14,6 +14,7 @@ namespace DrawTriangle
         private GraphicsBuffer _vertexBuffer;
         private Shader _vertexShader;
         private Shader _pixelShader;
+        private RenderPipelineState _renderPipelineState;
 
         protected override void LoadContent()
         {
@@ -59,7 +60,7 @@ namespace DrawTriangle
             _vertexShader = GraphicsDevice.CreateShader(ShaderStages.Vertex, ShaderCompiler.Compile(shaderSource, ShaderStages.Vertex, ShaderLanguage.DXC));
             _pixelShader = GraphicsDevice.CreateShader(ShaderStages.Pixel, ShaderCompiler.Compile(shaderSource, ShaderStages.Pixel, ShaderLanguage.DXC));
 
-            var pipeline = GraphicsDevice.CreateRenderPipelineState(new RenderPipelineDescriptor
+            _renderPipelineState = GraphicsDevice.CreateRenderPipelineState(new RenderPipelineDescriptor
             {
                 VertexShader = _vertexShader,
                 PixelShader = _pixelShader
@@ -75,6 +76,9 @@ namespace DrawTriangle
             // Record commands to default context.
             var commandBuffer = GraphicsDevice.GetCommandQueue().GetCommandBuffer();
             var passEncoder = commandBuffer.BeginRenderPass(MainView.CurrentRenderPassDescriptor);
+            passEncoder.SetPipelineState(_renderPipelineState);
+            passEncoder.SetVertexBuffer(0, _vertexBuffer);
+            passEncoder.Draw(3, 1, 0, 0);
             passEncoder.EndPass();
             commandBuffer.Commit();
         }

@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Assets", "assets\Vo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawTriangle.Game", "samples\graphics\DrawTriangle\DrawTriangle.Game\DrawTriangle.Game.csproj", "{49DD2894-3978-4EB0-8014-6C1FC5F53A97}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Physics", "engine\Vortice.Physics\Vortice.Physics.csproj", "{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +180,22 @@ Global
 		{49DD2894-3978-4EB0-8014-6C1FC5F53A97}.Release|x64.Build.0 = Release|Any CPU
 		{49DD2894-3978-4EB0-8014-6C1FC5F53A97}.Release|x86.ActiveCfg = Release|Any CPU
 		{49DD2894-3978-4EB0-8014-6C1FC5F53A97}.Release|x86.Build.0 = Release|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Debug|ARM.Build.0 = Debug|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Debug|x64.Build.0 = Debug|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Debug|x86.Build.0 = Debug|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|ARM.Build.0 = Release|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|x64.ActiveCfg = Release|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|x64.Build.0 = Release|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|x86.ActiveCfg = Release|Any CPU
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,6 +210,7 @@ Global
 		{DFE2EA8D-4C7B-4213-A314-37971EB01EC8} = {FAB2ABB8-1CEF-452B-A86E-995AB9907B37}
 		{261BD4C0-09C3-47AA-8013-E34D088E2F39} = {29FEB313-B508-409F-813D-E01E64604937}
 		{49DD2894-3978-4EB0-8014-6C1FC5F53A97} = {CF8EF5DB-101D-451E-84CF-181807AB0FCF}
+		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D} = {FAB2ABB8-1CEF-452B-A86E-995AB9907B37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF0375B3-E304-4A53-8E5F-FC9D23743647}

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Description>Asset pipeline library for Alimer game engine..</Description>
+    <Description>Asset pipeline library for Alimer game engine.</Description>
   </PropertyGroup>
 
   <ItemGroup>

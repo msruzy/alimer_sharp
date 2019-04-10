@@ -29,35 +29,29 @@ namespace Vortice.Graphics
             SetPipelineStateImpl(pipelineState);
         }
 
+        public void SetVertexBuffer(int slot, GraphicsBuffer buffer)
+        {
+            SetVertexBufferImpl(slot, buffer);
+        }
+
+        public void Draw(int vertexCount, int instanceCount, int firstVertex, int firstInstance)
+        {
+            DrawImpl(vertexCount, instanceCount, firstInstance, firstInstance);
+        }
+
         public void SetViewport(Viewport viewport)
         {
-            SetViewportImpl(viewport);
+            SetViewport(ref viewport);
         }
 
-        public void SetViewports(params Viewport[] viewports)
+        public abstract void SetViewport(ref Viewport viewport);
+
+        public void SetScissorRect(Rect scissorRect)
         {
-            SetViewportsImpl(viewports, viewports.Length);
+            SetScissorRect(ref scissorRect);
         }
 
-        public void SetViewports(Viewport[] viewports, int count)
-        {
-            SetViewportsImpl(viewports, count);
-        }
-
-        public void SetScissorRect(Rect rect)
-        {
-            SetScissorRectImpl(rect);
-        }
-
-        public void SetScissorRects(Rect[] scissorRects, int count)
-        {
-            SetScissorRectsImpl(scissorRects, count);
-        }
-
-        public void SetScissorRects(params Rect[] scissorRects)
-        {
-            SetScissorRectsImpl(scissorRects, scissorRects.Length);
-        }
+        public abstract void SetScissorRect(ref Rect scissorRect);
 
         /// <summary>
         /// Specifies the constant blend color.
@@ -77,10 +71,8 @@ namespace Vortice.Graphics
         //public abstract void SetStencilReference(int reference);
 
         protected abstract void SetPipelineStateImpl(RenderPipelineState pipelineState);
+        protected abstract void SetVertexBufferImpl(int slot, GraphicsBuffer buffer);
 
-        protected abstract void SetViewportImpl(Viewport viewport);
-        protected abstract void SetViewportsImpl(Viewport[] viewports, int count);
-        protected abstract void SetScissorRectImpl(Rect scissorRect);
-        protected abstract void SetScissorRectsImpl(Rect[] scissorRects, int count);
+        protected abstract void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance);
     }
 }
