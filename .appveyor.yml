@@ -33,7 +33,7 @@ build:
   project: src/Vortice.sln
   verbosity: minimal
 before_package:
-- cmd: msbuild /t:pack /p:VersionSuffix="%BUILD_VERSION_SUFFIX%" /p:Configuration=Release core/Vortice/Vortice.csproj.csproj
+- cmd: msbuild /t:pack /p:VersionSuffix="%BUILD_VERSION_SUFFIX%" /p:Configuration=Release core/Vortice/Vortice.csproj
 - cmd: msbuild /t:pack /p:VersionSuffix="%BUILD_VERSION_SUFFIX%" /p:Configuration=Release engine/Vortice.Graphics/Vortice.Graphics.csproj
 - cmd: msbuild /t:pack /p:VersionSuffix="%BUILD_VERSION_SUFFIX%" /p:Configuration=Release engine/Vortice.Audio/Vortice.Audio.csproj
 - cmd: msbuild /t:pack /p:VersionSuffix="%BUILD_VERSION_SUFFIX%" /p:Configuration=Release engine/Vortice.Game/Vortice.Game.csproj
