@@ -12,6 +12,7 @@ namespace Vortice.Graphics.D3D11
         public readonly ID3D11InputLayout InputLayout;
         public readonly ID3D11RasterizerState RasterizerState;
         public readonly ID3D11DepthStencilState DepthStencilState;
+        public readonly ID3D11BlendState BlendState;
 
         public RenderPipelineStateD3D11(DeviceD3D11 device, in RenderPipelineDescriptor descriptor)
             : base(device)
@@ -25,32 +26,9 @@ namespace Vortice.Graphics.D3D11
             inputElements[1] = new InputElementDescription("COLOR", 0, SharpDXGI.Format.R32G32B32A32_Float, 12, 0);
             InputLayout = device.D3D11Device.CreateInputLayout(inputElements, vsByteCode);
 
-            RasterizerState = device.D3D11Device.CreateRasterizerState(new RasterizerDescription
-            {
-                CullMode = CullMode.None,
-                FillMode = FillMode.Solid,
-                ScissorEnable = false
-            });
-
-            var defaultDepthStencilOp = new DepthStencilopDescription
-            {
-                StencilFailOp = StencilOp.Keep,
-                StencilDepthFailOp = StencilOp.Keep,
-                StencilPassOp = StencilOp.Keep,
-                StencilFunc = ComparisonFunc.Always
-            };
-
-            DepthStencilState = device.D3D11Device.CreateDepthStencilState(new DepthStencilDescription
-            {
-                DepthEnable = true,
-                DepthWriteMask = DepthWriteMask.All,
-                DepthFunc = ComparisonFunc.Less,
-                StencilEnable = false,
-                StencilReadMask = DepthStencilDescription.DefaultStencilReadMask,
-                StencilWriteMask = DepthStencilDescription.DefaultStencilWriteMask,
-                FrontFace = defaultDepthStencilOp,
-                BackFace = defaultDepthStencilOp
-            });
+            RasterizerState = device.D3D11Device.CreateRasterizerState(RasterizerDescription.CullCounterClockwise);
+            DepthStencilState = device.D3D11Device.CreateDepthStencilState(DepthStencilDescription.Default);
+            BlendState = device.D3D11Device.CreateBlendState(BlendDescription.Opaque);
         }
 
         /// <inheritdoc/>
@@ -59,6 +37,7 @@ namespace Vortice.Graphics.D3D11
             InputLayout.Dispose();
             RasterizerState.Dispose();
             DepthStencilState.Dispose();
+            BlendState.Dispose();
         }
     }
 }

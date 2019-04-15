@@ -139,11 +139,14 @@ namespace Vortice.Graphics.D3D11
             if (_boundDepthStencilState != depthStencilState)
             {
                 _boundDepthStencilState = depthStencilState;
-                D3D11Context.OMSetDepthStencilState(depthStencilState, 0);
+                D3D11Context.OMSetDepthStencilState(depthStencilState);
             }
 
             var rasterizerState = pipelineStateD3D11.RasterizerState;
             D3D11Context.RSSetState(rasterizerState);
+
+            var blendState = pipelineStateD3D11.BlendState;
+            D3D11Context.OMSetBlendState(blendState);
         }
 
         /// <inheritdoc/>
@@ -165,10 +168,8 @@ namespace Vortice.Graphics.D3D11
 
         protected override void SetVertexBufferImpl(int slot, GraphicsBuffer buffer)
         {
-            var d3dBuffers = new[] { ((BufferD3D11)buffer).Resource };
-            var strides = new[] { 28 };
-            var offsets = new[] { 0 };
-            D3D11Context.IASetVertexBuffers(1, 1, d3dBuffers, strides, offsets);
+            var view = new VertexBufferView(((BufferD3D11)buffer).Resource, 28);
+            D3D11Context.IASetVertexBuffers(0, view);
         }
 
         protected override void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance)

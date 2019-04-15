@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="$(RepositoryRootDirectory)\deps\dxc\win-x64\*.dll">
+    <Content Include="$(RepositoryRootDirectory)\deps\dxc\win-x64\dxcompiler.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <PackagePath>runtimes/win-x64/native</PackagePath>
       <Pack>true</Pack>

@@ -20,8 +20,6 @@ namespace DrawTriangle
         {
             base.LoadContent();
 
-            // new AudioEngine();
-
             var vertices = new VertexPositionColor[]
             {
                 new VertexPositionColor(new Vector3(0.0f, 0.5f, 0.0f), new Color4(1.0f, 0.0f, 0.0f)),
@@ -36,8 +34,7 @@ namespace DrawTriangle
                 float4 color : COLOR;
             };
 
-            PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
-{
+            PSInput VSMain(float4 position : POSITION, float4 color : COLOR) {
                 PSInput result;
 
                 result.position = position;
@@ -46,8 +43,7 @@ namespace DrawTriangle
                 return result;
             }
 
-            float4 PSMain(PSInput input) : SV_TARGET
-{
+            float4 PSMain(PSInput input) : SV_TARGET {
                 return input.color;
             }
 
