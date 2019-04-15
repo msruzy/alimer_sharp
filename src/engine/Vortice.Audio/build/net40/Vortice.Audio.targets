@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_Vortice_Audio_IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</_Vortice_Audio_IsWindows>
+    <_Vortice_Audio_IsMacOS Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</_Vortice_Audio_IsMacOS>
+
+    <_Vortice_Audio_NativeRuntime Condition=" '$(_Vortice_Audio_NativeRuntime)' == '' And '$(_Vortice_Audio_IsMacOS)' == 'true' And ('$(Prefer32Bit)' == 'false' Or '$(PlatformTarget)' == 'x64')">osx-x64</_Vortice_Audio_NativeRuntime>
+    <_Vortice_Audio_NativeRuntime Condition=" '$(_Vortice_Audio_NativeRuntime)' == '' And '$(_Vortice_Audio_IsWindows)' == 'true' And ('$(Prefer32Bit)' == 'true' Or '$(PlatformTarget)' == 'x86')">win-x86</_Vortice_Audio_NativeRuntime>
+    <_Vortice_Audio_NativeRuntime Condition=" '$(_Vortice_Audio_NativeRuntime)' == '' And '$(_Vortice_Audio_IsWindows)' == 'true' And ('$(Prefer32Bit)' == 'false' Or '$(PlatformTarget)' == 'x64')">win-x64</_Vortice_Audio_NativeRuntime>
+
+    <_Vortice_Audio_NativeLibName Condition="'$(_Vortice_Audio_NativeRuntime)' == 'win-x86' Or '$(_Vortice_Audio_NativeRuntime)' == 'win-x64'">SDL2.dll</_Vortice_Audio_NativeLibName>
+    <_Vortice_Audio_NativeLibName Condition="'$(_Vortice_Audio_NativeRuntime)' == 'osx-x64'">libsdl2.dylib</_Vortice_Audio_NativeLibName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Condition="'$(_Vortice_Audio_NativeRuntime)' != ''" Include="$(MSBuildThisFileDirectory)..\..\runtimes\$(_Vortice_Audio_NativeRuntime)\native\$(_Vortice_Audio_NativeLibName)">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+  </ItemGroup>
+</Project>

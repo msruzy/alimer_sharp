@@ -14,23 +14,30 @@ namespace Vortice.Audio
         {
             if (backend == AudioBackend.Default)
             {
-                backend = AudioBackend.XAudio2;
+                backend = AudioBackend.OpenAL;
             }
 
             switch (backend)
             {
-                case AudioBackend.XAudio2:
-#if !VORTICE_NO_XAUDIO2
-                    _backendEngine = new XAudio.XAudioEngine();
+                case AudioBackend.OpenAL:
+#if !VORTICE_NO_OPENAL
+                    _backendEngine = new OpenAL.ALAudioEngine();
 #else
                     throw new AudioException($"{AudioBackend.XAudio2} Backend is not supported");
 #endif
                     break;
+            }
+
+            if (!_backendEngine.Initialize())
+            {
+                //throw new AudioException($"{backend} Backend is not supported");
             }
         }
     }
 
     public interface IAudioEngine
     {
+        bool Initialize();
+        void Shutdown();
     }
 }

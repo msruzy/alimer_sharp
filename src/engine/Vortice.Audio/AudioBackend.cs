@@ -19,8 +19,8 @@ namespace Vortice.Audio
 		Custom,
 
         /// <summary>
-        /// XAudio 2.7+ backend.
+        /// OpenAL backend.
         /// </summary>
-        XAudio2,
+        OpenAL,
     }
 }
