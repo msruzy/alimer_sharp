@@ -68,7 +68,7 @@ namespace Vortice.Graphics
         /// <param name="blendColor">The color and alpha value for blend constant color.</param>
         public abstract void SetBlendColor(ref Color4 blendColor);
 
-        //public abstract void SetStencilReference(int reference);
+        public abstract void SetStencilReference(int reference);
 
         protected abstract void SetPipelineStateImpl(RenderPipelineState pipelineState);
         protected abstract void SetVertexBufferImpl(int slot, GraphicsBuffer buffer);

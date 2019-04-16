@@ -9,13 +9,16 @@ namespace Vortice.Graphics.D3D12
     internal class RenderPipelineStateD3D12 : RenderPipelineState
     {
         public readonly ID3D12PipelineState D3D12PipelineState;
+        public readonly SharpDXGI.Direct3D.PrimitiveTopology PrimitiveTopology;
 
         public RenderPipelineStateD3D12(DeviceD3D12 device, in RenderPipelineDescriptor descriptor)
-            : base(device)
+            : base(device, descriptor)
         {
             var inputElements = new InputElementDescription[2];
             inputElements[0] = new InputElementDescription("POSITION", 0, SharpDXGI.Format.R32G32B32_Float, 0, 0);
             inputElements[1] = new InputElementDescription("COLOR", 0, SharpDXGI.Format.R32G32B32A32_Float, 12, 0);
+
+            var sampleCount = (int)descriptor.Samples;
 
             var psoDesc = new GraphicsPipelineStateDescription()
             {
@@ -24,15 +27,17 @@ namespace Vortice.Graphics.D3D12
                 PixelShader = ((ShaderD3D12)descriptor.PixelShader).D3D12ShaderBytecode,
                 InputLayout = new InputLayoutDescription(inputElements),
                 SampleMask = uint.MaxValue,
-                PrimitiveTopologyType = PrimitiveTopologyType.Triangle,
+                PrimitiveTopologyType = D3D12Convert.Convert(descriptor.PrimitiveTopology),
                 RasterizerState = RasterizerDescription.CullCounterClockwise,
                 BlendState = BlendDescription.Opaque,
                 DepthStencilState = DepthStencilDescription.None,
                 RenderTargetFormats = new[] { Format.R8G8B8A8_UNorm },
-                DepthStencilFormat =D3DConvert.Convert( descriptor.DepthStencilAttachmentFormat),
-                SampleDescription = new SampleDescription(1, 0)
+                DepthStencilFormat = D3DConvert.Convert(descriptor.DepthStencilAttachmentFormat),
+                SampleDescription = new SampleDescription(sampleCount, 0)
             };
+
             D3D12PipelineState = device.D3D12Device.CreateGraphicsPipelineState(psoDesc);
+            PrimitiveTopology = D3DConvert.Convert(descriptor.PrimitiveTopology, 1);
         }
 
         /// <inheritdoc/>

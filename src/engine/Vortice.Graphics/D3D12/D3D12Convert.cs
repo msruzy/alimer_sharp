@@ -77,5 +77,28 @@ namespace Vortice.Graphics.D3D12
 
             return flags;
         }
+
+        public static PrimitiveTopologyType Convert(PrimitiveTopology topology)
+        {
+            switch (topology)
+            {
+                case PrimitiveTopology.PointList:
+                    return PrimitiveTopologyType.Point;
+
+                case PrimitiveTopology.LineList:
+                case PrimitiveTopology.LineStrip:
+                    return PrimitiveTopologyType.Line;
+
+                case PrimitiveTopology.TriangeList:
+                case PrimitiveTopology.TriangleStrip:
+                    return PrimitiveTopologyType.Triangle;
+
+                case PrimitiveTopology.PatchList:
+                    return PrimitiveTopologyType.Patch;
+
+                default:
+                    return PrimitiveTopologyType.Undefined;
+            }
+        }
     }
 }

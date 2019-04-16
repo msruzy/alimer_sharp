@@ -159,6 +159,8 @@ namespace Vortice.Graphics
 
         public RenderPipelineState CreateRenderPipelineState(in RenderPipelineDescriptor descriptor)
         {
+            Guard.NotNull(descriptor, nameof(descriptor), "Invalid RenderPipeline descriptor");
+
             return CreateRenderPipelineStateImpl(descriptor);
         }
 

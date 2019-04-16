@@ -8,14 +8,18 @@ namespace Vortice.Graphics.D3D11
     internal class RenderPipelineStateD3D11 : RenderPipelineState
     {
         public readonly ID3D11VertexShader VertexShader;
+        public readonly ID3D11GeometryShader GeometryShader;
+        public readonly ID3D11HullShader HullShader;
+        public readonly ID3D11DomainShader DomainShader;
         public readonly ID3D11PixelShader PixelShader;
         public readonly ID3D11InputLayout InputLayout;
         public readonly ID3D11RasterizerState RasterizerState;
         public readonly ID3D11DepthStencilState DepthStencilState;
         public readonly ID3D11BlendState BlendState;
+        public readonly SharpDXGI.Direct3D.PrimitiveTopology PrimitiveTopology;
 
         public RenderPipelineStateD3D11(DeviceD3D11 device, in RenderPipelineDescriptor descriptor)
-            : base(device)
+            : base(device, descriptor)
         {
             VertexShader = (ID3D11VertexShader)((ShaderD3D11)descriptor.VertexShader).D3D11Shader;
             PixelShader = (ID3D11PixelShader)((ShaderD3D11)descriptor.PixelShader).D3D11Shader;
@@ -29,6 +33,7 @@ namespace Vortice.Graphics.D3D11
             RasterizerState = device.D3D11Device.CreateRasterizerState(RasterizerDescription.CullCounterClockwise);
             DepthStencilState = device.D3D11Device.CreateDepthStencilState(DepthStencilDescription.Default);
             BlendState = device.D3D11Device.CreateBlendState(BlendDescription.Opaque);
+            PrimitiveTopology = D3DConvert.Convert(descriptor.PrimitiveTopology, 1);
         }
 
         /// <inheritdoc/>

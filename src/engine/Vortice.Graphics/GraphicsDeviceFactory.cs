@@ -132,8 +132,7 @@ namespace Vortice.Graphics
 
                 case GraphicsBackend.Direct3D12:
 #if !VORTICE_NO_D3D12
-                    return false;
-                //return D3D12.DeviceD3D12.IsSupported();
+                    return D3D12.DeviceD3D12.IsSupported();
 #else
                     return false;
 #endif

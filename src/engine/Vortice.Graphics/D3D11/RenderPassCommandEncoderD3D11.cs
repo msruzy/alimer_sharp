@@ -3,8 +3,6 @@
 
 using System;
 using SharpDirect3D11;
-using SharpDXGI;
-using SharpDXGI.Direct3D;
 using Vortice.Mathematics;
 
 namespace Vortice.Graphics.D3D11
@@ -14,14 +12,20 @@ namespace Vortice.Graphics.D3D11
         private static readonly ID3D11RenderTargetView[] _nullRTVViews = new ID3D11RenderTargetView[BlendDescription.SimultaneousRenderTargetCount];
         public readonly ID3D11DeviceContext D3D11Context;
         private readonly ID3D11RenderTargetView[] _rtvViews = new ID3D11RenderTargetView[BlendDescription.SimultaneousRenderTargetCount];
-        private Color4 _blendColor;
+
+        // Bound states
+        private ID3D11BlendState _boundBlendState;
+        private Color4 _boundBlendColor;
+        private ID3D11DepthStencilState _boundDepthStencilState;
+        private int _boundStencilReference;
+        private ID3D11RasterizerState _boundRasterizerState;
+        private SharpDXGI.Direct3D.PrimitiveTopology _boundPrimitiveTopology;
         private ID3D11InputLayout _boundInputLayout;
         private ID3D11VertexShader _boundVertexShader;
         private ID3D11GeometryShader _boundGeometryShader;
         private ID3D11HullShader _boundHullShader;
         private ID3D11DomainShader _boundDomainShader;
         private ID3D11PixelShader _boundPixelShader;
-        private ID3D11DepthStencilState _boundDepthStencilState;
 
         public RenderPassCommandEncoderD3D11(CommandBufferD3D11 commandBuffer)
             : base(commandBuffer)
@@ -103,7 +107,7 @@ namespace Vortice.Graphics.D3D11
             // Apply viewport and scissor for render target.
             SetViewport(new Viewport(width, height));
             SetScissorRect(new Rect(width, height));
-            _blendColor = default;
+            _boundBlendColor = default;
         }
 
         protected override void EndPassImpl()
@@ -114,6 +118,35 @@ namespace Vortice.Graphics.D3D11
         protected override void SetPipelineStateImpl(RenderPipelineState pipelineState)
         {
             var pipelineStateD3D11 = (RenderPipelineStateD3D11)pipelineState;
+
+            var blendState = pipelineStateD3D11.BlendState;
+            if (_boundBlendState != blendState)
+            {
+                _boundBlendState = blendState;
+                D3D11Context.OMSetBlendState(blendState, _boundBlendColor);
+            }
+
+            var depthStencilState = pipelineStateD3D11.DepthStencilState;
+            if (_boundDepthStencilState != depthStencilState)
+            {
+                _boundDepthStencilState = depthStencilState;
+                D3D11Context.OMSetDepthStencilState(depthStencilState, _boundStencilReference);
+            }
+
+            var rasterizerState = pipelineStateD3D11.RasterizerState;
+            if (_boundRasterizerState != rasterizerState)
+            {
+                _boundRasterizerState = rasterizerState;
+                D3D11Context.RSSetState(rasterizerState);
+            }
+
+            var primitiveTopology = pipelineStateD3D11.PrimitiveTopology;
+            if (_boundPrimitiveTopology != primitiveTopology)
+            {
+                _boundPrimitiveTopology = primitiveTopology;
+                D3D11Context.IASetPrimitiveTopology(primitiveTopology);
+            }
+
             var inputLayout = pipelineStateD3D11.InputLayout;
             if (_boundInputLayout != inputLayout)
             {
@@ -128,31 +161,45 @@ namespace Vortice.Graphics.D3D11
                 D3D11Context.VSSetShader(vertexShader);
             }
 
+            var geometryShader = pipelineStateD3D11.GeometryShader;
+            if (_boundGeometryShader != geometryShader)
+            {
+                _boundGeometryShader = geometryShader;
+                D3D11Context.GSSetShader(geometryShader);
+            }
+
+            var hullShader = pipelineStateD3D11.HullShader;
+            if (_boundHullShader != hullShader)
+            {
+                _boundHullShader = hullShader;
+                D3D11Context.HSSetShader(hullShader);
+            }
+
+            var domainShader = pipelineStateD3D11.DomainShader;
+            if (_boundDomainShader != domainShader)
+            {
+                _boundDomainShader = domainShader;
+                D3D11Context.DSSetShader(domainShader);
+            }
+
             var pixelShader = pipelineStateD3D11.PixelShader;
             if (_boundPixelShader != pixelShader)
             {
                 _boundPixelShader = pixelShader;
                 D3D11Context.PSSetShader(pixelShader);
             }
-
-            var depthStencilState = pipelineStateD3D11.DepthStencilState;
-            if (_boundDepthStencilState != depthStencilState)
-            {
-                _boundDepthStencilState = depthStencilState;
-                D3D11Context.OMSetDepthStencilState(depthStencilState);
-            }
-
-            var rasterizerState = pipelineStateD3D11.RasterizerState;
-            D3D11Context.RSSetState(rasterizerState);
-
-            var blendState = pipelineStateD3D11.BlendState;
-            D3D11Context.OMSetBlendState(blendState);
         }
 
         /// <inheritdoc/>
         public override void SetBlendColor(ref Color4 blendColor)
         {
-            _blendColor = blendColor;
+            _boundBlendColor = blendColor;
+        }
+
+        /// <inheritdoc/>
+        public override void SetStencilReference(int reference)
+        {
+            _boundStencilReference = reference;
         }
 
         /// <inheritdoc/>
@@ -174,8 +221,7 @@ namespace Vortice.Graphics.D3D11
 
         protected override void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance)
         {
-            PrepareDraw();
-            D3D11Context.IASetPrimitiveTopology(PrimitiveTopology.TriangleList);
+            
             if (instanceCount <= 1)
             {
                 D3D11Context.Draw(vertexCount, firstVertex);
@@ -186,8 +232,20 @@ namespace Vortice.Graphics.D3D11
             }
         }
 
-        private void PrepareDraw()
+        public void ResetState()
         {
+            _boundBlendState = null;
+            _boundBlendColor = default;
+            _boundDepthStencilState = null;
+            _boundStencilReference = 0;
+            _boundRasterizerState = null;
+            _boundPrimitiveTopology = SharpDXGI.Direct3D.PrimitiveTopology.Undefined;
+            _boundInputLayout = null;
+            _boundVertexShader = null;
+            _boundGeometryShader = null;
+            _boundHullShader = null;
+            _boundDomainShader = null;
+            _boundPixelShader = null;
         }
     }
 }

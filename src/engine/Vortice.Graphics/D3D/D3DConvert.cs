@@ -212,5 +212,32 @@ namespace Vortice.Graphics
                     return PixelFormat.Unknown;
             }
         }
+
+        public static SharpDXGI.Direct3D.PrimitiveTopology Convert(PrimitiveTopology topology, int patches)
+        {
+            switch (topology)
+            {
+                case PrimitiveTopology.PointList:
+                    return SharpDXGI.Direct3D.PrimitiveTopology.PointList;
+
+                case PrimitiveTopology.LineList:
+                    return SharpDXGI.Direct3D.PrimitiveTopology.LineList;
+
+                case PrimitiveTopology.LineStrip:
+                    return SharpDXGI.Direct3D.PrimitiveTopology.LineStrip;
+
+                case PrimitiveTopology.TriangeList:
+                    return SharpDXGI.Direct3D.PrimitiveTopology.TriangleList;
+
+                case PrimitiveTopology.TriangleStrip:
+                    return SharpDXGI.Direct3D.PrimitiveTopology.TriangleStrip;
+
+                case PrimitiveTopology.PatchList:
+                    return (SharpDXGI.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints) + patches - 1;
+
+                default:
+                    return SharpDXGI.Direct3D.PrimitiveTopology.Undefined;
+            }
+        }
     }
 }

@@ -15,6 +15,9 @@ namespace Vortice.Graphics
         /// </summary>
         public PixelFormat PixelFormat;
 
+        /// <summary>
+        /// A bitmask that restricts which color channels are written into the texture.
+        /// </summary>
         public ColorWriteMask WriteMask;
 
         /// <summary>
