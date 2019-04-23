@@ -23,13 +23,13 @@ namespace Vortice.Windows
         public override bool IsMinimized => IsIconic(_hwnd);
 
         /// <inheritdoc/>
-        public override Rect Bounds
+        public override RectF Bounds
         {
             get
 
             {
                 GetClientRect(_hwnd, out var rect);
-                return rect;
+                return RectF.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
             }
         }
 
