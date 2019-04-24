@@ -1,12 +1,12 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
+  
   <PropertyGroup>
-    <!--Work around so the conditions work below-->
     <TargetFrameworks></TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;net461;uap10.0.16299</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;net461</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RootNamespace>Vortice</RootNamespace>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>7.2</LangVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <Description>Vortice.Application library for cross platform application support</Description>
   </PropertyGroup>
