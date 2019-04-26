@@ -8,6 +8,7 @@ namespace Vortice.Graphics.D3D12
 {
     internal class RenderPipelineStateD3D12 : RenderPipelineState
     {
+        private readonly ID3D12RootSignature _rootSignature;
         public readonly ID3D12PipelineState D3D12PipelineState;
         public readonly SharpDXGI.Direct3D.PrimitiveTopology PrimitiveTopology;
 
@@ -20,9 +21,15 @@ namespace Vortice.Graphics.D3D12
 
             var sampleCount = (int)descriptor.Samples;
 
+            var rootSignatureDesc = new VersionedRootSignatureDescription(
+                new RootSignatureDescription1(RootSignatureFlags.AllowInputAssemblerInputLayout)
+                );
+
+            _rootSignature = device.D3D12Device.CreateRootSignature(0, rootSignatureDesc);
+
             var psoDesc = new GraphicsPipelineStateDescription()
             {
-                RootSignature = null,
+                RootSignature = _rootSignature,
                 VertexShader = ((ShaderD3D12)descriptor.VertexShader).D3D12ShaderBytecode,
                 PixelShader = ((ShaderD3D12)descriptor.PixelShader).D3D12ShaderBytecode,
                 InputLayout = new InputLayoutDescription(inputElements),
@@ -43,6 +50,7 @@ namespace Vortice.Graphics.D3D12
         /// <inheritdoc/>
         protected override void Destroy()
         {
+            _rootSignature.Dispose();
             D3D12PipelineState.Dispose();
         }
     }

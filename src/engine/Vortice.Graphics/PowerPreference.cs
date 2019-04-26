@@ -8,8 +8,17 @@ namespace Vortice.Graphics
 	/// </summary>
 	public enum PowerPreference
     {
+        /// <summary>
+        /// Default not specified gpu adapter.
+        /// </summary>
         Default,
+        /// <summary>
+        /// Low power gpu adapter.
+        /// </summary>
         LowPower,
+        /// <summary>
+        /// High performance (discrete) gpu adapter.
+        /// </summary>
         HighPerformance
     }
 }
