@@ -23,6 +23,11 @@ namespace Vortice.Graphics.D3D11
             _context = device.D3D11Device.CreateDeferredContext();
         }
 
+        public void Destroy()
+        {
+            _context.Dispose();
+        }
+
         protected override CommandBuffer CreateCommandBuffer()
         {
             return new CommandBufferD3D11(this, _context);

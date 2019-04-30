@@ -8,38 +8,26 @@ namespace Vortice.Graphics.D3D12
 {
     internal class CommandBufferD3D12 : CommandBuffer
     {
-        private readonly int _frameCount;
         private readonly CommandListType _type;
-        private int _currentFrameIndex;
 
-        private readonly ID3D12CommandAllocator[] _commandAllocators;
+        private readonly ID3D12CommandAllocator _commandAllocator;
 
         public ID3D12GraphicsCommandList CommandList { get; }
 
-        public CommandBufferD3D12(DeviceD3D12 device, int frameCount, CommandListType type)
-            : base(null)
+        public CommandBufferD3D12(CommandQueueD3D12 queue, CommandListType type)
+            : base(queue)
         {
-            _frameCount = frameCount;
-            _type = type;
+            var d3d12Device = ((DeviceD3D12)queue.Device).D3D12Device;
 
-            _commandAllocators = new ID3D12CommandAllocator[frameCount];
-            for (var i = 0; i < frameCount; ++i)
-            {
-                _commandAllocators[i] = device.D3D12Device.CreateCommandAllocator(type);
-            }
-
-            CommandList = device.D3D12Device.CreateCommandList(type, _commandAllocators[_currentFrameIndex], null);
-            CommandList.Close();
+            _commandAllocator = d3d12Device.CreateCommandAllocator(type);
+            CommandList = d3d12Device.CreateCommandList(type, _commandAllocator, null);
+            //CommandList.Close();
         }
 
         /// <inheritdoc/>
         protected override void Destroy()
         {
-            for (var i = 0; i < _frameCount; ++i)
-            {
-                _commandAllocators[i].Dispose();
-            }
-
+            _commandAllocator.Dispose();
             CommandList.Dispose();
         }
 

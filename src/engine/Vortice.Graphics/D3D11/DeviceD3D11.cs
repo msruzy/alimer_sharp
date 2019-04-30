@@ -32,11 +32,8 @@ namespace Vortice.Graphics.D3D11
         // Device1
         public readonly ID3D11Device1 D3D11Device1;
 
-        private readonly bool _supportsConcurrentResources;
-        private readonly bool _supportsCommandLists;
-
-        public bool SupportsConcurrentResources => _supportsConcurrentResources;
-        public bool SupportsCommandLists => _supportsCommandLists;
+        public bool SupportsConcurrentResources { get; }
+        public bool SupportsCommandLists { get; }
 
         public DeviceD3D11(IDXGIFactory1 factory, bool validation)
             : base(GraphicsBackend.Direct3D11)
@@ -91,8 +88,8 @@ namespace Vortice.Graphics.D3D11
             FeatureDataThreading featureDataThreading = default;
             if (D3D11Device.CheckFeatureSupport(SharpDirect3D11.Feature.Threading, ref featureDataThreading))
             {
-                _supportsConcurrentResources = featureDataThreading.DriverConcurrentCreates;
-                _supportsCommandLists = featureDataThreading.DriverCommandLists;
+                SupportsConcurrentResources = featureDataThreading.DriverConcurrentCreates;
+                SupportsCommandLists = featureDataThreading.DriverCommandLists;
             }
 
             // Init device features.
@@ -106,7 +103,10 @@ namespace Vortice.Graphics.D3D11
 
         protected override void Destroy()
         {
-            D3D11DeviceContext.Dispose();
+            ((CommandQueueD3D11)_copyCommandQueue).Destroy();
+            ((CommandQueueD3D11)_computeCommandQueue).Destroy();
+            ((CommandQueueD3D11)_graphicsCommandQueue).Destroy();
+
             var deviceDebug = D3D11Device.QueryInterfaceOrNull<ID3D11Debug>();
             if (deviceDebug != null)
             {
@@ -126,8 +126,8 @@ namespace Vortice.Graphics.D3D11
             Features.DeviceName = adapterDesc.Description;
             Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
 
-            if (_supportsConcurrentResources
-                && _supportsCommandLists)
+            if (SupportsConcurrentResources
+                && SupportsCommandLists)
             {
                 Features.Multithreading = true;
             }

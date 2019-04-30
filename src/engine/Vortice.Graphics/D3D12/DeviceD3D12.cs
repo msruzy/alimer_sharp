@@ -162,6 +162,11 @@ namespace Vortice.Graphics.D3D12
             // Init device features.
             InitializeFeatures();
 
+            // Create command queue's.
+            _graphicsCommandQueue = new CommandQueueD3D12(this, CommandQueueType.Graphics);
+            _computeCommandQueue = new CommandQueueD3D12(this, CommandQueueType.Compute);
+            _copyCommandQueue = new CommandQueueD3D12(this, CommandQueueType.Copy);
+
             // Create main graphics command queue.
             GraphicsQueue = D3D12Device.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
             GraphicsQueue.SetName("Main GraphicsQueue");
@@ -171,8 +176,6 @@ namespace Vortice.Graphics.D3D12
             {
                 _deferredReleases[i] = new List<IUnknown>();
             }
-            //ImmediateCommandBuffer = new CommandBufferD3D12(this, RenderLatency, CommandListType.Direct);
-            //((CommandBufferD3D12)ImmediateCommandBuffer).CommandList.SetName("Primary Graphics Command List");
 
             // Create the frame fence
             _frameFence = new FenceD3D12(this, 0);
