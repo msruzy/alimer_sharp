@@ -161,7 +161,9 @@ namespace Vortice.Graphics.D3D11
         protected override Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode) =>
             new ShaderD3D11(this, stage, byteCode);
 
-        protected override RenderPipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor) =>
-            new RenderPipelineStateD3D11(this, descriptor);
+        protected override PipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor)
+        {
+            return new PipelineStateD3D11(this, descriptor);
+        }
     }
 }

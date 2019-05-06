@@ -14,7 +14,12 @@ namespace DrawTriangle
         private GraphicsBuffer _vertexBuffer;
         private Shader _vertexShader;
         private Shader _pixelShader;
-        private RenderPipelineState _renderPipelineState;
+        private PipelineState _renderPipelineState;
+
+        public DrawTriangleGame()
+        {
+            GraphicsBackend = GraphicsBackend.Direct3D11;
+        }
 
         protected override void LoadContent()
         {
@@ -68,11 +73,11 @@ namespace DrawTriangle
 
             // Record commands to default context.
             var commandBuffer = GraphicsDevice.GetCommandQueue().GetCommandBuffer();
-            var passEncoder = commandBuffer.BeginRenderPass(MainView.CurrentRenderPassDescriptor);
-            passEncoder.SetPipelineState(_renderPipelineState);
-            passEncoder.SetVertexBuffer(0, _vertexBuffer);
-            passEncoder.Draw(3, 1, 0, 0);
-            passEncoder.EndPass();
+            commandBuffer.BeginRenderPass(MainView.CurrentRenderPassDescriptor);
+            commandBuffer.SetPipelineState(_renderPipelineState);
+            commandBuffer.SetVertexBuffer(_vertexBuffer, 0, 0);
+            commandBuffer.Draw(3, 1, 0, 0);
+            commandBuffer.EndRenderPass();
             commandBuffer.Commit();
         }
 

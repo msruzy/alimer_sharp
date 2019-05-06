@@ -6,13 +6,13 @@ using SharpDXGI;
 
 namespace Vortice.Graphics.D3D12
 {
-    internal class RenderPipelineStateD3D12 : RenderPipelineState
+    internal class PipelineStateD3D12 : PipelineState
     {
         private readonly ID3D12RootSignature _rootSignature;
         public readonly ID3D12PipelineState D3D12PipelineState;
         public readonly SharpDXGI.Direct3D.PrimitiveTopology PrimitiveTopology;
 
-        public RenderPipelineStateD3D12(DeviceD3D12 device, in RenderPipelineDescriptor descriptor)
+        public PipelineStateD3D12(DeviceD3D12 device, in RenderPipelineDescriptor descriptor)
             : base(device, descriptor)
         {
             var inputElements = new InputElementDescription[2];

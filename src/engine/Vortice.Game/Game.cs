@@ -76,6 +76,8 @@ namespace Vortice
         /// </summary>
         public TimeSpan InactiveSleepTime { get; set; } = TimeSpan.FromMilliseconds(20.0);
 
+        public GraphicsBackend GraphicsBackend { get; set; } = GraphicsBackend.Default;
+
         /// <summary>
         /// Gets the collection of <see cref="GameSystem"/> registered.
         /// </summary>
@@ -261,7 +263,7 @@ namespace Vortice
             try
             {
                 // Create GPU device first.
-                _graphicsDeviceFactory = GraphicsDeviceFactory.Create(GraphicsBackend.Direct3D12, validation: true);
+                _graphicsDeviceFactory = GraphicsDeviceFactory.Create(GraphicsBackend, validation: true);
                 _graphicsDevice = _graphicsDeviceFactory.CreateDevice(PowerPreference.Default);
                 MainView.SetDevice(_graphicsDevice);
 

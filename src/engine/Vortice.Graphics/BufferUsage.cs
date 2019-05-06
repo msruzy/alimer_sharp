@@ -12,9 +12,9 @@ namespace Vortice.Graphics
     public enum BufferUsage
     {
         /// <summary>
-        /// Unknown buffer usage.
+        /// None buffer usage.
         /// </summary>
-        Unknown = 0,
+        None = 0,
 
         Vertex = 1 << 0,
         Index = 1 << 1,

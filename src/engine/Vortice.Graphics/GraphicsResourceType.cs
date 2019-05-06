@@ -13,6 +13,6 @@ namespace Vortice.Graphics
         Buffer,
         Framebuffer,
         Shader,
-        Pipeline,
+        PipelineState,
     }
 }

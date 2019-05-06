@@ -20,8 +20,24 @@ namespace Vortice.Graphics.D3D11
                     D3D11Shader = device.D3D11Device.CreateVertexShader(byteCode);
                     break;
 
+                case ShaderStages.Hull:
+                    D3D11Shader = device.D3D11Device.CreateHullShader(byteCode);
+                    break;
+
+                case ShaderStages.Domain:
+                    D3D11Shader = device.D3D11Device.CreateDomainShader(byteCode);
+                    break;
+
+                case ShaderStages.Geometry:
+                    D3D11Shader = device.D3D11Device.CreateGeometryShader(byteCode);
+                    break;
+
                 case ShaderStages.Pixel:
                     D3D11Shader = device.D3D11Device.CreatePixelShader(byteCode);
+                    break;
+
+                case ShaderStages.Compute:
+                    D3D11Shader = device.D3D11Device.CreateComputeShader(byteCode);
                     break;
             }
         }

@@ -50,10 +50,12 @@ namespace Vortice.Graphics
             {
                 preferredBackend = GetDefaultGraphicsPlatform(Platform.PlatformType);
             }
-
-            if (!IsSupported(preferredBackend))
+            else
             {
-                throw new GraphicsException($"Backend {preferredBackend} is not supported");
+                if (!IsSupported(preferredBackend))
+                {
+                    throw new GraphicsException($"Backend {preferredBackend} is not supported");
+                }
             }
 
             switch (preferredBackend)

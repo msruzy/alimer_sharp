@@ -31,35 +31,30 @@ namespace Vortice.Graphics.D3D12
             CommandList.Dispose();
         }
 
-        protected override RenderPassCommandEncoder BeginRenderPassCore(in RenderPassDescriptor descriptor)
+        public override void SetViewport(ref Viewport viewport)
         {
-            return null;
+            CommandList.RSSetViewport(viewport);
         }
 
-        protected override ComputePassCommandEncoder BeginComputePassCore()
+        public override void SetScissorRect(ref Rect scissorRect)
         {
-            return null;
+            CommandList.RSSetScissorRect(scissorRect);
         }
 
-        //protected override void SetViewportImpl(Viewport viewport)
-        //{
-        //    CommandList.RSSetViewport(viewport);
-        //}
+        public override void SetStencilReference(int reference)
+        {
+            throw new System.NotImplementedException();
+        }
 
-        //protected override void SetViewportsImpl(Viewport[] viewports, int count)
-        //{
-        //    CommandList.RSSetViewports(count, viewports);
-        //}
+        public override void SetBlendColor(ref Color4 blendColor)
+        {
+            throw new System.NotImplementedException();
+        }
 
-        //protected override void SetScissorRectImpl(Rect scissorRect)
-        //{
-        //    CommandList.RSSetScissorRect(scissorRect);
-        //}
-
-        //protected override void SetScissorRectsImpl(Rect[] scissorRects, int count)
-        //{
-        //    //CommandList.RSSetScissorRects(count, scissorRects);
-        //}
+        protected override void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance)
+        {
+            throw new System.NotImplementedException();
+        }
 
         //protected override void CommitCore()
         //{
@@ -71,5 +66,31 @@ namespace Vortice.Graphics.D3D12
         //    _commandAllocators[_currentFrameIndex].Reset();
         //    CommandList.Reset(_commandAllocators[_currentFrameIndex], null);
         //}
+
+        protected override void SetPipelineStateImpl(PipelineState pipelineState)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void SetVertexBufferImpl(GraphicsBuffer buffer, int offset, int index)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void BeginRenderPassImpl(in RenderPassDescriptor descriptor)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void EndRenderPassImpl()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        protected override void DispatchCore(int groupCountX, int groupCountY, int groupCountZ)
+        {
+            CommandList.Dispatch(groupCountX, groupCountY, groupCountZ);
+        }
     }
 }

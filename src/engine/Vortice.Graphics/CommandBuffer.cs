@@ -21,7 +21,10 @@ namespace Vortice.Graphics
         /// </summary>
         public CommandQueue CommandQueue { get; }
 
-        public bool IsEncodingPass { get; internal set; }
+        /// <summary>
+        /// Gets whether command buffer is inside render pass.
+        /// </summary>
+        public bool IsInRenderPass { get; private set; }
 
         /// <summary>
         /// Create a new instance of <see cref="CommandBuffer"/> class.
@@ -45,42 +48,94 @@ namespace Vortice.Graphics
         }
 
         /// <summary>
-        /// Begin rendering with given descriptor.
+        /// Set the <see cref="PipelineState"/> to use as graphics or compute pipeline.
         /// </summary>
-        /// <param name="descriptor">The <see cref="RenderPassDescriptor"/></param>
-        /// <returns>Instance of <see cref="RenderPassCommandEncoder"/> for encoding commands.</returns>
-        public RenderPassCommandEncoder BeginRenderPass(in RenderPassDescriptor descriptor)
+        /// <param name="pipelineState"></param>
+        public void SetPipelineState(PipelineState pipelineState)
         {
-            if (IsEncodingPass)
-            {
-                throw new GraphicsException($"Cannot {nameof(BeginRenderPass)} while inside another encoder pass");
-            }
+            Guard.NotNull(pipelineState, nameof(pipelineState));
 
-            return BeginRenderPassCore(descriptor);
+            SetPipelineStateImpl(pipelineState);
         }
 
-        public ComputePassCommandEncoder BeginComputePass()
+        public void BeginRenderPass(in RenderPassDescriptor descriptor)
         {
-            if (IsEncodingPass)
-            {
-                throw new GraphicsException($"Cannot {nameof(BeginComputePass)} while inside another encoder pass");
-            }
+            IsInRenderPass = true;
+            BeginRenderPassImpl(descriptor);
+        }
 
-            return BeginComputePassCore();
+        public void EndRenderPass()
+        {
+            EndRenderPassImpl();
+            IsInRenderPass = false;
+        }
+
+        public void SetVertexBuffer(GraphicsBuffer buffer, int offset, int index)
+        {
+            Guard.NotNull(buffer, nameof(buffer));
+            Guard.IsTrue((buffer.BufferUsage & BufferUsage.Vertex) != BufferUsage.None, nameof(buffer), $"Buffer must have {BufferUsage.Vertex}" );
+
+            SetVertexBufferImpl(buffer, offset, index);
+        }
+
+        public void SetViewport(Viewport viewport)
+        {
+            SetViewport(ref viewport);
+        }
+
+        public abstract void SetViewport(ref Viewport viewport);
+
+        public void SetScissorRect(Rect scissorRect)
+        {
+            SetScissorRect(ref scissorRect);
+        }
+
+        public abstract void SetScissorRect(ref Rect scissorRect);
+
+        /// <summary>
+        /// Specifies the constant blend color.
+        /// </summary>
+        /// <param name="blendColor">The color and alpha value for blend constant color.</param>
+        public void SetBlendColor(Color4 blendColor)
+        {
+            SetBlendColor(ref blendColor);
+        }
+
+        /// <summary>
+        /// Specifies the constant blend color.
+        /// </summary>
+        /// <param name="blendColor">The color and alpha value for blend constant color.</param>
+        public abstract void SetBlendColor(ref Color4 blendColor);
+
+        public abstract void SetStencilReference(int reference);
+
+        public void Draw(int vertexCount, int instanceCount, int firstVertex, int firstInstance)
+        {
+            DrawImpl(vertexCount, instanceCount, firstVertex, firstInstance);
+        }
+
+        public void Dispatch(int groupCountX, int groupCountY, int groupCountZ)
+        {
+            DispatchCore(groupCountX, groupCountY, groupCountZ);
         }
 
         public void Commit()
         {
-            if (IsEncodingPass)
+            if (IsInRenderPass)
             {
-                throw new GraphicsException($"Cannot commit command buffer while encoder are recording");
+                throw new GraphicsException($"Cannot commit command buffer while inside render pass, call EndRenderPass first");
             }
 
             CommandQueue.Submit(this);
         }
 
         protected abstract void Destroy();
-        protected abstract RenderPassCommandEncoder BeginRenderPassCore(in RenderPassDescriptor descriptor);
-        protected abstract ComputePassCommandEncoder BeginComputePassCore();
+
+        protected abstract void SetPipelineStateImpl(PipelineState pipelineState);
+        protected abstract void BeginRenderPassImpl(in RenderPassDescriptor descriptor);
+        protected abstract void EndRenderPassImpl();
+        protected abstract void SetVertexBufferImpl(GraphicsBuffer buffer, int offset, int index);
+        protected abstract void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance);
+        protected abstract void DispatchCore(int groupCountX, int groupCountY, int groupCountZ);
     }
 }

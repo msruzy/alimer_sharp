@@ -101,7 +101,7 @@ namespace Vortice.Graphics
 
         public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor, IntPtr initialData)
         {
-            Guard.IsTrue(descriptor.BufferUsage != BufferUsage.Unknown, nameof(descriptor.Usage), $"BufferUsage cannot be {nameof(BufferUsage.Unknown)}");
+            Guard.IsTrue(descriptor.BufferUsage != BufferUsage.None, nameof(descriptor.Usage), $"BufferUsage cannot be {nameof(BufferUsage.None)}");
             Guard.MustBeGreaterThan(descriptor.SizeInBytes, 0, nameof(descriptor.SizeInBytes));
 
             if (descriptor.Usage == GraphicsResourceUsage.Immutable
@@ -157,7 +157,7 @@ namespace Vortice.Graphics
             return CreateShaderImpl(stage, byteCode);
         }
 
-        public RenderPipelineState CreateRenderPipelineState(in RenderPipelineDescriptor descriptor)
+        public PipelineState CreateRenderPipelineState(in RenderPipelineDescriptor descriptor)
         {
             Guard.NotNull(descriptor, nameof(descriptor), "Invalid RenderPipeline descriptor");
 
@@ -206,6 +206,6 @@ namespace Vortice.Graphics
         protected abstract GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData);
         protected abstract Texture CreateTextureImpl(in TextureDescription description);
         protected abstract Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode);
-        protected abstract RenderPipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor);
+        protected abstract PipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor);
     }
 }

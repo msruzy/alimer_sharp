@@ -5,7 +5,7 @@ using SharpDirect3D11;
 
 namespace Vortice.Graphics.D3D11
 {
-    internal class RenderPipelineStateD3D11 : RenderPipelineState
+    internal class PipelineStateD3D11 : PipelineState
     {
         public readonly ID3D11VertexShader VertexShader;
         public readonly ID3D11GeometryShader GeometryShader;
@@ -18,7 +18,9 @@ namespace Vortice.Graphics.D3D11
         public readonly ID3D11BlendState BlendState;
         public readonly SharpDXGI.Direct3D.PrimitiveTopology PrimitiveTopology;
 
-        public RenderPipelineStateD3D11(DeviceD3D11 device, in RenderPipelineDescriptor descriptor)
+        public readonly ID3D11ComputeShader ComputeShader;
+
+        public PipelineStateD3D11(DeviceD3D11 device, in RenderPipelineDescriptor descriptor)
             : base(device, descriptor)
         {
             VertexShader = (ID3D11VertexShader)((ShaderD3D11)descriptor.VertexShader).D3D11Shader;
