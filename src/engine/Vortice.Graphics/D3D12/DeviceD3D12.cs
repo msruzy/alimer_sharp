@@ -305,9 +305,9 @@ namespace Vortice.Graphics.D3D12
             return new TextureD3D12(this, description, nativeTexture: null);
         }
 
-        protected override Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode)
+        protected override Shader CreateShaderImpl(ShaderBytecode bytecode)
         {
-            return new ShaderD3D12(this, stage, byteCode);
+            return new ShaderD3D12(this, bytecode);
         }
 
         protected override PipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor)

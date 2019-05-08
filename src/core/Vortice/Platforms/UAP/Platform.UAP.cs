@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
+using System;
 using System.Runtime.InteropServices;
 using Windows.System.Profile;
 
@@ -48,6 +49,7 @@ namespace Vortice
 
             FrameworkDescription = RuntimeInformation.FrameworkDescription;
             OSDescription = RuntimeInformation.OSDescription;
+            DefaultAppDirectory = AppContext.BaseDirectory;
         }
     }
 }

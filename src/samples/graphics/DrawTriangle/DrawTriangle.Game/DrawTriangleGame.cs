@@ -55,8 +55,9 @@ namespace DrawTriangle
             void CSMain(uint3 DTid : SV_DispatchThreadID ) {
             }";
 
-            _vertexShader = GraphicsDevice.CreateShader(ShaderStages.Vertex, ShaderCompiler.Compile(shaderSource, ShaderStages.Vertex, ShaderLanguage.DXC));
-            _pixelShader = GraphicsDevice.CreateShader(ShaderStages.Pixel, ShaderCompiler.Compile(shaderSource, ShaderStages.Pixel, ShaderLanguage.DXC));
+            
+            _vertexShader = GraphicsDevice.CreateShader(ShaderCompiler.Compile(GraphicsDevice.Backend, shaderSource, ShaderStages.Vertex));
+            _pixelShader = GraphicsDevice.CreateShader(ShaderCompiler.Compile(GraphicsDevice.Backend, shaderSource, ShaderStages.Pixel));
 
             _renderPipelineState = GraphicsDevice.CreateRenderPipelineState(new RenderPipelineDescriptor
             {

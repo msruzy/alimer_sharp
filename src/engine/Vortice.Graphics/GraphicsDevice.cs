@@ -149,12 +149,11 @@ namespace Vortice.Graphics
             return CreateTextureImpl(description);
         }
 
-        public Shader CreateShader(ShaderStages stage, byte[] byteCode)
+        public Shader CreateShader(ShaderBytecode bytecode)
         {
-            Guard.IsTrue(stage != ShaderStages.None, nameof(stage), "Invalid shader stage");
-            Guard.NotNullOrEmpty(byteCode, nameof(byteCode));
+            Guard.NotNullOrEmpty(bytecode.Data, nameof(bytecode), "Invalid bytecode data");
 
-            return CreateShaderImpl(stage, byteCode);
+            return CreateShaderImpl(bytecode);
         }
 
         public PipelineState CreateRenderPipelineState(in RenderPipelineDescriptor descriptor)
@@ -205,7 +204,7 @@ namespace Vortice.Graphics
         protected abstract SwapChain CreateSwapChainImpl(in SwapChainDescriptor descriptor);
         protected abstract GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData);
         protected abstract Texture CreateTextureImpl(in TextureDescription description);
-        protected abstract Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode);
+        protected abstract Shader CreateShaderImpl(ShaderBytecode bytecode);
         protected abstract PipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor);
     }
 }

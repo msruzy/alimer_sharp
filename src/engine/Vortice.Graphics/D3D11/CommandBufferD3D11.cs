@@ -224,7 +224,7 @@ namespace Vortice.Graphics.D3D11
             // Apply viewport and scissor for render target.
             SetViewport(new Viewport(width, height));
             SetScissorRect(new Rect(width, height));
-            //_boundBlendColor = default;
+            _boundBlendColor = default;
         }
 
         protected override void EndRenderPassImpl()

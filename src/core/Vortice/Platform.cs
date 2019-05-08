@@ -27,5 +27,10 @@ namespace Vortice
 		/// Get the operating system description.
 		/// </summary>
 		public static string OSDescription { get; }
+
+        /// <summary>
+		/// Returns the default directory name where the current application runs.
+		/// </summary>
+		public static string DefaultAppDirectory { get; }
     }
 }

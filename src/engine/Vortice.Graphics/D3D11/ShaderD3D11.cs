@@ -10,34 +10,34 @@ namespace Vortice.Graphics.D3D11
         public readonly ID3D11DeviceChild D3D11Shader;
         public readonly byte[] Bytecode;
 
-        public ShaderD3D11(DeviceD3D11 device, ShaderStages stage, byte[] byteCode)
-            : base(device, stage)
+        public ShaderD3D11(DeviceD3D11 device, ShaderBytecode bytecode)
+            : base(device, bytecode)
         {
-            switch (stage)
+            switch (bytecode.Stage)
             {
                 case ShaderStages.Vertex:
-                    Bytecode = (byte[])byteCode.Clone();
-                    D3D11Shader = device.D3D11Device.CreateVertexShader(byteCode);
+                    Bytecode = (byte[])bytecode.Data.Clone();
+                    D3D11Shader = device.D3D11Device.CreateVertexShader(bytecode.Data);
                     break;
 
                 case ShaderStages.Hull:
-                    D3D11Shader = device.D3D11Device.CreateHullShader(byteCode);
+                    D3D11Shader = device.D3D11Device.CreateHullShader(bytecode.Data);
                     break;
 
                 case ShaderStages.Domain:
-                    D3D11Shader = device.D3D11Device.CreateDomainShader(byteCode);
+                    D3D11Shader = device.D3D11Device.CreateDomainShader(bytecode.Data);
                     break;
 
                 case ShaderStages.Geometry:
-                    D3D11Shader = device.D3D11Device.CreateGeometryShader(byteCode);
+                    D3D11Shader = device.D3D11Device.CreateGeometryShader(bytecode.Data);
                     break;
 
                 case ShaderStages.Pixel:
-                    D3D11Shader = device.D3D11Device.CreatePixelShader(byteCode);
+                    D3D11Shader = device.D3D11Device.CreatePixelShader(bytecode.Data);
                     break;
 
                 case ShaderStages.Compute:
-                    D3D11Shader = device.D3D11Device.CreateComputeShader(byteCode);
+                    D3D11Shader = device.D3D11Device.CreateComputeShader(bytecode.Data);
                     break;
             }
         }

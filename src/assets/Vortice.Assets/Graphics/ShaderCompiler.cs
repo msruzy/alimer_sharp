@@ -9,10 +9,10 @@ namespace Vortice.Assets.Graphics
 {
     public static class ShaderCompiler
     {
-        public static byte[] Compile(
+        public static ShaderBytecode Compile(
+            GraphicsBackend backend,
             string source,
             ShaderStages stage,
-            ShaderLanguage language,
             string entryPoint = "",
             string fileName = "")
         {
@@ -21,7 +21,8 @@ namespace Vortice.Assets.Graphics
                 entryPoint = GetDefaultEntryPoint(stage);
             }
 
-            bool isDxil = language == ShaderLanguage.DXIL;
+            // We use legacy compiler for D3D11.
+            bool isDxil = backend != GraphicsBackend.Direct3D11;
             if (isDxil)
             {
                 RuntimeHelpers.RunClassConstructor(typeof(Dxc).TypeHandle);
@@ -71,7 +72,7 @@ namespace Vortice.Assets.Graphics
                     var disassembleBlob = compiler.Disassemble(blob);
                     string disassemblyText = Dxc.GetStringFromBlob(disassembleBlob);
 
-                    return bytecode;
+                    return new ShaderBytecode(stage, bytecode);
                 }
                 else
                 {
@@ -105,11 +106,11 @@ namespace Vortice.Assets.Graphics
                 else
                 {
                     var bytecode = Dxc.GetBytesFromBlob(blob);
-                    return bytecode;
+                    return new ShaderBytecode(stage, bytecode);
                 }
             }
 
-            return null;
+            return default;
         }
 
         private static string GetDefaultEntryPoint(ShaderStages stage)
@@ -163,38 +164,5 @@ namespace Vortice.Assets.Graphics
             string[] shaderKinds = "Pixel,Vertex,Geometry,Hull,Domain,Compute".Split(',');
             return shaderKinds[kind] + " " + major + "." + minor;
         }
-    }
-
-    public enum ShaderLanguage
-    {
-        /// <summary>
-        /// DXIL bytecode
-        /// </summary>
-        DXIL,
-
-        /// <summary>
-        /// DXC (legacy) bytecode.
-        /// </summary>
-        DXC,
-
-        /// <summary>
-        /// SPIRV bytecode.
-        /// </summary>
-        SPIRV,
-
-        /// <summary>
-        /// OpenGL desktop shader language.
-        /// </summary>
-        GLSL,
-
-        /// <summary>
-        /// OpenGLES shader language.
-        /// </summary>
-        ESSL,
-
-        /// <summary>
-        /// Metal shading language.
-        /// </summary>
-        MSL
     }
 }

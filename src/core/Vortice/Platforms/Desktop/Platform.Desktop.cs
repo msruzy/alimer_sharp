@@ -36,6 +36,7 @@ namespace Vortice
             //FrameworkDescription = $"{Environment.Version} {assemblyFileVersionAttribute.Version}";
             FrameworkDescription = Environment.Version.ToString();
             OSDescription = Environment.OSVersion.VersionString;
+            DefaultAppDirectory = AppContext.BaseDirectory;
         }
     }
 }

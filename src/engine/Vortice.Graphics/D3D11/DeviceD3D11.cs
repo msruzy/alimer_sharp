@@ -158,8 +158,10 @@ namespace Vortice.Graphics.D3D11
             return new TextureD3D11(this, description);
         }
 
-        protected override Shader CreateShaderImpl(ShaderStages stage, byte[] byteCode) =>
-            new ShaderD3D11(this, stage, byteCode);
+        protected override Shader CreateShaderImpl(ShaderBytecode bytecode)
+        {
+            return new ShaderD3D11(this, bytecode);
+        }
 
         protected override PipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor)
         {
