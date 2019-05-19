@@ -92,5 +92,9 @@ namespace Vortice.Graphics.D3D12
         {
             CommandList.Dispatch(groupCountX, groupCountY, groupCountZ);
         }
+
+        protected override void SetConstantBufferImpl(ShaderStages stages, int index, GraphicsBuffer buffer)
+        {
+        }
     }
 }

@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
+using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Vortice;
 using Vortice.Assets.Graphics;
 using Vortice.Graphics;
@@ -15,6 +17,7 @@ namespace DrawTriangle
         private Shader _vertexShader;
         private Shader _pixelShader;
         private PipelineState _renderPipelineState;
+        private GraphicsBuffer _matricesConstantBuffer;
 
         public DrawTriangleGame()
         {
@@ -33,15 +36,26 @@ namespace DrawTriangle
             };
             _vertexBuffer = GraphicsDevice.CreateBuffer(BufferUsage.Vertex, vertices);
 
+            unsafe
+            {
+                var worldViewProjection = Matrix4x4.Identity;
+                _matricesConstantBuffer = GraphicsDevice.CreateBuffer(new BufferDescriptor(Unsafe.SizeOf<Matrix4x4>(), BufferUsage.Constant), (IntPtr)Unsafe.AsPointer(ref worldViewProjection));
+            }
+
             const string shaderSource = @"struct PSInput {
                 float4 position : SV_POSITION;
                 float4 color : COLOR;
             };
 
+            cbuffer Matrices : register(b0)
+            {
+	            float4x4	WorldViewProjectionMatrix : packoffset(c0);
+            };
+
             PSInput VSMain(float4 position : POSITION, float4 color : COLOR) {
                 PSInput result;
 
-                result.position = position;
+                result.position = mul(position, WorldViewProjectionMatrix);
                 result.color = color;
 
                 return result;
@@ -55,7 +69,7 @@ namespace DrawTriangle
             void CSMain(uint3 DTid : SV_DispatchThreadID ) {
             }";
 
-            
+
             _vertexShader = GraphicsDevice.CreateShader(ShaderCompiler.Compile(GraphicsDevice.Backend, shaderSource, ShaderStages.Vertex));
             _pixelShader = GraphicsDevice.CreateShader(ShaderCompiler.Compile(GraphicsDevice.Backend, shaderSource, ShaderStages.Pixel));
 
@@ -77,6 +91,7 @@ namespace DrawTriangle
             commandBuffer.BeginRenderPass(MainView.CurrentRenderPassDescriptor);
             commandBuffer.SetPipelineState(_renderPipelineState);
             commandBuffer.SetVertexBuffer(_vertexBuffer, 0, 0);
+            commandBuffer.SetConstantBuffer(ShaderStages.Vertex, 0, _matricesConstantBuffer);
             commandBuffer.Draw(3, 1, 0, 0);
             commandBuffer.EndRenderPass();
             commandBuffer.Commit();

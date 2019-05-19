@@ -18,7 +18,11 @@ namespace Vortice.Graphics
 
         Vertex = 1 << 0,
         Index = 1 << 1,
-        Uniform = 1 << 2,
+
+        /// <summary>
+        /// Constant buffer usage.
+        /// </summary>
+        Constant = 1 << 2,
         Storage = 1 << 3,
         Indirect = 1 << 4,
     }

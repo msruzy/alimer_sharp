@@ -281,6 +281,20 @@ namespace Vortice.Graphics.D3D11
             D3D11Context.Dispatch(groupCountX, groupCountY, groupCountZ);
         }
 
+        protected override void SetConstantBufferImpl(ShaderStages stages, int index, GraphicsBuffer buffer)
+        {
+            var d3d11Buffer = ((BufferD3D11)buffer).Resource;
+            if ((stages & ShaderStages.Vertex) != ShaderStages.None)
+            {
+                D3D11Context.VSSetConstantBuffer(index, d3d11Buffer);
+            }
+
+            if ((stages & ShaderStages.Pixel) != ShaderStages.None)
+            {
+                D3D11Context.PSSetConstantBuffer(index, d3d11Buffer);
+            }
+        }
+
         public void ResetState()
         {
             _boundBlendState = null;

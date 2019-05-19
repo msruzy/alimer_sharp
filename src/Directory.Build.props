@@ -28,6 +28,7 @@
 
   <PropertyGroup>
     <SharpWindowsVersion>1.0.0-pre035</SharpWindowsVersion>
+    <SharpSPIRVCrossVersion>1.0.0-pre010</SharpSPIRVCrossVersion>
   </PropertyGroup>
 
   <PropertyGroup>

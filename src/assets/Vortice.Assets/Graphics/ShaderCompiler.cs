@@ -4,6 +4,7 @@
 using System.Runtime.CompilerServices;
 using Vortice.Graphics;
 using DotNetDxc;
+using SharpShaderCompiler.D3D12;
 
 namespace Vortice.Assets.Graphics
 {
@@ -52,18 +53,34 @@ namespace Vortice.Assets.Graphics
                     var blob = result.GetResult();
                     var bytecode = Dxc.GetBytesFromBlob(blob);
 
-                    var reflection = Dxc.CreateDxcContainerReflection();
-                    reflection.Load(blob);
-                    int hr = reflection.FindFirstPartKind(Dxc.DFCC_DXIL, out uint index);
+                    var containReflection = Dxc.CreateDxcContainerReflection();
+                    containReflection.Load(blob);
+                    int hr = containReflection.FindFirstPartKind(Dxc.DFCC_DXIL, out uint dxilPartIndex);
                     if (hr < 0)
                     {
                         //MessageBox.Show("Debug information not found in container.");
                         //return;
                     }
 
+                    var f = containReflection.GetPartReflection(dxilPartIndex, typeof(ID3D12ShaderReflection).GUID, out var nativePtr);
+                    using (var shaderReflection = new ID3D12ShaderReflection(nativePtr))
+                    {
+                        var shaderReflectionDesc = shaderReflection.Desc;
+
+                        for (var i = 0; i < shaderReflectionDesc.InputParameters; i++)
+                        {
+                            var parameterDescription = shaderReflection.GetInputParameterDesc(i);
+                        }
+
+                        for (var resourceIndex = 0; resourceIndex < shaderReflectionDesc.BoundResources; resourceIndex++)
+                        {
+                            var bindDesc = shaderReflection.GetResourceBindingDesc(resourceIndex);
+                        }
+                    }
+
                     unsafe
                     {
-                        IDxcBlob part = reflection.GetPartContent(index);
+                        IDxcBlob part = containReflection.GetPartContent(dxilPartIndex);
                         uint* p = (uint*)part.GetBufferPointer();
                         var v = DescribeProgramVersion(*p);
                     }

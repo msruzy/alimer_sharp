@@ -109,8 +109,8 @@ namespace DotNetDxc
         IDxcBlob GetPartContent(uint idx);
         [PreserveSig]
         int FindFirstPartKind(uint kind, out uint result);
-        [return: MarshalAs(UnmanagedType.Interface, IidParameterIndex = 1)]
-        object GetPartReflection(uint idx, Guid iid);
+
+        int GetPartReflection(uint idx, ref Guid iid, out IntPtr ppvObject);
     }
 
     public static class Dxc

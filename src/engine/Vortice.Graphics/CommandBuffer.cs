@@ -73,7 +73,7 @@ namespace Vortice.Graphics
         public void SetVertexBuffer(GraphicsBuffer buffer, int offset, int index)
         {
             Guard.NotNull(buffer, nameof(buffer));
-            Guard.IsTrue((buffer.BufferUsage & BufferUsage.Vertex) != BufferUsage.None, nameof(buffer), $"Buffer must have {BufferUsage.Vertex}" );
+            Guard.IsTrue((buffer.BufferUsage & BufferUsage.Vertex) != BufferUsage.None, nameof(buffer), $"Buffer must have {BufferUsage.Vertex}");
 
             SetVertexBufferImpl(buffer, offset, index);
         }
@@ -109,6 +109,11 @@ namespace Vortice.Graphics
 
         public abstract void SetStencilReference(int reference);
 
+        public void SetConstantBuffer(ShaderStages stages, int index, GraphicsBuffer buffer)
+        {
+            SetConstantBufferImpl(stages, index, buffer);
+        }
+
         public void Draw(int vertexCount, int instanceCount, int firstVertex, int firstInstance)
         {
             DrawImpl(vertexCount, instanceCount, firstVertex, firstInstance);
@@ -137,5 +142,7 @@ namespace Vortice.Graphics
         protected abstract void SetVertexBufferImpl(GraphicsBuffer buffer, int offset, int index);
         protected abstract void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance);
         protected abstract void DispatchCore(int groupCountX, int groupCountY, int groupCountZ);
+
+        protected abstract void SetConstantBufferImpl(ShaderStages stages, int index, GraphicsBuffer buffer);
     }
 }

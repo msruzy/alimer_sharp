@@ -64,7 +64,7 @@ namespace Vortice.Graphics.D3D11
 
         public static BindFlags Convert(BufferUsage usage)
         {
-            if ((usage & BufferUsage.Uniform) != 0)
+            if ((usage & BufferUsage.Constant) != 0)
             {
                 // Exclusive usage.
                 return BindFlags.ConstantBuffer;
