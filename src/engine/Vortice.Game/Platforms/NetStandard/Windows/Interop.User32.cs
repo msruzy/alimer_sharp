@@ -2,9 +2,9 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using SharpDXGI;
-using Vortice.Mathematics;
+using Vortice.DirectX;
 
 namespace Vortice.Windows
 {

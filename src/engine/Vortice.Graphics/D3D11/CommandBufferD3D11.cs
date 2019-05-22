@@ -2,7 +2,8 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using SharpDirect3D11;
+using System.Drawing;
+using Vortice.DirectX.Direct3D11;
 using Vortice.Mathematics;
 
 namespace Vortice.Graphics.D3D11
@@ -27,7 +28,7 @@ namespace Vortice.Graphics.D3D11
         private ID3D11DepthStencilState _boundDepthStencilState;
         private int _boundStencilReference;
         private ID3D11RasterizerState _boundRasterizerState;
-        private SharpDXGI.Direct3D.PrimitiveTopology _boundPrimitiveTopology;
+        private Vortice.DirectX.Direct3D.PrimitiveTopology _boundPrimitiveTopology;
         private ID3D11InputLayout _boundInputLayout;
         private ID3D11VertexShader _boundVertexShader;
         private ID3D11GeometryShader _boundGeometryShader;
@@ -223,7 +224,7 @@ namespace Vortice.Graphics.D3D11
 
             // Apply viewport and scissor for render target.
             SetViewport(new Viewport(width, height));
-            SetScissorRect(new Rect(width, height));
+            SetScissorRect(new Rectangle(0, 0, width, height));
             _boundBlendColor = default;
         }
 
@@ -257,7 +258,7 @@ namespace Vortice.Graphics.D3D11
             D3D11Context.RSSetViewport(viewport);
         }
 
-        public override void SetScissorRect(ref Rect scissorRect)
+        public override void SetScissorRect(ref Rectangle scissorRect)
         {
             D3D11Context.RSSetScissorRect(scissorRect);
         }
@@ -302,7 +303,7 @@ namespace Vortice.Graphics.D3D11
             _boundDepthStencilState = null;
             _boundStencilReference = 0;
             _boundRasterizerState = null;
-            _boundPrimitiveTopology = SharpDXGI.Direct3D.PrimitiveTopology.Undefined;
+            _boundPrimitiveTopology = Vortice.DirectX.Direct3D.PrimitiveTopology.Undefined;
             _boundInputLayout = null;
             _boundVertexShader = null;
             _boundGeometryShader = null;

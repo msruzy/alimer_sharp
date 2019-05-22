@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDirect3D12;
-using SharpDXGI;
+using Vortice.DirectX.DXGI;
+using Vortice.DirectX.Direct3D12;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -10,14 +10,14 @@ namespace Vortice.Graphics.D3D12
     {
         private readonly ID3D12RootSignature _rootSignature;
         public readonly ID3D12PipelineState D3D12PipelineState;
-        public readonly SharpDXGI.Direct3D.PrimitiveTopology PrimitiveTopology;
+        public readonly Vortice.DirectX.Direct3D.PrimitiveTopology PrimitiveTopology;
 
         public PipelineStateD3D12(DeviceD3D12 device, in RenderPipelineDescriptor descriptor)
             : base(device, descriptor)
         {
             var inputElements = new InputElementDescription[2];
-            inputElements[0] = new InputElementDescription("POSITION", 0, SharpDXGI.Format.R32G32B32_Float, 0, 0);
-            inputElements[1] = new InputElementDescription("COLOR", 0, SharpDXGI.Format.R32G32B32A32_Float, 12, 0);
+            inputElements[0] = new InputElementDescription("POSITION", 0, Vortice.DirectX.DXGI.Format.R32G32B32_Float, 0, 0);
+            inputElements[1] = new InputElementDescription("COLOR", 0, Vortice.DirectX.DXGI.Format.R32G32B32A32_Float, 12, 0);
 
             var sampleCount = (int)descriptor.Samples;
 

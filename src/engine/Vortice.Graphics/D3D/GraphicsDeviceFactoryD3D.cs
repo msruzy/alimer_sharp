@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDirect3D12.Debug;
-using static SharpDXGI.DXGI;
-using static SharpDirect3D12.D3D12;
-using SharpDXGI;
+using Vortice.DirectX.Direct3D12.Debug;
+using static Vortice.DirectX.DXGI.DXGI;
+using static Vortice.DirectX.Direct3D12.D3D12;
+using Vortice.DirectX.DXGI;
 
 namespace Vortice.Graphics
 {

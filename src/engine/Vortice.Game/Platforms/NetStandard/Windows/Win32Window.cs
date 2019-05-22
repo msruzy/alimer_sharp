@@ -2,9 +2,9 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using SharpDXGI;
+using System.Drawing;
+using Vortice.DirectX;
 using Vortice.Graphics;
-using Vortice.Mathematics;
 using static Vortice.Windows.User32;
 
 namespace Vortice.Windows
@@ -23,13 +23,13 @@ namespace Vortice.Windows
         public override bool IsMinimized => IsIconic(_hwnd);
 
         /// <inheritdoc/>
-        public override RectF Bounds
+        public override RectangleF Bounds
         {
             get
 
             {
                 GetClientRect(_hwnd, out var rect);
-                return RectF.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
+                return RectangleF.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
             }
         }
 

@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using System.Drawing;
 using Vortice.Mathematics;
 
 namespace Vortice.Graphics
@@ -85,12 +86,12 @@ namespace Vortice.Graphics
 
         public abstract void SetViewport(ref Viewport viewport);
 
-        public void SetScissorRect(Rect scissorRect)
+        public void SetScissorRect(Rectangle scissorRect)
         {
             SetScissorRect(ref scissorRect);
         }
 
-        public abstract void SetScissorRect(ref Rect scissorRect);
+        public abstract void SetScissorRect(ref Rectangle scissorRect);
 
         /// <summary>
         /// Specifies the constant blend color.

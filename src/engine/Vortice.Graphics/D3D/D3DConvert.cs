@@ -4,7 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using SharpDXGI;
+using Vortice.DirectX.DXGI;
 
 namespace Vortice.Graphics
 {
@@ -127,30 +127,30 @@ namespace Vortice.Graphics
             return _formatsMap[format];
         }
 
-        public static SharpDXGI.Direct3D.PrimitiveTopology Convert(PrimitiveTopology topology, int patches)
+        public static Vortice.DirectX.Direct3D.PrimitiveTopology Convert(PrimitiveTopology topology, int patches)
         {
             switch (topology)
             {
                 case PrimitiveTopology.PointList:
-                    return SharpDXGI.Direct3D.PrimitiveTopology.PointList;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.PointList;
 
                 case PrimitiveTopology.LineList:
-                    return SharpDXGI.Direct3D.PrimitiveTopology.LineList;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.LineList;
 
                 case PrimitiveTopology.LineStrip:
-                    return SharpDXGI.Direct3D.PrimitiveTopology.LineStrip;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.LineStrip;
 
                 case PrimitiveTopology.TriangeList:
-                    return SharpDXGI.Direct3D.PrimitiveTopology.TriangleList;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.TriangleList;
 
                 case PrimitiveTopology.TriangleStrip:
-                    return SharpDXGI.Direct3D.PrimitiveTopology.TriangleStrip;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.TriangleStrip;
 
                 case PrimitiveTopology.PatchList:
-                    return (SharpDXGI.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints) + patches - 1;
+                    return (Vortice.DirectX.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints) + patches - 1;
 
                 default:
-                    return SharpDXGI.Direct3D.PrimitiveTopology.Undefined;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.Undefined;
             }
         }
 

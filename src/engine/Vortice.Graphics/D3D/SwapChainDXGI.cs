@@ -2,8 +2,9 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using SharpDXGI;
+using Vortice.DirectX.DXGI;
 using SharpGen.Runtime;
+using Vortice.DirectX;
 
 namespace Vortice.Graphics
 {
@@ -57,7 +58,7 @@ namespace Vortice.Graphics
                                 Format = BackBufferFormat,
                                 Stereo = false,
                                 SampleDescription = new SampleDescription(1, 0),
-                                Usage = SharpDXGI.Usage.RenderTargetOutput,
+                                Usage = Vortice.DirectX.Usage.RenderTargetOutput,
                                 BufferCount = bufferCount,
                                 Scaling = Scaling.Stretch,
                                 SwapEffect = allowTearing ? SwapEffect.FlipDiscard : SwapEffect.Discard,
@@ -88,7 +89,7 @@ namespace Vortice.Graphics
                                 OutputWindow = win32Handle.HWnd,
                                 SampleDescription = new SampleDescription(1, 0),
                                 SwapEffect = SwapEffect.Discard,
-                                Usage = SharpDXGI.Usage.Backbuffer | SharpDXGI.Usage.RenderTargetOutput
+                                Usage = Vortice.DirectX.Usage.Backbuffer | Vortice.DirectX.Usage.RenderTargetOutput
                             };
 
                             _swapChain = dxgiFactory.CreateSwapChain(deviceOrCommandQueue, dxgiSCDesc);

@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System.ComponentModel;
+using System.Drawing;
 using Vortice.Graphics;
 using Vortice.Mathematics;
 
@@ -35,7 +36,7 @@ namespace Vortice
         /// Gets the bounding rectangle of the window.
         /// </summary>
         /// <value>The bounding rectangle of the window, in device-independent pixels (DIPs).</value>
-        public abstract RectF Bounds { get; }
+        public abstract RectangleF Bounds { get; }
 
         /// <summary>
         /// The text that is displayed in the title bar of the window (if it has a title bar).

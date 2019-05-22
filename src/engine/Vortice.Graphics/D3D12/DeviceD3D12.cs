@@ -4,14 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using SharpDirect3D12;
-using SharpDXGI;
-using SharpDXGI.Direct3D;
+using Vortice.DirectX.Direct3D12;
+using Vortice.DirectX.DXGI;
+using Vortice.DirectX.Direct3D;
 using SharpGen.Runtime;
 using Vortice.Diagnostics;
-using static SharpDXGI.DXGI;
-using static SharpDirect3D12.D3D12;
-using SharpDirect3D12.Debug;
+using static Vortice.DirectX.DXGI.DXGI;
+using static Vortice.DirectX.Direct3D12.D3D12;
+using Vortice.DirectX.Direct3D12.Debug;
 
 namespace Vortice.Graphics.D3D12
 {
@@ -141,9 +141,9 @@ namespace Vortice.Graphics.D3D12
                     infoQueue.SetBreakOnSeverity(MessageSeverity.Error, true);
 #endif
 
-                    infoQueue.AddStorageFilterEntries(new SharpDirect3D12.Debug.InfoQueueFilter
+                    infoQueue.AddStorageFilterEntries(new Vortice.DirectX.Direct3D12.Debug.InfoQueueFilter
                     {
-                        DenyList = new SharpDirect3D12.Debug.InfoQueueFilterDescription
+                        DenyList = new Vortice.DirectX.Direct3D12.Debug.InfoQueueFilterDescription
                         {
                             Ids = new[]
                             {

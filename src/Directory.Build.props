@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <SharpWindowsVersion>1.0.0-pre035</SharpWindowsVersion>
+    <VorticeDirectXVersion>1.0.0</VorticeDirectXVersion>
     <SharpSPIRVCrossVersion>1.0.0-pre010</SharpSPIRVCrossVersion>
   </PropertyGroup>
 
@@ -45,7 +45,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vortice.Mathematics" Version="1.0.0-pre021" />
+    <PackageReference Include="Vortice.Mathematics" Version="1.0.0-pre022" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
   </ItemGroup>
 

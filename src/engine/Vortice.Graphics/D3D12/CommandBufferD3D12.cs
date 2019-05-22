@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDirect3D12;
+using System.Drawing;
+using Vortice.DirectX.Direct3D12;
 using Vortice.Mathematics;
 
 namespace Vortice.Graphics.D3D12
@@ -36,7 +37,7 @@ namespace Vortice.Graphics.D3D12
             CommandList.RSSetViewport(viewport);
         }
 
-        public override void SetScissorRect(ref Rect scissorRect)
+        public override void SetScissorRect(ref Rectangle scissorRect)
         {
             CommandList.RSSetScissorRect(scissorRect);
         }

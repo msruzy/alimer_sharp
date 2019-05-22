@@ -11,6 +11,7 @@ using static Vortice.Windows.ShCore;
 using System.Runtime.CompilerServices;
 using Vortice.Diagnostics;
 using Vortice.Mathematics;
+using System.Drawing;
 
 namespace Vortice.Windows
 {

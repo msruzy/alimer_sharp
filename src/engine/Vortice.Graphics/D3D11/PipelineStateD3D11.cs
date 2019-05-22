@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using SharpDirect3D11;
+using Vortice.DirectX.Direct3D11;
 
 namespace Vortice.Graphics.D3D11
 {
@@ -16,7 +16,7 @@ namespace Vortice.Graphics.D3D11
         public readonly ID3D11RasterizerState RasterizerState;
         public readonly ID3D11DepthStencilState DepthStencilState;
         public readonly ID3D11BlendState BlendState;
-        public readonly SharpDXGI.Direct3D.PrimitiveTopology PrimitiveTopology;
+        public readonly Vortice.DirectX.Direct3D.PrimitiveTopology PrimitiveTopology;
 
         public readonly ID3D11ComputeShader ComputeShader;
 
@@ -28,8 +28,8 @@ namespace Vortice.Graphics.D3D11
 
             var vsByteCode = ((ShaderD3D11)descriptor.VertexShader).Bytecode;
             var inputElements = new InputElementDescription[2];
-            inputElements[0] = new InputElementDescription("POSITION", 0, SharpDXGI.Format.R32G32B32_Float, 0, 0);
-            inputElements[1] = new InputElementDescription("COLOR", 0, SharpDXGI.Format.R32G32B32A32_Float, 12, 0);
+            inputElements[0] = new InputElementDescription("POSITION", 0, Vortice.DirectX.DXGI.Format.R32G32B32_Float, 0, 0);
+            inputElements[1] = new InputElementDescription("COLOR", 0, Vortice.DirectX.DXGI.Format.R32G32B32A32_Float, 12, 0);
             InputLayout = device.D3D11Device.CreateInputLayout(inputElements, vsByteCode);
 
             RasterizerState = device.D3D11Device.CreateRasterizerState(RasterizerDescription.CullCounterClockwise);

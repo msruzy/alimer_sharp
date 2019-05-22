@@ -4,13 +4,14 @@
 using System.Runtime.CompilerServices;
 using Vortice.Graphics;
 using DotNetDxc;
-using SharpShaderCompiler.D3D12;
+using Vortice.DirectX.ShaderCompiler;
+using Vortice.DirectX.ShaderCompiler.D3D12;
 
 namespace Vortice.Assets.Graphics
 {
     public static class ShaderCompiler
     {
-        public static ShaderBytecode Compile(
+        public static Vortice.Graphics.ShaderBytecode Compile(
             GraphicsBackend backend,
             string source,
             ShaderStages stage,
@@ -65,16 +66,14 @@ namespace Vortice.Assets.Graphics
                     var f = containReflection.GetPartReflection(dxilPartIndex, typeof(ID3D12ShaderReflection).GUID, out var nativePtr);
                     using (var shaderReflection = new ID3D12ShaderReflection(nativePtr))
                     {
-                        var shaderReflectionDesc = shaderReflection.Desc;
+                        var shaderReflectionDesc = shaderReflection.Description;
 
-                        for (var i = 0; i < shaderReflectionDesc.InputParameters; i++)
+                        foreach (var parameterDescription in shaderReflection.InputParameters)
                         {
-                            var parameterDescription = shaderReflection.GetInputParameterDesc(i);
                         }
 
-                        for (var resourceIndex = 0; resourceIndex < shaderReflectionDesc.BoundResources; resourceIndex++)
+                        foreach (var resource in shaderReflection.Resources)
                         {
-                            var bindDesc = shaderReflection.GetResourceBindingDesc(resourceIndex);
                         }
                     }
 
@@ -89,7 +88,7 @@ namespace Vortice.Assets.Graphics
                     var disassembleBlob = compiler.Disassemble(blob);
                     string disassemblyText = Dxc.GetStringFromBlob(disassembleBlob);
 
-                    return new ShaderBytecode(stage, bytecode);
+                    return new Vortice.Graphics.ShaderBytecode(stage, bytecode);
                 }
                 else
                 {
@@ -123,7 +122,7 @@ namespace Vortice.Assets.Graphics
                 else
                 {
                     var bytecode = Dxc.GetBytesFromBlob(blob);
-                    return new ShaderBytecode(stage, bytecode);
+                    return new Vortice.Graphics.ShaderBytecode(stage, bytecode);
                 }
             }
 
