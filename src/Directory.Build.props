@@ -23,12 +23,12 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/amerkoleci/vortice</PackageProjectUrl>
     <PackageTags>3D Engine Graphics gamedev vortice Direct3D DirectX Vulkan OpenGL Metal Core Standard Game</PackageTags>
-    <VersionPrefix>1.0.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
-    <VorticeDirectXVersion>1.0.0</VorticeDirectXVersion>
+    <VorticeDirectXVersion>1.0.0-gefa89eebd2</VorticeDirectXVersion>
     <SharpSPIRVCrossVersion>1.0.0-pre010</SharpSPIRVCrossVersion>
+    <NerdbankGitVersioningVersion>2.3.38</NerdbankGitVersioningVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -47,6 +47,7 @@
   <ItemGroup>
     <PackageReference Include="Vortice.Mathematics" Version="1.0.0-pre022" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
