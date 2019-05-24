@@ -1,11 +1,11 @@
 <Project>
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <RepositoryRootDirectory>$(MSBuildThisFileDirectory)..\</RepositoryRootDirectory>
-    <RepoBinPath>$(RepositoryRootDirectory)bin\</RepoBinPath>
-    <BaseIntermediateOutputPath>$([System.IO.Path]::GetFullPath('$(RepositoryRootDirectory)obj\$(MSBuildProjectName)'))\</BaseIntermediateOutputPath>
-    <BaseOutputPath Condition=" '$(BaseOutputPath)' == '' ">$(RepoBinPath)$(MSBuildProjectName)\</BaseOutputPath>
-    <PackageOutputPath>$(RepoBinPath)Packages\$(Configuration)\</PackageOutputPath>
+    <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
+    <BinDir>$(RepositoryRootDirectory)bin</BinDir>
+    <OutputPath>$([System.IO.Path]::GetFullPath('$(RepositoryRootDirectory)bin\$(Configuration)'))\$(MSBuildProjectName)</OutputPath>
+    <BaseIntermediateOutputPath>$([System.IO.Path]::GetFullPath('$(RepositoryRootDirectory)bin\obj\$(MSBuildProjectName)'))\</BaseIntermediateOutputPath>
+    <PackageOutputPath>$(RepositoryRootDirectory)bin\$(Configuration)\Packages</PackageOutputPath>
 
     <DebugType Condition=" '$(Configuration)' == 'Release' ">pdbonly</DebugType>
     <DebugType Condition=" '$(Configuration)' == 'Debug' ">Full</DebugType>
@@ -26,7 +26,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VorticeDirectXVersion>1.0.0-gefa89eebd2</VorticeDirectXVersion>
+    <VorticeMathematicsVersion>1.0.0-pre023</VorticeMathematicsVersion>
+    <VorticeDirectXVersion>1.0.0-gd90dc922ee</VorticeDirectXVersion>
     <SharpSPIRVCrossVersion>1.0.0-pre010</SharpSPIRVCrossVersion>
     <NerdbankGitVersioningVersion>2.3.38</NerdbankGitVersioningVersion>
   </PropertyGroup>
@@ -45,7 +46,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vortice.Mathematics" Version="1.0.0-pre022" />
+    <PackageReference Include="Vortice.Mathematics" Version="$(VorticeMathematicsVersion)" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
     <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="All" />
   </ItemGroup>
