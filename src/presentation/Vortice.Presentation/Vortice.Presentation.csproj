@@ -1,0 +1,20 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+
+  <PropertyGroup>
+    <TargetFramework>$(TargetFrameworkTool)</TargetFramework>
+    <UseWpf>true</UseWpf>
+    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+    <AssemblyName>Vortice.Presentation</AssemblyName>
+    <AssemblyTitle>Vortice Presentation</AssemblyTitle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+    <PackageReference Include="Autofac " Version="4.9.1" />
+    <PackageReference Include="Caliburn.Micro" Version="4.0.62-alpha" />
+    <PackageReference Include="Vortice.DirectX.Direct2D" Version="$(VorticeDirectXVersion)" />
+    <PackageReference Include="Vortice.DirectX.Direct3D11" Version="$(VorticeDirectXVersion)" />
+  </ItemGroup>
+
+</Project>

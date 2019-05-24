@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.156
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice", "core\Vortice\Vortice.csproj", "{8DB6EBC7-7705-489D-B43C-9FAABD9C9F07}"
 EndProject
@@ -12,13 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawTriangle.NetCore", "samples\graphics\DrawTriangle\DrawTriangle.NetCore\DrawTriangle.NetCore.csproj", "{D786FF73-82E5-496E-982E-20D5A0327F2C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{73A421A6-7943-4D04-A5B8-6C07FE132781}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6CAD8296-D773-4848-9270-6DE280A11ACF}"
-	ProjectSection(SolutionItems) = preProject
-		Directory.Build.props = Directory.Build.props
-		global.json = global.json
-		nuget.config = nuget.config
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "engine", "engine", "{FAB2ABB8-1CEF-452B-A86E-995AB9907B37}"
 EndProject
@@ -40,7 +33,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawTriangle.Game", "sample
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Physics", "engine\Vortice.Physics\Vortice.Physics.csproj", "{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawTriangle.Desktop", "samples\graphics\DrawTriangle\DrawTriangle.Desktop\DrawTriangle.Desktop.csproj", "{2171462B-8005-4F31-86D8-F6C9787D5E50}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "presentation", "presentation", "{207B399A-19C7-48ED-AC82-87558CB621F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "editor", "editor", "{DCF5F965-78CD-41E4-B7EE-5735FE0FFBF4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Presentation", "presentation\Vortice.Presentation\Vortice.Presentation.csproj", "{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Studio", "editor\Vortice.Studio\Vortice.Studio.csproj", "{2A1479B4-43CC-4E4C-AB30-983A094C911C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -198,22 +197,38 @@ Global
 		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|x64.Build.0 = Release|Any CPU
 		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|x86.ActiveCfg = Release|Any CPU
 		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D}.Release|x86.Build.0 = Release|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Debug|ARM.Build.0 = Debug|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Debug|x64.Build.0 = Debug|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Debug|x86.Build.0 = Debug|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Release|ARM.ActiveCfg = Release|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Release|ARM.Build.0 = Release|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Release|x64.ActiveCfg = Release|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Release|x64.Build.0 = Release|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Release|x86.ActiveCfg = Release|Any CPU
-		{2171462B-8005-4F31-86D8-F6C9787D5E50}.Release|x86.Build.0 = Release|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Debug|x64.Build.0 = Debug|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Debug|x86.Build.0 = Debug|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Release|ARM.Build.0 = Release|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Release|x64.ActiveCfg = Release|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Release|x64.Build.0 = Release|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF}.Release|x86.Build.0 = Release|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Debug|x64.Build.0 = Debug|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Debug|x86.Build.0 = Debug|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|ARM.Build.0 = Release|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|x64.ActiveCfg = Release|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|x64.Build.0 = Release|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|x86.ActiveCfg = Release|Any CPU
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -229,7 +244,8 @@ Global
 		{261BD4C0-09C3-47AA-8013-E34D088E2F39} = {29FEB313-B508-409F-813D-E01E64604937}
 		{49DD2894-3978-4EB0-8014-6C1FC5F53A97} = {CF8EF5DB-101D-451E-84CF-181807AB0FCF}
 		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D} = {FAB2ABB8-1CEF-452B-A86E-995AB9907B37}
-		{2171462B-8005-4F31-86D8-F6C9787D5E50} = {CF8EF5DB-101D-451E-84CF-181807AB0FCF}
+		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF} = {207B399A-19C7-48ED-AC82-87558CB621F2}
+		{2A1479B4-43CC-4E4C-AB30-983A094C911C} = {DCF5F965-78CD-41E4-B7EE-5735FE0FFBF4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF0375B3-E304-4A53-8E5F-FC9D23743647}

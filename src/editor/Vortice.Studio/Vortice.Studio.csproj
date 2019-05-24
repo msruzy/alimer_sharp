@@ -1,0 +1,17 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+
+  <PropertyGroup>
+    <TargetFramework>$(TargetFrameworkTool)</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWpf>true</UseWpf>
+    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+    <AssemblyName>Vortice.Studio</AssemblyName>
+    <AssemblyTitle>Vortice Studio</AssemblyTitle>
+    <!--<StartupObject>Vortice.Studio.Program</StartupObject>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\presentation\Vortice.Presentation\Vortice.Presentation.csproj" />
+  </ItemGroup>
+
+</Project>
