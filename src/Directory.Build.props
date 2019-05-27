@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
+    <RepositoryRootDirectory>$(MSBuildThisFileDirectory)..\</RepositoryRootDirectory>
     <BaseOutputPath Condition=" '$(BaseOutputPath)' == '' ">$(RepositoryRootDirectory)bin\$(MSBuildProjectName)\</BaseOutputPath>
     <PackageOutputPath>$(RepositoryRootDirectory)bin\Packages\$(Configuration)</PackageOutputPath>
 
@@ -27,7 +27,7 @@
 
   <PropertyGroup>
     <VorticeMathematicsVersion>1.0.0-pre023</VorticeMathematicsVersion>
-    <VorticeDirectXVersion>1.0.0-g5ce63bc75c</VorticeDirectXVersion>
+    <VorticeDirectXVersion>1.0.0-g7653fddc33</VorticeDirectXVersion>
     <SharpSPIRVCrossVersion>1.0.0-pre010</SharpSPIRVCrossVersion>
     <NerdbankGitVersioningVersion>2.3.38</NerdbankGitVersioningVersion>
   </PropertyGroup>
