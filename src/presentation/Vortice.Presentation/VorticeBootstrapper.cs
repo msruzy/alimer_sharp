@@ -3,117 +3,120 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition.Primitives;
+using System.ComponentModel.Composition.ReflectionModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
-using Microsoft.VisualStudio.Composition;
 
 namespace Vortice.Presentation
 {
-    // @see: https://github.com/dbuksbaum/Caliburn.Micro.Autofac/blob/master/src/Caliburn.Micro.Autofac.WPF/AutofacBootstrapper.cs
-
     public class VorticeBootstrapper : BootstrapperBase
     {
-        protected ExportProvider ExportProvider { get; set; }
+        private List<Assembly> _priorityAssemblies;
+
+        protected CompositionContainer Container { get; set; }
 
         public VorticeBootstrapper()
         {
             Initialize();
         }
 
-        protected override void Configure()
+        protected override void BuildUp(object instance)
         {
-            var discovery = PartDiscovery.Combine(
-                new AttributedPartDiscovery(Resolver.DefaultInstance), // "NuGet MEF" attributes (Microsoft.Composition)
-                new AttributedPartDiscoveryV1(Resolver.DefaultInstance)); // ".NET MEF" attributes (System.ComponentModel.Composition)
-
-            // Build up a catalog of MEF parts
-            var catalog = ComposableCatalog.Create(Resolver.DefaultInstance)
-                .AddParts(discovery.CreatePartsAsync(Assembly.GetExecutingAssembly()).Result)
-                .WithCompositionService(); // Makes an ICompositionService export available to MEF parts to import
-
-            // Assemble the parts into a valid graph.
-            var config = CompositionConfiguration.Create(catalog);
-
-            // Prepare an ExportProvider factory based on this graph.
-            var epf = config.CreateExportProviderFactory();
-
-            // Create an export provider, which represents a unique container of values.
-            // You can create as many of these as you want, but typically an app needs just one.
-            ExportProvider = epf.CreateExportProvider();
-
-            //ExportProvider.Register<IWindowManager>(_ => new WindowManager()).InstancePerLifetimeScope();
-            //ExportProvider.Register<IEventAggregator>(_ => new EventAggregator()).InstancePerLifetimeScope();
-            //ExportProvider.Register<IContainer>(_ => Container).InstancePerLifetimeScope();
-            //ExportProvider.Register<BootstrapperBase>(_ => this).InstancePerLifetimeScope();
+            Container.SatisfyImportsOnce(instance);
         }
 
 
+        protected override void Configure()
+        {
+            // Add all assemblies to AssemblySource (using a temporary DirectoryCatalog).
+            var directoryCatalog = new DirectoryCatalog("./");
+            AssemblySource.Instance.AddRange(
+                directoryCatalog.Parts
+                    .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
+                    .Where(assembly => !AssemblySource.Instance.Contains(assembly)));
+
+            // Prioritise the executable assembly. This allows the client project to override exports, including IShell.
+            // The client project can override SelectAssemblies to choose which assemblies are prioritised.
+            _priorityAssemblies = SelectAssemblies().ToList();
+            var priorityCatalog = new AggregateCatalog(_priorityAssemblies.Select(x => new AssemblyCatalog(x)));
+            var priorityProvider = new CatalogExportProvider(priorityCatalog);
+
+            // Now get all other assemblies (excluding the priority assemblies).
+            var mainCatalog = new AggregateCatalog(
+                AssemblySource.Instance
+                    .Where(assembly => !_priorityAssemblies.Contains(assembly))
+                    .Select(x => new AssemblyCatalog(x)));
+            var mainProvider = new CatalogExportProvider(mainCatalog);
+
+            Container = new CompositionContainer(priorityProvider, mainProvider);
+            priorityProvider.SourceProvider = Container;
+            mainProvider.SourceProvider = Container;
+
+            var batch = new CompositionBatch();
+
+            BindServices(batch);
+            batch.AddExportedValue(mainCatalog);
+
+            Container.Compose(batch);
+        }
+
+        protected virtual void BindServices(CompositionBatch batch)
+        {
+            batch.AddExportedValue<IWindowManager>(new WindowManager());
+            batch.AddExportedValue<IEventAggregator>(new EventAggregator());
+            batch.AddExportedValue(Container);
+            batch.AddExportedValue(this);
+        }
+
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<MainWindow>();
+            var startupTasks =
+                GetAllInstances(typeof(StartupTask))
+                .Cast<ExportedDelegate>()
+                .Select(exportedDelegate => (StartupTask)exportedDelegate.CreateDelegate(typeof(StartupTask)));
+
+            startupTasks.Apply(s => s());
+
+            DisplayRootViewFor<IShell>();
         }
 
         protected override object GetInstance(Type service, string key)
         {
-            return key == null ? GetExportedValue(ExportProvider, service) : GetExportedValue(ExportProvider, service, key);
+            string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(service) : key;
+            var exports = Container.GetExports<object>(contract);
+
+            if (exports.Any())
+            {
+                return exports.First().Value;
+            }
+
+            throw new Exception($"Could not locate any instances of contract {contract}.");
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
         {
-            return null;
-            //return Container.Resolve(typeof(IEnumerable<>).MakeGenericType(service)) as IEnumerable<object>;
+            return Container.GetExportedValues<object>(AttributedModelServices.GetContractName(service));
         }
 
-        protected override void BuildUp(object instance)
-        {
-        }
-
+        
         protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
             MessageBox.Show(e.Exception.Message, "An error as occurred", MessageBoxButton.OK);
         }
 
-        private static object GetExportedValue(ExportProvider container, Type type)
+        protected override IEnumerable<Assembly> SelectAssemblies()
         {
-            // get a reference to the GetExportedValue<T> method
-            MethodInfo methodInfo = container.GetType().GetMethods()
-                                      .Where(d => d.Name == "GetExportedValue"
-                                                  && d.GetParameters().Length == 0).First();
-
-            // create an array of the generic types that the GetExportedValue<T> method expects
-            Type[] genericTypeArray = new Type[] { type };
-
-            // add the generic types to the method
-            methodInfo = methodInfo.MakeGenericMethod(genericTypeArray);
-
-            // invoke GetExportedValue<type>()
-            return methodInfo.Invoke(container, null);
+            return new[] {
+                typeof(VorticeBootstrapper).Assembly,
+                Assembly.GetEntryAssembly()
+            };
         }
-
-        private static object GetExportedValue(ExportProvider container, Type type, string key)
-        {
-            // get a reference to the GetExportedValue<T> method
-            MethodInfo methodInfo = container.GetType().GetMethods()
-                                      .Where(d => d.Name == "GetExportedValue"
-                                                  && d.GetParameters().Length == 1).First();
-
-            // create an array of the generic types that the GetExportedValue<T> method expects
-            Type[] genericTypeArray = new Type[] { type };
-
-            // add the generic types to the method
-            methodInfo = methodInfo.MakeGenericMethod(genericTypeArray);
-
-            // invoke GetExportedValue<type>()
-            return methodInfo.Invoke(container, new object[] { key });
-        }
-    }
-
-    public interface MainWindow
-    {
-
     }
 }
