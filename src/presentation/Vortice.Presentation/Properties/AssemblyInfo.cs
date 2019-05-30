@@ -11,4 +11,5 @@ using System.Windows.Markup;
 
 [assembly: XmlnsPrefix("http://schemas.vortice.com/xaml/presentation", "vortice")]
 [assembly: XmlnsDefinition("http://schemas.vortice.com/xaml/presentation", "Vortice.Presentation")]
-//[assembly: XmlnsDefinition("http://schemas.vortice.com/xaml/presentation", "Vortice.Presentation.Controls")]
+[assembly: XmlnsDefinition("http://schemas.vortice.com/xaml/presentation", "Vortice.Presentation.Controls")]
+[assembly: XmlnsDefinition("http://schemas.vortice.com/xaml/presentation", "Vortice.Presentation.Converters")]

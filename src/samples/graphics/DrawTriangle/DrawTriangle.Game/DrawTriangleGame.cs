@@ -21,7 +21,7 @@ namespace DrawTriangle
 
         public DrawTriangleGame()
         {
-            GraphicsBackend = GraphicsBackend.Direct3D11;
+            GraphicsBackend = GraphicsBackend.Direct3D12;
         }
 
         protected override void LoadContent()
@@ -55,7 +55,8 @@ namespace DrawTriangle
             PSInput VSMain(float4 position : ATTRIBUTE0, float4 color : ATTRIBUTE1) {
                 PSInput result;
 
-                result.position = mul(position, WorldViewProjectionMatrix);
+                //result.position = mul(position, WorldViewProjectionMatrix);
+                result.position = position;
                 result.color = color;
 
                 return result;
