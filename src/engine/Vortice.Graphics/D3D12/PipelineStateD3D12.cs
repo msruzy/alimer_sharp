@@ -31,7 +31,7 @@ namespace Vortice.Graphics.D3D12
             {
                 RootSignature = _rootSignature,
                 VertexShader = ((ShaderD3D12)descriptor.VertexShader).D3D12ShaderBytecode,
-                PixelShader = ((ShaderD3D12)descriptor.PixelShader).D3D12ShaderBytecode,
+                PixelShader = ((ShaderD3D12)descriptor.FragmentShader).D3D12ShaderBytecode,
                 InputLayout = new InputLayoutDescription(inputElements),
                 SampleMask = uint.MaxValue,
                 PrimitiveTopologyType = D3D12Convert.Convert(descriptor.PrimitiveTopology),
@@ -39,7 +39,7 @@ namespace Vortice.Graphics.D3D12
                 BlendState = BlendDescription.Opaque,
                 DepthStencilState = DepthStencilDescription.None,
                 RenderTargetFormats = new[] { Format.R8G8B8A8_UNorm },
-                DepthStencilFormat = D3DConvert.Convert(descriptor.DepthStencilAttachmentFormat),
+                DepthStencilFormat = D3DConvert.ConvertPixelFormat(descriptor.DepthStencilAttachmentFormat),
                 SampleDescription = new SampleDescription(sampleCount, 0)
             };
 

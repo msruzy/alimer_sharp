@@ -20,11 +20,11 @@ namespace Vortice.Graphics.D3D11
                     D3D11Shader = device.D3D11Device.CreateVertexShader(bytecode.Data);
                     break;
 
-                case ShaderStages.Hull:
+                case ShaderStages.TessellationControl:
                     D3D11Shader = device.D3D11Device.CreateHullShader(bytecode.Data);
                     break;
 
-                case ShaderStages.Domain:
+                case ShaderStages.TessellationEvaluation:
                     D3D11Shader = device.D3D11Device.CreateDomainShader(bytecode.Data);
                     break;
 
@@ -32,7 +32,7 @@ namespace Vortice.Graphics.D3D11
                     D3D11Shader = device.D3D11Device.CreateGeometryShader(bytecode.Data);
                     break;
 
-                case ShaderStages.Pixel:
+                case ShaderStages.Fragment:
                     D3D11Shader = device.D3D11Device.CreatePixelShader(bytecode.Data);
                     break;
 

@@ -19,7 +19,7 @@ namespace Vortice.Graphics
         Zero,
 
         /// <summary>
-        /// Replace the stencil value with the stencil reference value, which is set by the <see cref="RenderPassCommandEncoder.SetStencilReference(int)"/>
+        /// Replace the stencil value with the stencil reference value, which is set by the <see cref="CommandBuffer.SetStencilReference(int)"/>
         /// </summary>
         Replace,
 

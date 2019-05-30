@@ -3,16 +3,15 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Vortice.DirectX.DXGI;
 
 namespace Vortice.Graphics
 {
     internal static class D3DConvert
     {
-        private static readonly PixelFormatMap _formatsMap = new PixelFormatMap
+        private static readonly FormatMap<PixelFormat, Format> _formatsMap = new FormatMap<PixelFormat, Format>
         {
-            { PixelFormat.Unknown,          Format.Unknown },
+            { PixelFormat.Invalid,          Format.Unknown },
             // 8-bit pixel formats
             { PixelFormat.R8UNorm,          Format.R8_UNorm },
             { PixelFormat.R8SNorm,          Format.R8_UNorm },
@@ -117,15 +116,54 @@ namespace Vortice.Graphics
             { PixelFormat.ASTC12x12,    Format.Unknown },
         };
 
-        public static Format Convert(PixelFormat format)
+        private static readonly FormatMap<VertexFormat, Format> _vertexFormatsMap = new FormatMap<VertexFormat, Format>
         {
-            return _formatsMap[format];
-        }
+            { VertexFormat.Invalid,             Format.Unknown },
+            { VertexFormat.UChar2,              Format.R8G8_UInt },
+            { VertexFormat.UChar4,              Format.R8G8B8A8_UInt },
+            { VertexFormat.Char2,               Format.R8G8_SInt },
+            { VertexFormat.Char4,               Format.R8G8B8A8_SInt },
+            { VertexFormat.UChar2Norm,          Format.R8G8_UNorm },
+            { VertexFormat.UChar4Norm,          Format.R8G8B8A8_UNorm },
+            { VertexFormat.Char2Norm,           Format.R8G8_SNorm },
+            { VertexFormat.Char4Norm,           Format.R8G8B8A8_SNorm },
 
-        public static PixelFormat Convert(Format format)
-        {
-            return _formatsMap[format];
-        }
+            { VertexFormat.UShort2,             Format.R16G16_UInt },
+            { VertexFormat.UShort4,             Format.R16G16B16A16_UInt },
+            { VertexFormat.Short2,              Format.R16G16_SInt },
+            { VertexFormat.Short4,              Format.R16G16B16A16_SInt },
+            { VertexFormat.UShort2Norm,         Format.R16G16_UNorm },
+            { VertexFormat.UShort4Norm,         Format.R16G16B16A16_UNorm },
+            { VertexFormat.Short2Norm,          Format.R16G16_SNorm },
+            { VertexFormat.Short4Norm,          Format.R16G16B16A16_SNorm },
+
+            { VertexFormat.Half2,               Format.R16G16_Float },
+            { VertexFormat.Half4,               Format.R16G16B16A16_Float },
+
+            { VertexFormat.Float,               Format.R32_Float },
+            { VertexFormat.Float2,              Format.R32G32_Float },
+            { VertexFormat.Float3,              Format.R32G32B32_Float },
+            { VertexFormat.Float4,              Format.R32G32B32A32_Float },
+
+            { VertexFormat.UInt,                Format.R32_UInt },
+            { VertexFormat.UInt2,               Format.R32G32_UInt },
+            { VertexFormat.UInt3,               Format.R32G32B32_UInt },
+            { VertexFormat.UInt4,               Format.R32G32B32A32_UInt },
+
+            { VertexFormat.Int,                 Format.R32_SInt },
+            { VertexFormat.Int2,                Format.R32G32_SInt },
+            { VertexFormat.Int3,                Format.R32G32B32_SInt },
+            { VertexFormat.Int4,                Format.R32G32B32A32_SInt },
+
+            { VertexFormat.UInt1010102Norm,     Format.R10G10B10A2_UNorm },
+        };
+
+        public static Format ConvertPixelFormat(PixelFormat format) => _formatsMap[format];
+
+        public static PixelFormat ConvertPixelFormat(Format format) => _formatsMap[format];
+
+        public static Format ConvertVertexFormat(VertexFormat format) => _vertexFormatsMap[format];
+        public static VertexFormat ConvertVertexFormat(Format format) => _vertexFormatsMap[format];
 
         public static Vortice.DirectX.Direct3D.PrimitiveTopology Convert(PrimitiveTopology topology, int patches)
         {
@@ -154,26 +192,26 @@ namespace Vortice.Graphics
             }
         }
 
-        public class PixelFormatMap : IEnumerable<KeyValuePair<PixelFormat, Format>>
+        private class FormatMap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
         {
-            private readonly Dictionary<PixelFormat, Format> _forward = new Dictionary<PixelFormat, Format>();
-            private readonly Dictionary<Format, PixelFormat> _reverse = new Dictionary<Format, PixelFormat>();
+            private readonly Dictionary<TKey, TValue> _forward = new Dictionary<TKey, TValue>();
+            private readonly Dictionary<TValue, TKey> _reverse = new Dictionary<TValue, TKey>();
 
-            public void Add(PixelFormat pixelFormat, Format dxgiFormat)
+            public void Add(TKey key, TValue value)
             {
-                _forward.Add(pixelFormat, dxgiFormat);
-                if (!_reverse.ContainsKey(dxgiFormat))
+                _forward.Add(key, value);
+                if (!_reverse.ContainsKey(value))
                 {
-                    _reverse.Add(dxgiFormat, pixelFormat);
+                    _reverse.Add(value, key);
                 }
             }
 
-            public Format this[PixelFormat pixelFormat] => _forward[pixelFormat];
-            public PixelFormat this[Format dxgiFormat] => _reverse[dxgiFormat];
+            public TValue this[TKey key] => _forward[key];
+            public TKey this[TValue value] => _reverse[value];
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            public IEnumerator<KeyValuePair<PixelFormat, Format>> GetEnumerator()
+            public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
             {
                 return _forward.GetEnumerator();
             }

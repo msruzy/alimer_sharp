@@ -22,7 +22,7 @@ namespace Vortice.Graphics.D3D12
 
             _commandAllocator = d3d12Device.CreateCommandAllocator(type);
             CommandList = d3d12Device.CreateCommandList(type, _commandAllocator, null);
-            //CommandList.Close();
+            _type = type;
         }
 
         /// <inheritdoc/>

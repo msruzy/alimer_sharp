@@ -39,7 +39,7 @@ namespace Vortice.Graphics
                 _textures[i] = GetBackBufferTexture(i);
             }
 
-            bool hasDepthStencil = descriptor.PreferredDepthStencilFormat != PixelFormat.Unknown;
+            bool hasDepthStencil = descriptor.PreferredDepthStencilFormat != PixelFormat.Invalid;
             if (hasDepthStencil)
             {
                 _depthStencilTexture = Device.CreateTexture(

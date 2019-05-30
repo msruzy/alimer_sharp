@@ -162,5 +162,10 @@ namespace Vortice.Graphics
         /// Four signed 32-bit values.
         /// </summary>
         Int4,
+
+        /// <summary>
+        /// One packed 32-bit value with four normalized unsigned integer values, arranged as 10 bits, 10 bits, 10 bits, and 2 bits.
+        /// </summary>
+        UInt1010102Norm
     }
 }

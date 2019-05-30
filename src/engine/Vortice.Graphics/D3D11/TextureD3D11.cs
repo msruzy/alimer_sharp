@@ -25,7 +25,7 @@ namespace Vortice.Graphics.D3D11
             : base(device, description)
         {
             // Create new one.
-            DXGIFormat = D3DConvert.Convert(description.Format);
+            DXGIFormat = D3DConvert.ConvertPixelFormat(description.Format);
 
             var cpuFlags = CpuAccessFlags.None;
             var resourceUsage = Vortice.DirectX.Direct3D11.Usage.Default;

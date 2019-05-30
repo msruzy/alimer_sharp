@@ -15,7 +15,7 @@ namespace DrawTriangle
     {
         private GraphicsBuffer _vertexBuffer;
         private Shader _vertexShader;
-        private Shader _pixelShader;
+        private Shader _fragmentShader;
         private PipelineState _renderPipelineState;
         private GraphicsBuffer _matricesConstantBuffer;
 
@@ -52,7 +52,7 @@ namespace DrawTriangle
 	            float4x4	WorldViewProjectionMatrix : packoffset(c0);
             };
 
-            PSInput VSMain(float4 position : POSITION, float4 color : COLOR) {
+            PSInput VSMain(float4 position : ATTRIBUTE0, float4 color : ATTRIBUTE1) {
                 PSInput result;
 
                 result.position = mul(position, WorldViewProjectionMatrix);
@@ -69,14 +69,19 @@ namespace DrawTriangle
             void CSMain(uint3 DTid : SV_DispatchThreadID ) {
             }";
 
-
             _vertexShader = GraphicsDevice.CreateShader(ShaderCompiler.Compile(GraphicsDevice.Backend, shaderSource, ShaderStages.Vertex));
-            _pixelShader = GraphicsDevice.CreateShader(ShaderCompiler.Compile(GraphicsDevice.Backend, shaderSource, ShaderStages.Pixel));
+            _fragmentShader = GraphicsDevice.CreateShader(ShaderCompiler.Compile(GraphicsDevice.Backend, shaderSource, ShaderStages.Fragment));
 
             _renderPipelineState = GraphicsDevice.CreateRenderPipelineState(new RenderPipelineDescriptor
             {
                 VertexShader = _vertexShader,
-                PixelShader = _pixelShader
+                FragmentShader = _fragmentShader,
+                VertexLayouts = new VertexLayoutDescriptor[]
+                {
+                    new VertexLayoutDescriptor(
+                        new VertexAttributeDescriptor(0, VertexFormat.Float3, 0),
+                        new VertexAttributeDescriptor(1, VertexFormat.Float4, 12))
+                }
             });
 
             MainView.ClearColor = new Color4(0.0f, 0.2f, 0.4f);

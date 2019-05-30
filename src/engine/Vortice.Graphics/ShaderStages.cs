@@ -22,14 +22,14 @@ namespace Vortice.Graphics
         Vertex = 1 << 0,
 
         /// <summary>
-        /// Specifies the hull (tessellation control) stage.
+        /// Specifies the tessellation control (hull) stage.
         /// </summary>
-        Hull = 1 << 1,
+        TessellationControl = 1 << 1,
 
         /// <summary>
-        /// Specifies the domain (tessellation evaluation) stage.
+        /// Specifies the tessellation evaluation (domain) stage.
         /// </summary>
-        Domain = 1 << 2,
+        TessellationEvaluation = 1 << 2,
 
         /// <summary>
         /// Specifies the geometry stage.
@@ -37,9 +37,9 @@ namespace Vortice.Graphics
         Geometry = 1 << 3,
 
         /// <summary>
-        /// Specifies the pixel/fragment stage.
+        /// Specifies the fragment stage.
         /// </summary>
-        Pixel = 1 << 4,
+        Fragment = 1 << 4,
 
         /// <summary>
         /// Specifies the compute stage.

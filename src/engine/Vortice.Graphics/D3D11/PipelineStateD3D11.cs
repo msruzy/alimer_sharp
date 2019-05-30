@@ -24,12 +24,43 @@ namespace Vortice.Graphics.D3D11
             : base(device, descriptor)
         {
             VertexShader = (ID3D11VertexShader)((ShaderD3D11)descriptor.VertexShader).D3D11Shader;
-            PixelShader = (ID3D11PixelShader)((ShaderD3D11)descriptor.PixelShader).D3D11Shader;
+            PixelShader = (ID3D11PixelShader)((ShaderD3D11)descriptor.FragmentShader).D3D11Shader;
 
             var vsByteCode = ((ShaderD3D11)descriptor.VertexShader).Bytecode;
-            var inputElements = new InputElementDescription[2];
-            inputElements[0] = new InputElementDescription("POSITION", 0, Vortice.DirectX.DXGI.Format.R32G32B32_Float, 0, 0);
-            inputElements[1] = new InputElementDescription("COLOR", 0, Vortice.DirectX.DXGI.Format.R32G32B32A32_Float, 12, 0);
+
+            int inputElementsCount = 0;
+            for (int i = 0; i < descriptor.VertexLayouts.Length; i++)
+            {
+                if (descriptor.VertexLayouts[i].Attributes == null)
+                    break;
+
+                inputElementsCount += descriptor.VertexLayouts[i].Attributes.Length;
+            }
+
+            var elementIndex = 0;
+            var inputElements = new InputElementDescription[inputElementsCount];
+            for (int slot = 0; slot < descriptor.VertexLayouts.Length; slot++)
+            {
+                if (descriptor.VertexLayouts[slot].Attributes == null)
+                    break;
+
+                int currentOffset = 0;
+                var inputRate = descriptor.VertexLayouts[slot].InputRate;
+                foreach (var vertexAttribute in descriptor.VertexLayouts[slot].Attributes)
+                {
+                    inputElements[elementIndex++] = new InputElementDescription(
+                        "ATTRIBUTE",
+                        vertexAttribute.Location,
+                        D3DConvert.ConvertVertexFormat(vertexAttribute.Format),
+                        vertexAttribute.Offset != 0 ? vertexAttribute.Offset : currentOffset,
+                        slot,
+                        inputRate == VertexInputRate.Vertex ? InputClassification.PerVertexData : InputClassification.PerInstanceData,
+                        inputRate == VertexInputRate.Instance ? 1 : 0);
+
+                    currentOffset += VertexFormatUtil.GetSizeInBytes(vertexAttribute.Format);
+                }
+            }
+
             InputLayout = device.D3D11Device.CreateInputLayout(inputElements, vsByteCode);
 
             RasterizerState = device.D3D11Device.CreateRasterizerState(RasterizerDescription.CullCounterClockwise);

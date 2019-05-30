@@ -9,9 +9,9 @@ namespace Vortice.Graphics
     public enum PixelFormat
     {
         /// <summary>
-        /// Unknown pixel format.
+        /// Invalid pixel format.
         /// </summary>
-        Unknown = 0,
+        Invalid = 0,
 
         // 8-bit pixel formats
 

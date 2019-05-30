@@ -290,7 +290,7 @@ namespace Vortice.Graphics.D3D11
                 D3D11Context.VSSetConstantBuffer(index, d3d11Buffer);
             }
 
-            if ((stages & ShaderStages.Pixel) != ShaderStages.None)
+            if ((stages & ShaderStages.Fragment) != ShaderStages.None)
             {
                 D3D11Context.PSSetConstantBuffer(index, d3d11Buffer);
             }

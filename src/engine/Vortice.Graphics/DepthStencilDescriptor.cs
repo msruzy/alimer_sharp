@@ -4,7 +4,7 @@
 namespace Vortice.Graphics
 {
     /// <summary>
-    /// Describes a depth-stencil state in <see cref="RenderPipelineState"/>.
+    /// Describes a depth-stencil state in <see cref="RenderPipelineDescriptor"/>.
     /// </summary>
     public readonly struct DepthStencilDescriptor
     {

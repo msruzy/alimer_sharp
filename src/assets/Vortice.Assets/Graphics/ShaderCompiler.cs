@@ -79,7 +79,7 @@ namespace Vortice.Assets.Graphics
 
                     unsafe
                     {
-                        IDxcBlob part = containReflection.GetPartContent(dxilPartIndex);
+                        var part = containReflection.GetPartContent(dxilPartIndex);
                         uint* p = (uint*)part.GetBufferPointer();
                         var v = DescribeProgramVersion(*p);
                     }
@@ -97,7 +97,7 @@ namespace Vortice.Assets.Graphics
             }
             else
             {
-                uint flags = 0;
+                const uint flags = 0;
                 var shaderProfile = $"{GetShaderProfile(stage)}_5_0";
                 int hr = D3DCompiler.D3DCompiler.D3DCompile(
                     source,
@@ -109,8 +109,8 @@ namespace Vortice.Assets.Graphics
                     shaderProfile,
                     flags,
                     0,
-                    out IDxcBlob blob,
-                    out IDxcBlob errorMsgs);
+                    out var blob,
+                    out var errorMsgs);
 
                 if (hr != 0)
                 {
@@ -135,13 +135,13 @@ namespace Vortice.Assets.Graphics
             {
                 case ShaderStages.Vertex:
                     return "VSMain";
-                case ShaderStages.Hull:
+                case ShaderStages.TessellationControl:
                     return "HSMain";
-                case ShaderStages.Domain:
+                case ShaderStages.TessellationEvaluation:
                     return "DSMain";
                 case ShaderStages.Geometry:
                     return "GSMain";
-                case ShaderStages.Pixel:
+                case ShaderStages.Fragment:
                     return "PSMain";
                 case ShaderStages.Compute:
                     return "CSMain";
@@ -156,13 +156,13 @@ namespace Vortice.Assets.Graphics
             {
                 case ShaderStages.Vertex:
                     return "vs";
-                case ShaderStages.Hull:
+                case ShaderStages.TessellationControl:
                     return "hs";
-                case ShaderStages.Domain:
+                case ShaderStages.TessellationEvaluation:
                     return "ds";
                 case ShaderStages.Geometry:
                     return "gs";
-                case ShaderStages.Pixel:
+                case ShaderStages.Fragment:
                     return "ps";
                 case ShaderStages.Compute:
                     return "cs";

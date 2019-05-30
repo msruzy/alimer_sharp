@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Description>Vortice.Audio library for cross platform audio support.</Description>
     <DefineConstants Condition="'$(ExcludeOpenAL)' == 'true'">$(DefineConstants);VORTICE_NO_OPENAL</DefineConstants>

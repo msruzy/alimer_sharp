@@ -4,29 +4,36 @@
 namespace Vortice.Graphics
 {
     /// <summary>
-    /// Describes a rendering <see cref="RenderPipelineState"/>.
+    /// Describes a rendering <see cref="PipelineState"/>.
     /// </summary>
     public sealed class RenderPipelineDescriptor
     {
-        public const int SimultaneousRenderTargetCount = 8;
+        public const int MaxVertexBufferBindings = 4;
+        public const int MaxColorAttachments = 8;
 
+        private VertexLayoutDescriptor[] _vertexLayouts;
         private RenderPipelineColorAttachmentDescriptor[] _colorAttachments;
 
         public Shader VertexShader { get; set; }
 
-        public Shader PixelShader { get; set; }
+        public Shader TessellationControl { get; set; }
 
-        public Shader DomainShader { get; set; }
-
-        public Shader HullShader { get; set; }
+        public Shader TessellationEvaluation { get; set; }
 
         public Shader GeometryShader { get; set; }
+        public Shader FragmentShader { get; set; }
+
+        public VertexLayoutDescriptor[] VertexLayouts
+        {
+            get => _vertexLayouts ?? (_vertexLayouts = new VertexLayoutDescriptor[MaxVertexBufferBindings]);
+            set => _vertexLayouts = value;
+        }
 
         public PrimitiveTopology PrimitiveTopology { get; set; } = PrimitiveTopology.TriangeList;
 
         public RenderPipelineColorAttachmentDescriptor[] ColorAttachments
         {
-            get => _colorAttachments ?? (_colorAttachments = new RenderPipelineColorAttachmentDescriptor[SimultaneousRenderTargetCount]);
+            get => _colorAttachments ?? (_colorAttachments = new RenderPipelineColorAttachmentDescriptor[MaxColorAttachments]);
             set => _colorAttachments = value;
         }
 
