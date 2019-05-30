@@ -15,10 +15,6 @@ namespace Vortice.Graphics.D3D12
         public PipelineStateD3D12(DeviceD3D12 device, in RenderPipelineDescriptor descriptor)
             : base(device, descriptor)
         {
-            var inputElements = new InputElementDescription[2];
-            inputElements[0] = new InputElementDescription("POSITION", 0, Vortice.DirectX.DXGI.Format.R32G32B32_Float, 0, 0);
-            inputElements[1] = new InputElementDescription("COLOR", 0, Vortice.DirectX.DXGI.Format.R32G32B32A32_Float, 12, 0);
-
             var sampleCount = (int)descriptor.Samples;
 
             var rootSignatureDesc = new VersionedRootSignatureDescription(
@@ -26,6 +22,39 @@ namespace Vortice.Graphics.D3D12
                 );
 
             _rootSignature = device.D3D12Device.CreateRootSignature(0, rootSignatureDesc);
+
+            int inputElementsCount = 0;
+            for (int i = 0; i < descriptor.VertexLayouts.Length; i++)
+            {
+                if (descriptor.VertexLayouts[i].Attributes == null)
+                    break;
+
+                inputElementsCount += descriptor.VertexLayouts[i].Attributes.Length;
+            }
+
+            var elementIndex = 0;
+            var inputElements = new InputElementDescription[inputElementsCount];
+            for (int slot = 0; slot < descriptor.VertexLayouts.Length; slot++)
+            {
+                if (descriptor.VertexLayouts[slot].Attributes == null)
+                    break;
+
+                int currentOffset = 0;
+                var inputRate = descriptor.VertexLayouts[slot].InputRate;
+                foreach (var vertexAttribute in descriptor.VertexLayouts[slot].Attributes)
+                {
+                    inputElements[elementIndex++] = new InputElementDescription(
+                        "ATTRIBUTE",
+                        vertexAttribute.Location,
+                        D3DConvert.ConvertVertexFormat(vertexAttribute.Format),
+                        vertexAttribute.Offset != 0 ? vertexAttribute.Offset : currentOffset,
+                        slot,
+                        inputRate == VertexInputRate.Vertex ? InputClassification.PerVertexData : InputClassification.PerInstanceData,
+                        inputRate == VertexInputRate.Instance ? 1 : 0);
+
+                    currentOffset += VertexFormatUtil.GetSizeInBytes(vertexAttribute.Format);
+                }
+            }
 
             var psoDesc = new GraphicsPipelineStateDescription()
             {

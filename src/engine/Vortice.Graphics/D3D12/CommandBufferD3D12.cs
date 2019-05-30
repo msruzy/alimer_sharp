@@ -44,12 +44,12 @@ namespace Vortice.Graphics.D3D12
 
         public override void SetStencilReference(int reference)
         {
-            throw new System.NotImplementedException();
+            CommandList.OMSetStencilRef(reference);
         }
 
         public override void SetBlendColor(ref Color4 blendColor)
         {
-            throw new System.NotImplementedException();
+            CommandList.OMSetBlendFactor(new float[] { blendColor.R, blendColor.G, blendColor.B, blendColor.A });
         }
 
         protected override void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance)

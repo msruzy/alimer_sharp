@@ -15,6 +15,12 @@ namespace Vortice.Graphics.D3D12
             : base(device, descriptor)
         {
             _creationFrame = device.CurrentCPUFrame;
+            _resource = device.D3D12Device.CreateCommittedResource(
+                new HeapProperties(HeapType.Upload),
+                HeapFlags.None,
+                ResourceDescription.Buffer((ulong)descriptor.SizeInBytes),
+                ResourceStates.GenericRead,
+                null);
         }
 
         /// <inheritdoc/>

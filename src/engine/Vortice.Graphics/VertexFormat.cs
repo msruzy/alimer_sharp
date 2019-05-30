@@ -94,6 +94,11 @@ namespace Vortice.Graphics
         Short4Norm,
 
         /// <summary>
+        /// One half-precision floating-point value..
+        /// </summary>
+        Half,
+
+        /// <summary>
         /// Two half-precision floating-point values.
         /// </summary>
         Half2,

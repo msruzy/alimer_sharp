@@ -137,6 +137,7 @@ namespace Vortice.Graphics
             { VertexFormat.Short2Norm,          Format.R16G16_SNorm },
             { VertexFormat.Short4Norm,          Format.R16G16B16A16_SNorm },
 
+            { VertexFormat.Half,                Format.R16_Float },
             { VertexFormat.Half2,               Format.R16G16_Float },
             { VertexFormat.Half4,               Format.R16G16B16A16_Float },
 
