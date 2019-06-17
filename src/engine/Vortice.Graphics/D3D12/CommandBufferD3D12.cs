@@ -49,7 +49,7 @@ namespace Vortice.Graphics.D3D12
 
         public override void SetBlendColor(ref Color4 blendColor)
         {
-            CommandList.OMSetBlendFactor(new float[] { blendColor.R, blendColor.G, blendColor.B, blendColor.A });
+            CommandList.OMSetBlendFactor(blendColor);
         }
 
         protected override void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance)

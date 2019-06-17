@@ -21,7 +21,7 @@ namespace DrawTriangle
 
         public DrawTriangleGame()
         {
-            GraphicsBackend = GraphicsBackend.Direct3D12;
+            GraphicsBackend = GraphicsBackend.Direct3D11;
         }
 
         protected override void LoadContent()

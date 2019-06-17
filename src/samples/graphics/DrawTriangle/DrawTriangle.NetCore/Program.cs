@@ -10,6 +10,7 @@ namespace DrawTriangle
 		public static void Main()
 		{
             var audio = new AudioEngine();
+
             using (var game = new DrawTriangleGame())
 			{
                 game.Run();
