@@ -14,7 +14,8 @@ namespace Vortice.Graphics.D3D11
             : base(device, descriptor, device.DXGIFactory, device.D3D11Device, 2, 1)
         {
             var backBufferTexture = _swapChain.GetBuffer<ID3D11Texture2D>(0);
-            BackbufferTexture = new TextureD3D11(device, backBufferTexture, BackBufferFormat);
+            var textureDescriptor = Utils.Convert(backBufferTexture.Description);
+            BackbufferTexture = new TextureD3D11(device, ref textureDescriptor, backBufferTexture, BackBufferFormat);
 
             // Configure base.
             Configure(descriptor);

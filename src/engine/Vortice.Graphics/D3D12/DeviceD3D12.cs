@@ -300,9 +300,14 @@ namespace Vortice.Graphics.D3D12
             return new BufferD3D12(this, descriptor, initialData);
         }
 
-        protected override Texture CreateTextureImpl(in TextureDescription description)
+        protected override Texture CreateTextureCore(ref TextureDescriptor descriptor)
         {
-            return new TextureD3D12(this, description, nativeTexture: null);
+            return new TextureD3D12(this, ref descriptor, nativeTexture: null);
+        }
+
+        protected override Sampler CreateSamplerCore(ref SamplerDescriptor descriptor)
+        {
+            throw new NotImplementedException();
         }
 
         protected override Shader CreateShaderImpl(ShaderBytecode bytecode)

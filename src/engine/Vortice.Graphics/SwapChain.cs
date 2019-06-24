@@ -43,7 +43,7 @@ namespace Vortice.Graphics
             if (hasDepthStencil)
             {
                 _depthStencilTexture = Device.CreateTexture(
-                    TextureDescription.Texture2D(descriptor.Width, descriptor.Height,
+                    TextureDescriptor.Texture2D(descriptor.Width, descriptor.Height,
                     false, 1,
                     descriptor.PreferredDepthStencilFormat, TextureUsage.RenderTarget)
                     );

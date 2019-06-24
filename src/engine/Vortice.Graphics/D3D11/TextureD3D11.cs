@@ -14,40 +14,40 @@ namespace Vortice.Graphics.D3D11
         public readonly Format DXGIFormat;
         private readonly Dictionary<TextureViewDescriptor, TextureViewD3D11> _views = new Dictionary<TextureViewDescriptor, TextureViewD3D11>();
 
-        public TextureD3D11(DeviceD3D11 device, ID3D11Texture2D nativeTexture, Format dxgiFormat)
-           : base(device, Convert(nativeTexture.Description))
+        public TextureD3D11(DeviceD3D11 device, ref TextureDescriptor descriptor, ID3D11Texture2D nativeTexture, Format dxgiFormat)
+           : base(device, ref descriptor)
         {
             Resource = nativeTexture;
             DXGIFormat = dxgiFormat;
         }
 
-        public TextureD3D11(DeviceD3D11 device, in TextureDescription description)
-            : base(device, description)
+        public TextureD3D11(DeviceD3D11 device, ref TextureDescriptor descriptor)
+            : base(device, ref descriptor)
         {
             // Create new one.
-            DXGIFormat = D3DConvert.ConvertPixelFormat(description.Format);
+            DXGIFormat = D3DConvert.ConvertPixelFormat(descriptor.Format);
 
             var cpuFlags = CpuAccessFlags.None;
             var resourceUsage = Vortice.DirectX.Direct3D11.Usage.Default;
-            var bindFlags = Convert(description.TextureUsage, description.Format);
+            var bindFlags = Convert(descriptor.TextureUsage, descriptor.Format);
             var optionFlags = ResourceOptionFlags.None;
 
-            var arraySize = description.ArrayLayers;
-            if (description.TextureType == TextureType.TextureCube)
+            var arraySize = descriptor.ArrayLayers;
+            if (descriptor.TextureType == TextureType.TextureCube)
             {
                 arraySize *= 6;
                 optionFlags = ResourceOptionFlags.TextureCube;
             }
 
-            switch (description.TextureType)
+            switch (descriptor.TextureType)
             {
                 case TextureType.Texture1D:
                     {
                         var d3dTextureDesc = new Texture1DDescription()
                         {
-                            Width = description.Width,
-                            MipLevels = description.MipLevels,
-                            ArraySize = description.ArrayLayers,
+                            Width = descriptor.Width,
+                            MipLevels = descriptor.MipLevels,
+                            ArraySize = descriptor.ArrayLayers,
                             Format = DXGIFormat,
                             BindFlags = bindFlags,
                             CpuAccessFlags = cpuFlags,
@@ -64,15 +64,15 @@ namespace Vortice.Graphics.D3D11
                     {
                         var d3dTextureDesc = new Texture2DDescription()
                         {
-                            Width = description.Width,
-                            Height = description.Height,
-                            MipLevels = description.MipLevels,
-                            ArraySize = description.ArrayLayers,
+                            Width = descriptor.Width,
+                            Height = descriptor.Height,
+                            MipLevels = descriptor.MipLevels,
+                            ArraySize = descriptor.ArrayLayers,
                             Format = DXGIFormat,
                             BindFlags = bindFlags,
                             CpuAccessFlags = cpuFlags,
                             Usage = resourceUsage,
-                            SampleDescription = new SampleDescription((int)description.Samples, 0),
+                            SampleDescription = new SampleDescription((int)descriptor.Samples, 0),
                             OptionFlags = optionFlags,
                         };
 
@@ -84,10 +84,10 @@ namespace Vortice.Graphics.D3D11
                     {
                         var d3dTextureDesc = new Texture3DDescription()
                         {
-                            Width = description.Width,
-                            Height = description.Height,
-                            Depth = description.Depth,
-                            MipLevels = description.MipLevels,
+                            Width = descriptor.Width,
+                            Height = descriptor.Height,
+                            Depth = descriptor.Depth,
+                            MipLevels = descriptor.MipLevels,
                             Format = DXGIFormat,
                             BindFlags = bindFlags,
                             CpuAccessFlags = cpuFlags,

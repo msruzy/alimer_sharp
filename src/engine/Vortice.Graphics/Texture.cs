@@ -58,25 +58,25 @@ namespace Vortice.Graphics
         /// <summary>
         /// Create a new instance of <see cref="Texture"/> class.
         /// </summary>
-        /// <param name="device">The creation device</param>
-        /// <param name="description">The texture description</param>
-        protected Texture(GraphicsDevice device, in TextureDescription description)
+        /// <param name="device">The creation device.</param>
+        /// <param name="descriptor">The texture descriptor.</param>
+        protected Texture(GraphicsDevice device, ref TextureDescriptor descriptor)
             : base(device, GraphicsResourceType.Texture, GraphicsResourceUsage.Default)
         {
-            Guard.IsTrue(description.TextureType != TextureType.Unknown, nameof(description), $"TextureType cannot be {nameof(TextureType.Unknown)}");
-            Guard.MustBeGreaterThanOrEqualTo(description.Width, 1, nameof(description.Width));
-            Guard.MustBeGreaterThanOrEqualTo(description.Height, 1, nameof(description.Height));
-            Guard.MustBeGreaterThanOrEqualTo(description.Depth, 1, nameof(description.Depth));
+            Guard.IsTrue(descriptor.TextureType != TextureType.Unknown, nameof(descriptor), $"TextureType cannot be {nameof(TextureType.Unknown)}");
+            Guard.MustBeGreaterThanOrEqualTo(descriptor.Width, 1, nameof(descriptor.Width));
+            Guard.MustBeGreaterThanOrEqualTo(descriptor.Height, 1, nameof(descriptor.Height));
+            Guard.MustBeGreaterThanOrEqualTo(descriptor.Depth, 1, nameof(descriptor.Depth));
 
-            TextureType = description.TextureType;
-            Width = description.Width;
-            Height = description.Height;
-            Depth = description.Depth;
-            MipLevels = description.MipLevels;
-            ArrayLayers = description.ArrayLayers;
-            Format = description.Format;
-            TextureUsage = description.TextureUsage;
-            Samples = description.Samples;
+            TextureType = descriptor.TextureType;
+            Width = descriptor.Width;
+            Height = descriptor.Height;
+            Depth = descriptor.Depth;
+            MipLevels = descriptor.MipLevels;
+            ArrayLayers = descriptor.ArrayLayers;
+            Format = descriptor.Format;
+            TextureUsage = descriptor.TextureUsage;
+            Samples = descriptor.Samples;
         }
 
         public int GetLevelWidth(int mipLevel = 0) => Math.Max(1, Width >> mipLevel);

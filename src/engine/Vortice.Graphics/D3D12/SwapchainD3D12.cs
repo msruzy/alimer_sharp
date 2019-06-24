@@ -20,7 +20,7 @@ namespace Vortice.Graphics.D3D12
             {
                 var backBufferTexture = _swapChain.GetBuffer<ID3D12Resource>(i);
                 var d3dTextureDesc = backBufferTexture.Description;
-                var textureDescription = TextureDescription.Texture2D(
+                var textureDescriptor = TextureDescriptor.Texture2D(
                     (int)d3dTextureDesc.Width,
                     d3dTextureDesc.Height,
                     d3dTextureDesc.MipLevels,
@@ -29,7 +29,7 @@ namespace Vortice.Graphics.D3D12
                     D3D12Convert.Convert(d3dTextureDesc.Flags),
                     (SampleCount)d3dTextureDesc.SampleDescription.Count);
 
-                _backbufferTextures[i] = new TextureD3D12(device, textureDescription, backBufferTexture);
+                _backbufferTextures[i] = new TextureD3D12(device, ref textureDescriptor, backBufferTexture);
             }
 
             // Configure base.

@@ -117,9 +117,9 @@ namespace Vortice.Graphics.D3D11
             return bindFlags;
         }
 
-        public static TextureDescription Convert(Texture2DDescription description)
+        public static TextureDescriptor Convert(Texture2DDescription description)
         {
-            return new TextureDescription(
+            return new TextureDescriptor(
                 TextureType.Texture2D,
                 description.Width,
                 description.Height,

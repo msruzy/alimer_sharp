@@ -10,6 +10,7 @@ namespace Vortice.Graphics
     {
         SwapChain,
         Texture,
+        Sampler,
         Buffer,
         Framebuffer,
         Shader,

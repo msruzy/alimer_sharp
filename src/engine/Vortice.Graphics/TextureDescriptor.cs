@@ -8,10 +8,10 @@ namespace Vortice.Graphics
     /// <summary>
     /// Describes <see cref="Texture"/>.
     /// </summary>
-    public readonly struct TextureDescription : IEquatable<TextureDescription>
+    public readonly struct TextureDescriptor : IEquatable<TextureDescriptor>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextureDescription"/> struct.
+        /// Initializes a new instance of the <see cref="TextureDescriptor"/> struct.
         /// </summary>
         /// <param name="textureType">The texture type</param>
         /// <param name="width">The width</param>
@@ -22,7 +22,7 @@ namespace Vortice.Graphics
         /// <param name="format">The <see cref="PixelFormat"/></param>
         /// <param name="textureUsage">The texture usage</param>
         /// <param name="samples">The samples</param>
-        public TextureDescription(TextureType textureType,
+        public TextureDescriptor(TextureType textureType,
             int width, int height, int depth,
             int mipLevels, int arrayLayers,
             PixelFormat format,
@@ -41,7 +41,7 @@ namespace Vortice.Graphics
         }
 
         /// <summary>
-        /// Create new Texture2D description.
+        /// Create new instance of <see cref="TextureDescriptor"/> struct describing 2D texture.
         /// </summary>
         /// <param name="width">The width</param>
         /// <param name="height">The height</param>
@@ -51,7 +51,7 @@ namespace Vortice.Graphics
         /// <param name="textureUsage">The texture usage</param>
         /// <param name="samples">The number of samples.</param>
         /// <returns></returns>
-        public static TextureDescription Texture2D(
+        public static TextureDescriptor Texture2D(
             int width,
             int height,
             int mipLevels = 1,
@@ -64,11 +64,11 @@ namespace Vortice.Graphics
             height = Math.Max(height, 1);
             mipLevels = Math.Max(mipLevels, 1);
             arrayLayers = Math.Max(arrayLayers, 1);
-            return new TextureDescription(TextureType.Texture2D, width, height, 1, mipLevels, arrayLayers, format, textureUsage, samples);
+            return new TextureDescriptor(TextureType.Texture2D, width, height, 1, mipLevels, arrayLayers, format, textureUsage, samples);
         }
 
         /// <summary>
-        /// Create new Texture2D description.
+        /// Create new instance of <see cref="TextureDescriptor"/> struct describing 2D texture.
         /// </summary>
         /// <param name="width">The width</param>
         /// <param name="height">The height</param>
@@ -78,7 +78,7 @@ namespace Vortice.Graphics
         /// <param name="textureUsage">The texture usage.</param>
         /// <param name="samples">The number of samples.</param>
         /// <returns></returns>
-        public static TextureDescription Texture2D(
+        public static TextureDescriptor Texture2D(
             int width,
             int height,
             bool mipMap,
@@ -106,7 +106,7 @@ namespace Vortice.Graphics
             height = Math.Max(height, 1);
             arrayLayers = Math.Max(arrayLayers, 1);
 
-            return new TextureDescription(TextureType.Texture2D, width, height, 1, mipLevels, arrayLayers, format, textureUsage, samples);
+            return new TextureDescriptor(TextureType.Texture2D, width, height, 1, mipLevels, arrayLayers, format, textureUsage, samples);
         }
 
         /// <summary>
@@ -155,51 +155,53 @@ namespace Vortice.Graphics
         public SampleCount Samples { get; }
 
         /// <summary>
-        /// Compares two <see cref="TextureDescription"/> objects for equality.
+        /// Compares two <see cref="TextureDescriptor"/> objects for equality.
         /// </summary>
         /// <param name="left">
-        /// The <see cref="TextureDescription"/> on the left side of the operand.
+        /// The <see cref="TextureDescriptor"/> on the left side of the operand.
         /// </param>
         /// <param name="right">
-        /// The <see cref="TextureDescription"/> on the right side of the operand.
+        /// The <see cref="TextureDescriptor"/> on the right side of the operand.
         /// </param>
         /// <returns>
         /// True if the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter; otherwise, false.
         /// </returns>
-        public static bool operator ==(in TextureDescription left, in TextureDescription right)
+        public static bool operator ==(in TextureDescriptor left, in TextureDescriptor right)
         {
             return left.Equals(right);
         }
 
         /// <summary>
-        /// Compares two <see cref="TextureDescription"/> objects for equality.
+        /// Compares two <see cref="TextureDescriptor"/> objects for equality.
         /// </summary>
-        /// <param name="left">The <see cref="TextureDescription"/> on the left side of the operand.</param>
-        /// <param name="right">The <see cref="TextureDescription"/> on the right side of the operand.</param>
+        /// <param name="left">The <see cref="TextureDescriptor"/> on the left side of the operand.</param>
+        /// <param name="right">The <see cref="TextureDescriptor"/> on the right side of the operand.</param>
         /// <returns>
         /// True if the <paramref name="left"/> parameter is not equal to the <paramref name="right"/> parameter; otherwise, false.
         /// </returns>
-        public static bool operator !=(in TextureDescription left, in TextureDescription right)
+        public static bool operator !=(in TextureDescriptor left, in TextureDescriptor right)
         {
             return !left.Equals(right);
         }
 
         /// <inheritdoc />
-        public bool Equals(TextureDescription other) =>
-            TextureType == other.TextureType
-            && Width == other.Width
-            && Height == other.Height
-            && Depth == other.Depth
-            && MipLevels == other.MipLevels
-            && ArrayLayers == other.ArrayLayers
-            && Format == other.Format
-            && TextureUsage == other.TextureUsage
-            && Samples == other.Samples;
+        public bool Equals(TextureDescriptor other)
+        {
+            return TextureType == other.TextureType
+                && Width == other.Width
+                && Height == other.Height
+                && Depth == other.Depth
+                && MipLevels == other.MipLevels
+                && ArrayLayers == other.ArrayLayers
+                && Format == other.Format
+                && TextureUsage == other.TextureUsage
+                && Samples == other.Samples;
+        }
 
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return obj is TextureDescription other && this.Equals(other);
+            return obj is TextureDescriptor other && Equals(other);
         }
 
         /// <inheritdoc/>

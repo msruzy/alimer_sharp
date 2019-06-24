@@ -11,10 +11,13 @@ namespace Vortice.Graphics.D3D12
         public readonly Format DXGIFormat;
         public readonly ID3D12Resource Resource;
 
-        public TextureD3D12(DeviceD3D12 device, in TextureDescription description, ID3D12Resource nativeTexture)
-            : base(device, description)
+        public TextureD3D12(
+            DeviceD3D12 device, 
+            ref TextureDescriptor descriptor, 
+            ID3D12Resource nativeTexture)
+            : base(device, ref descriptor)
         {
-            DXGIFormat = D3DConvert.ConvertPixelFormat(description.Format);
+            DXGIFormat = D3DConvert.ConvertPixelFormat(descriptor.Format);
             if (nativeTexture == null)
             {
             }

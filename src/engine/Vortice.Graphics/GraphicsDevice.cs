@@ -144,9 +144,18 @@ namespace Vortice.Graphics
                 initialData);
         }
 
-        public Texture CreateTexture(in TextureDescription description)
+        public Texture CreateTexture(TextureDescriptor descriptor) => CreateTexture(ref descriptor);
+
+        public Texture CreateTexture(ref TextureDescriptor descriptor)
         {
-            return CreateTextureImpl(description);
+            return CreateTextureCore(ref descriptor);
+        }
+
+        public Sampler CreateSampler(SamplerDescriptor descriptor) => CreateSampler(ref descriptor);
+
+        public Sampler CreateSampler(ref SamplerDescriptor descriptor)
+        {
+            return CreateSamplerCore(ref descriptor);
         }
 
         public Shader CreateShader(ShaderBytecode bytecode)
@@ -203,7 +212,12 @@ namespace Vortice.Graphics
 
         protected abstract SwapChain CreateSwapChainImpl(in SwapChainDescriptor descriptor);
         protected abstract GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData);
-        protected abstract Texture CreateTextureImpl(in TextureDescription description);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected abstract Texture CreateTextureCore(ref TextureDescriptor descriptor);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected abstract Sampler CreateSamplerCore(ref SamplerDescriptor descriptor);
         protected abstract Shader CreateShaderImpl(ShaderBytecode bytecode);
         protected abstract PipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor);
     }

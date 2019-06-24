@@ -153,9 +153,14 @@ namespace Vortice.Graphics.D3D11
             return new BufferD3D11(this, descriptor, initialData);
         }
 
-        protected override Texture CreateTextureImpl(in TextureDescription description)
+        protected override Texture CreateTextureCore(ref TextureDescriptor descriptor)
         {
-            return new TextureD3D11(this, description);
+            return new TextureD3D11(this, ref descriptor);
+        }
+
+        protected override Sampler CreateSamplerCore(ref SamplerDescriptor descriptor)
+        {
+            return new SamplerD3D11(this, ref descriptor);
         }
 
         protected override Shader CreateShaderImpl(ShaderBytecode bytecode)
