@@ -127,7 +127,7 @@ namespace Vortice.Windows
             ShowWindow(_hwnd, ShowWindowCommand.Normal);
 
             // Rase and set handle.
-            OnHandleCreated(SwapChainHandle.CreateWin32(_hwnd, host.HInstance));
+            OnHandleCreated(SwapChainHandle.CreateWin32(host.HInstance, _hwnd));
         }
 
         internal void HandleDestroy()

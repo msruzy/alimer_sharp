@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.2</LangVersion>
+    <Description>Direct3D11.1+ graphics backend for Vortice</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+    <PackageReference Include="Vortice.DirectX.Direct3D11" Version="$(VorticeDirectXVersion)" />
+    <ProjectReference Include="..\Vortice.Graphics\Vortice.Graphics.csproj" />
+  </ItemGroup>
+
+</Project>

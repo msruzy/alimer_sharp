@@ -3,7 +3,7 @@
 
 using Vortice.DirectX.Direct3D11;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.Direct3D11
 {
     internal class PipelineStateD3D11 : PipelineState
     {
@@ -51,7 +51,7 @@ namespace Vortice.Graphics.D3D11
                     inputElements[elementIndex++] = new InputElementDescription(
                         "ATTRIBUTE",
                         vertexAttribute.Location,
-                        D3DConvert.ConvertVertexFormat(vertexAttribute.Format),
+                        vertexAttribute.Format.ToDirectX(),
                         vertexAttribute.Offset != 0 ? vertexAttribute.Offset : currentOffset,
                         slot,
                         inputRate == VertexInputRate.Vertex ? InputClassification.PerVertexData : InputClassification.PerInstanceData,
@@ -66,7 +66,7 @@ namespace Vortice.Graphics.D3D11
             RasterizerState = device.D3D11Device.CreateRasterizerState(RasterizerDescription.CullCounterClockwise);
             DepthStencilState = device.D3D11Device.CreateDepthStencilState(DepthStencilDescription.Default);
             BlendState = device.D3D11Device.CreateBlendState(BlendDescription.Opaque);
-            PrimitiveTopology = D3DConvert.Convert(descriptor.PrimitiveTopology, 1);
+            PrimitiveTopology = descriptor.PrimitiveTopology.ToDirectX(1);
         }
 
         /// <inheritdoc/>

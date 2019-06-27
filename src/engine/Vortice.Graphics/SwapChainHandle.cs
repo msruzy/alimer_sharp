@@ -15,10 +15,10 @@ namespace Vortice.Graphics
         /// <summary>
         /// Creates a new <see cref="SwapChainHandle"/> from Win32 window.
         /// </summary>
-        /// <param name="hWnd">The Win32 window handle.</param>
         /// <param name="hInstance">The Win32 instance handle.</param>
+        /// <param name="hWnd">The Win32 window handle.</param>
         /// <returns>A new <see cref="SwapChainHandle"/> instance.</returns>
-        public static SwapChainHandle CreateWin32(IntPtr hWnd, IntPtr hInstance) => new Win32SwapChainHandle(hWnd, hInstance);
+        public static SwapChainHandle CreateWin32(IntPtr hInstance, IntPtr hWnd) => new Win32SwapChainHandle(hInstance, hWnd);
 
         /// <summary>
         /// Creates a new <see cref="SwapChainHandle"/> from UWP CoreWindow.
@@ -28,22 +28,22 @@ namespace Vortice.Graphics
         public static SwapChainHandle CreateUWPCoreWindow(object coreWindow) => new UWPCoreWindowSwapChainHandle(coreWindow);
     }
 
-    internal class Win32SwapChainHandle : SwapChainHandle
+    public sealed class Win32SwapChainHandle : SwapChainHandle
     {
-        public IntPtr HWnd { get; }
         public IntPtr HInstance { get; }
+        public IntPtr HWnd { get; }
 
-        public Win32SwapChainHandle(IntPtr hWnd, IntPtr hInstance)
+        internal Win32SwapChainHandle(IntPtr hInstance, IntPtr hWnd)
         {
-            Guard.IsTrue(hWnd != IntPtr.Zero, nameof(hWnd), "Invalid hWnd handle");
             Guard.IsTrue(hInstance != IntPtr.Zero, nameof(hInstance), "Invalid hInstance handle");
+            Guard.IsTrue(hWnd != IntPtr.Zero, nameof(hWnd), "Invalid hWnd handle");
 
-            HWnd = hWnd;
             HInstance = hInstance;
+            HWnd = hWnd;
         }
     }
 
-    internal class UWPCoreWindowSwapChainHandle : SwapChainHandle
+    public sealed class UWPCoreWindowSwapChainHandle : SwapChainHandle
     {
         public object CoreWindow { get; }
 

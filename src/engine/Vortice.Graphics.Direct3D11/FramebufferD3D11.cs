@@ -5,7 +5,7 @@ using Vortice.DirectX.Direct3D11;
 using Vortice.Diagnostics;
 
 #if TODO
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.Direct3D11
 {
     internal class FramebufferD3D11 : Framebuffer
     {

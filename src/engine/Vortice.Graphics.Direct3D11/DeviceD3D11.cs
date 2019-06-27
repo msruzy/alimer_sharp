@@ -10,12 +10,14 @@ using Vortice.DirectX.Direct3D;
 using Vortice.Diagnostics;
 using static Vortice.DirectX.Direct3D11.D3D11;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.Direct3D11
 {
     internal unsafe class DeviceD3D11 : GraphicsDevice
     {
         private static readonly FeatureLevel[] s_featureLevels = new FeatureLevel[]
         {
+            FeatureLevel.Level_12_1,
+            FeatureLevel.Level_12_0,
             FeatureLevel.Level_11_1,
             FeatureLevel.Level_11_0,
             FeatureLevel.Level_10_1,
@@ -121,16 +123,16 @@ namespace Vortice.Graphics.D3D11
         private void InitializeFeatures()
         {
             var adapterDesc = DXGIAdapter.Description1;
-            Features.VendorId = adapterDesc.VendorId;
-            Features.DeviceId = adapterDesc.DeviceId;
-            Features.DeviceName = adapterDesc.Description;
-            Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
+            //Features.VendorId = adapterDesc.VendorId;
+            //Features.DeviceId = adapterDesc.DeviceId;
+            //Features.DeviceName = adapterDesc.Description;
+            //Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
 
-            if (SupportsConcurrentResources
-                && SupportsCommandLists)
-            {
-                Features.Multithreading = true;
-            }
+            //if (SupportsConcurrentResources
+            //    && SupportsCommandLists)
+            //{
+            //    Features.Multithreading = true;
+            //}
         }
 
         protected override void FrameCore()

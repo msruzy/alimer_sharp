@@ -1,18 +1,17 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using static Vortice.Graphics.D3D11.Utils;
 using System.Collections.Generic;
 using Vortice.DirectX.Direct3D11;
 using Vortice.DirectX.DXGI;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.Direct3D11
 {
     internal class TextureD3D11 : Texture
     {
         public readonly ID3D11Resource Resource;
         public readonly Format DXGIFormat;
-        private readonly Dictionary<TextureViewDescriptor, TextureViewD3D11> _views = new Dictionary<TextureViewDescriptor, TextureViewD3D11>();
+        //private readonly Dictionary<TextureViewDescriptor, TextureViewD3D11> _views = new Dictionary<TextureViewDescriptor, TextureViewD3D11>();
 
         public TextureD3D11(DeviceD3D11 device, ref TextureDescriptor descriptor, ID3D11Texture2D nativeTexture, Format dxgiFormat)
            : base(device, ref descriptor)
@@ -25,11 +24,11 @@ namespace Vortice.Graphics.D3D11
             : base(device, ref descriptor)
         {
             // Create new one.
-            DXGIFormat = D3DConvert.ConvertPixelFormat(descriptor.Format);
+            DXGIFormat = descriptor.Format.ToDirectX();
 
             var cpuFlags = CpuAccessFlags.None;
             var resourceUsage = Vortice.DirectX.Direct3D11.Usage.Default;
-            var bindFlags = Convert(descriptor.TextureUsage, descriptor.Format);
+            var bindFlags = descriptor.TextureUsage.ToDirectX(descriptor.Format);
             var optionFlags = ResourceOptionFlags.None;
 
             var arraySize = descriptor.ArrayLayers;
@@ -107,16 +106,16 @@ namespace Vortice.Graphics.D3D11
             Resource.Dispose();
         }
 
-        public TextureViewD3D11 GetView(int mostDetailedMip = 0, int mipCount = TextureViewDescriptor.MaxPossible, int firstArraySlice = 0, int arraySize = TextureViewDescriptor.MaxPossible)
-        {
-            var key = new TextureViewDescriptor(mostDetailedMip, mipCount, firstArraySlice, arraySize);
-            if (!_views.TryGetValue(key, out TextureViewD3D11 view))
-            {
-                view = new TextureViewD3D11((DeviceD3D11)Device, this, key);
-                _views.Add(key, view);
-            }
+        //public TextureViewD3D11 GetView(int mostDetailedMip = 0, int mipCount = TextureViewDescriptor.MaxPossible, int firstArraySlice = 0, int arraySize = TextureViewDescriptor.MaxPossible)
+        //{
+        //    var key = new TextureViewDescriptor(mostDetailedMip, mipCount, firstArraySlice, arraySize);
+        //    if (!_views.TryGetValue(key, out TextureViewD3D11 view))
+        //    {
+        //        view = new TextureViewD3D11((DeviceD3D11)Device, this, key);
+        //        _views.Add(key, view);
+        //    }
 
-            return view;
-        }
+        //    return view;
+        //}
     }
 }

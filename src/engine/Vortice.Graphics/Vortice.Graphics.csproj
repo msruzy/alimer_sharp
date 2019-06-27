@@ -6,14 +6,12 @@
     <LangVersion>7.2</LangVersion>
     <Description>Vortice.Graphics library for cross platform application support</Description>
     <ExcludeVulkan>True</ExcludeVulkan>
-    <DefineConstants Condition="'$(ExcludeD3D11)' == 'true'">$(DefineConstants);VORTICE_NO_D3D11</DefineConstants>
     <DefineConstants Condition="'$(ExcludeD3D12)' == 'true'">$(DefineConstants);VORTICE_NO_D3D12</DefineConstants>
     <DefineConstants Condition="'$(ExcludeVulkan)' == 'true'">$(DefineConstants);VORTICE_NO_VULKAN</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="D3D/**/*" Condition="'$(ExcludeD3D11)' == 'true' and '$(ExcludeD3D12)' == 'true'" />
-    <Compile Remove="D3D11/**/*" Condition="'$(ExcludeD3D11)' == 'true'" />
     <Compile Remove="D3D12/**/*" Condition="'$(ExcludeD3D12)' == 'true'" />
     <Compile Remove="Vulkan/**/*" Condition="'$(ExcludeVulkan)' == 'true'" />
   </ItemGroup>
@@ -21,7 +19,6 @@
   <ItemGroup>
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
-    <PackageReference Include="Vortice.DirectX.Direct3D11" Version="$(VorticeDirectXVersion)" Condition="'$(ExcludeD3D11)' != 'true'" />
     <PackageReference Include="Vortice.DirectX.Direct3D12" Version="$(VorticeDirectXVersion)" Condition="'$(ExcludeD3D12)' != 'true'" />
     <ProjectReference Include="..\..\core\Vortice\Vortice.csproj" />
   </ItemGroup>

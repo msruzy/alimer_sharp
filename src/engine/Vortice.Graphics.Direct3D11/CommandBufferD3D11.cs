@@ -6,7 +6,7 @@ using System.Drawing;
 using Vortice.DirectX.Direct3D11;
 using Vortice.Mathematics;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.Direct3D11
 {
     internal class CommandBufferD3D11 : CommandBuffer
     {
@@ -165,8 +165,8 @@ namespace Vortice.Graphics.D3D11
                 ref var attachment = ref descriptor.ColorAttachments[i];
 
                 var texture = (TextureD3D11)attachment.Texture;
-                var textureView = texture.GetView(attachment.Level, 1, attachment.Slice);
-                _rtvViews[i] = textureView.RenderTargetView;
+                //var textureView = texture.GetView(attachment.Level, 1, attachment.Slice);
+                //_rtvViews[i] = textureView.RenderTargetView;
 
                 switch (attachment.LoadAction)
                 {
@@ -194,8 +194,8 @@ namespace Vortice.Graphics.D3D11
                 width = Math.Min(width, texture.GetLevelWidth(attachment.Level));
                 height = Math.Min(height, texture.GetLevelHeight(attachment.Level));
 
-                var textureView = texture.GetView(attachment.Level, 1, attachment.Slice);
-                depthStencilView = textureView.DepthStencilView;
+                //var textureView = texture.GetView(attachment.Level, 1, attachment.Slice);
+                //depthStencilView = textureView.DepthStencilView;
 
                 DepthStencilClearFlags depthStencilClearFlags = 0;
                 if (attachment.DepthLoadAction == LoadAction.Clear)
@@ -290,7 +290,7 @@ namespace Vortice.Graphics.D3D11
                 D3D11Context.VSSetConstantBuffer(index, d3d11Buffer);
             }
 
-            if ((stages & ShaderStages.Fragment) != ShaderStages.None)
+            if ((stages & ShaderStages.Pixel) != ShaderStages.None)
             {
                 D3D11Context.PSSetConstantBuffer(index, d3d11Buffer);
             }

@@ -135,13 +135,13 @@ namespace Vortice.Assets.Graphics
             {
                 case ShaderStages.Vertex:
                     return "VSMain";
-                case ShaderStages.TessellationControl:
+                case ShaderStages.Hull:
                     return "HSMain";
-                case ShaderStages.TessellationEvaluation:
+                case ShaderStages.Domain:
                     return "DSMain";
                 case ShaderStages.Geometry:
                     return "GSMain";
-                case ShaderStages.Fragment:
+                case ShaderStages.Pixel:
                     return "PSMain";
                 case ShaderStages.Compute:
                     return "CSMain";
@@ -156,13 +156,13 @@ namespace Vortice.Assets.Graphics
             {
                 case ShaderStages.Vertex:
                     return "vs";
-                case ShaderStages.TessellationControl:
+                case ShaderStages.Hull:
                     return "hs";
-                case ShaderStages.TessellationEvaluation:
+                case ShaderStages.Domain:
                     return "ds";
                 case ShaderStages.Geometry:
                     return "gs";
-                case ShaderStages.Fragment:
+                case ShaderStages.Pixel:
                     return "ps";
                 case ShaderStages.Compute:
                     return "cs";

@@ -2,10 +2,9 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using static Vortice.Graphics.D3D11.Utils;
 using Vortice.DirectX.Direct3D11;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.Direct3D11
 {
     internal class BufferD3D11 : GraphicsBuffer
     {
@@ -18,8 +17,8 @@ namespace Vortice.Graphics.D3D11
             {
                 ByteWidth = descriptor.SizeInBytes,
                 Usage = (Vortice.DirectX.Direct3D11.Usage)descriptor.Usage,
-                BindFlags = Convert(descriptor.BufferUsage),
-                CpuAccessFlags = Convert(descriptor.Usage),
+                BindFlags = descriptor.BufferUsage.ToDirectX(),
+                CpuAccessFlags = descriptor.Usage.ToDirectX(),
                 OptionFlags = ResourceOptionFlags.None,
                 StructureByteStride = 0
             };

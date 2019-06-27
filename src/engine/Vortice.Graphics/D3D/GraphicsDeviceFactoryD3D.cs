@@ -49,14 +49,7 @@ namespace Vortice.Graphics
 
         protected override GraphicsDevice CreateDeviceImpl(PowerPreference powerPreference)
         {
-            if (Backend == GraphicsBackend.Direct3D11)
-            {
-                return new D3D11.DeviceD3D11(DXGIFactory, Validation);
-            }
-            else
-            {
-                return new D3D12.DeviceD3D12((IDXGIFactory4)DXGIFactory);
-            }
+            return new D3D12.DeviceD3D12((IDXGIFactory4)DXGIFactory);
         }
     }
 }

@@ -3,7 +3,7 @@
 
 using Vortice.DirectX.Direct3D11;
 
-namespace Vortice.Graphics.D3D11
+namespace Vortice.Graphics.Direct3D11
 {
     internal class ShaderD3D11 : Shader
     {
@@ -20,11 +20,11 @@ namespace Vortice.Graphics.D3D11
                     D3D11Shader = device.D3D11Device.CreateVertexShader(bytecode.Data);
                     break;
 
-                case ShaderStages.TessellationControl:
+                case ShaderStages.Hull:
                     D3D11Shader = device.D3D11Device.CreateHullShader(bytecode.Data);
                     break;
 
-                case ShaderStages.TessellationEvaluation:
+                case ShaderStages.Domain:
                     D3D11Shader = device.D3D11Device.CreateDomainShader(bytecode.Data);
                     break;
 
@@ -32,7 +32,7 @@ namespace Vortice.Graphics.D3D11
                     D3D11Shader = device.D3D11Device.CreateGeometryShader(bytecode.Data);
                     break;
 
-                case ShaderStages.Fragment:
+                case ShaderStages.Pixel:
                     D3D11Shader = device.D3D11Device.CreatePixelShader(bytecode.Data);
                     break;
 
