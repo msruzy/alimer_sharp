@@ -30,8 +30,8 @@ namespace Vortice.Graphics
             { PixelFormat.RG8SInt,          Format.R8G8_SInt },
 
             // Packed 16-bit pixel formats
-            { PixelFormat.R5G6B5UNorm,      Format.B5G6R5_UNorm },
-            { PixelFormat.RGBA4UNorm,       Format.B4G4R4A4_UNorm },
+            { PixelFormat.B5G6R5UNorm,      Format.B5G6R5_UNorm },
+            { PixelFormat.BGRA4UNorm,       Format.B4G4R4A4_UNorm },
 
             // 32-bit pixel formats
             { PixelFormat.R32UInt,          Format.R32_UInt },
@@ -52,9 +52,7 @@ namespace Vortice.Graphics
 
             // Packed 32-Bit Pixel formats
             { PixelFormat.RGB10A2UNorm,     Format.R10G10B10A2_UNorm },
-            { PixelFormat.RGB10A2UInt,      Format.R10G10B10A2_UInt },
             { PixelFormat.RG11B10Float,     Format.R11G11B10_Float },
-            { PixelFormat.RGB9E5Float,      Format.R9G9B9E5_SharedExp },
 
             // 64-Bit Pixel Formats
             { PixelFormat.RG32UInt,         Format.R32G32_UInt },
@@ -76,24 +74,23 @@ namespace Vortice.Graphics
             { PixelFormat.Depth32Float,     Format.D32_Float },
             { PixelFormat.Depth24UNormStencil8, Format.D24_UNorm_S8_UInt },
             { PixelFormat.Depth32FloatStencil8, Format.D32_Float_S8X24_UInt },
-            { PixelFormat.Stencil8,             Format.D24_UNorm_S8_UInt },
 
             // Compressed BC formats
-            { PixelFormat.BC1UNorm,     Format.BC1_UNorm },
-            { PixelFormat.BC1UNormSrgb, Format.BC1_UNorm_SRgb },
-            { PixelFormat.BC2UNorm,     Format.BC2_UNorm },
-            { PixelFormat.BC2UNormSrgb, Format.BC2_UNorm_SRgb },
-            { PixelFormat.BC3UNorm,     Format.BC3_UNorm },
-            { PixelFormat.BC3UNormSrgb, Format.BC3_UNorm_SRgb },
-            { PixelFormat.BC4UNorm,     Format.BC4_UNorm },
-            { PixelFormat.BC4SNorm,     Format.BC4_SNorm },
-            { PixelFormat.BC5UNorm,     Format.BC5_UNorm },
-            { PixelFormat.BC5SNorm,     Format.BC5_SNorm },
+            { PixelFormat.BC1RGBAUNorm,     Format.BC1_UNorm },
+            { PixelFormat.BC1RGBAUNormSrgb, Format.BC1_UNorm_SRgb },
+            { PixelFormat.BC2RGBAUNorm,     Format.BC2_UNorm },
+            { PixelFormat.BC2RGBAUNormSrgb, Format.BC2_UNorm_SRgb },
+            { PixelFormat.BC3RGBAUNorm,     Format.BC3_UNorm },
+            { PixelFormat.BC3RGBAUNormSrgb, Format.BC3_UNorm_SRgb },
+            { PixelFormat.BC4RUNorm,     Format.BC4_UNorm },
+            { PixelFormat.BC4RSNorm,     Format.BC4_SNorm },
+            { PixelFormat.BC5RGUNorm,     Format.BC5_UNorm },
+            { PixelFormat.BC5RGSNorm,     Format.BC5_SNorm },
 
-            { PixelFormat.BC6HS16,      Format.BC6H_Sf16 },
-            { PixelFormat.BC6HU16,      Format.BC6H_Uf16 },
-            { PixelFormat.BC7UNorm,     Format.BC7_UNorm },
-            { PixelFormat.BC7UNormSrgb, Format.BC7_UNorm_SRgb },
+            { PixelFormat.BC6HRGBSFloat,      Format.BC6H_Sf16 },
+            { PixelFormat.BC6HRGBUFloat,      Format.BC6H_Uf16 },
+            { PixelFormat.BC7RGBAUNorm,     Format.BC7_UNorm },
+            { PixelFormat.BC7RGBAUNormSrgb, Format.BC7_UNorm_SRgb },
 
             // Compressed PVRTC Pixel Formats
             { PixelFormat.PVRTC_RGB2,   Format.Unknown },
@@ -159,39 +156,44 @@ namespace Vortice.Graphics
             { VertexFormat.UInt1010102Norm,     Format.R10G10B10A2_UNorm },
         };
 
-        public static Format ConvertPixelFormat(PixelFormat format) => _formatsMap[format];
+        #region ToDirectX Methods
+        public static Format ToDirectX(this PixelFormat format) => _formatsMap[format];
 
-        public static PixelFormat ConvertPixelFormat(Format format) => _formatsMap[format];
+        public static Format ToDirectX(this VertexFormat format) => _vertexFormatsMap[format];
 
-        public static Format ConvertVertexFormat(VertexFormat format) => _vertexFormatsMap[format];
-        public static VertexFormat ConvertVertexFormat(Format format) => _vertexFormatsMap[format];
-
-        public static Vortice.DirectX.Direct3D.PrimitiveTopology Convert(PrimitiveTopology topology, int patches)
+        public static DirectX.Direct3D.PrimitiveTopology ToDirectX(this PrimitiveTopology topology, int patches)
         {
             switch (topology)
             {
                 case PrimitiveTopology.PointList:
-                    return Vortice.DirectX.Direct3D.PrimitiveTopology.PointList;
+                    return DirectX.Direct3D.PrimitiveTopology.PointList;
 
                 case PrimitiveTopology.LineList:
-                    return Vortice.DirectX.Direct3D.PrimitiveTopology.LineList;
+                    return DirectX.Direct3D.PrimitiveTopology.LineList;
 
                 case PrimitiveTopology.LineStrip:
-                    return Vortice.DirectX.Direct3D.PrimitiveTopology.LineStrip;
+                    return DirectX.Direct3D.PrimitiveTopology.LineStrip;
 
                 case PrimitiveTopology.TriangeList:
-                    return Vortice.DirectX.Direct3D.PrimitiveTopology.TriangleList;
+                    return DirectX.Direct3D.PrimitiveTopology.TriangleList;
 
                 case PrimitiveTopology.TriangleStrip:
-                    return Vortice.DirectX.Direct3D.PrimitiveTopology.TriangleStrip;
+                    return DirectX.Direct3D.PrimitiveTopology.TriangleStrip;
 
                 case PrimitiveTopology.PatchList:
-                    return (Vortice.DirectX.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints) + patches - 1;
+                    return (DirectX.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints) + patches - 1;
 
                 default:
-                    return Vortice.DirectX.Direct3D.PrimitiveTopology.Undefined;
+                    return DirectX.Direct3D.PrimitiveTopology.Undefined;
             }
         }
+        #endregion ToDirectX Methods
+
+        #region FromDirectX Methods
+        public static PixelFormat FromDirectXPixelFormat(this Format format) => _formatsMap[format];
+
+        public static VertexFormat FromDirectXVertexFormat(this Format format) => _vertexFormatsMap[format];
+        #endregion FromDirectX Methods
 
         private class FormatMap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
         {

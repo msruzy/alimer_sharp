@@ -10,7 +10,7 @@ using Vortice.DirectX.Direct3D;
 using Vortice.Diagnostics;
 using static Vortice.DirectX.Direct3D11.D3D11;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Vortice.Graphics.D3D11
 {
     internal unsafe class DeviceD3D11 : GraphicsDevice
     {

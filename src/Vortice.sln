@@ -41,8 +41,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Presentation", "pre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Studio", "editor\Vortice.Studio\Vortice.Studio.csproj", "{2A1479B4-43CC-4E4C-AB30-983A094C911C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Graphics.Direct3D11", "engine\Vortice.Graphics.Direct3D11\Vortice.Graphics.Direct3D11.csproj", "{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -231,22 +229,6 @@ Global
 		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|x64.Build.0 = Release|Any CPU
 		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|x86.ActiveCfg = Release|Any CPU
 		{2A1479B4-43CC-4E4C-AB30-983A094C911C}.Release|x86.Build.0 = Release|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Debug|ARM.Build.0 = Debug|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Debug|x64.Build.0 = Debug|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Debug|x86.Build.0 = Debug|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Release|ARM.ActiveCfg = Release|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Release|ARM.Build.0 = Release|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Release|x64.ActiveCfg = Release|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Release|x64.Build.0 = Release|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Release|x86.ActiveCfg = Release|Any CPU
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -264,7 +246,6 @@ Global
 		{A3208E21-55C8-41CC-8DC4-C70A97A4C13D} = {FAB2ABB8-1CEF-452B-A86E-995AB9907B37}
 		{CF4C4EFC-C7FF-4F90-9946-8AE66276ABDF} = {207B399A-19C7-48ED-AC82-87558CB621F2}
 		{2A1479B4-43CC-4E4C-AB30-983A094C911C} = {DCF5F965-78CD-41E4-B7EE-5735FE0FFBF4}
-		{308BCF7B-03DD-4CC1-8F85-F016A148A7FB} = {FAB2ABB8-1CEF-452B-A86E-995AB9907B37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF0375B3-E304-4A53-8E5F-FC9D23743647}

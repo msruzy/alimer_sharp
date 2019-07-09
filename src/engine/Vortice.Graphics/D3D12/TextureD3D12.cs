@@ -17,7 +17,7 @@ namespace Vortice.Graphics.D3D12
             ID3D12Resource nativeTexture)
             : base(device, ref descriptor)
         {
-            DXGIFormat = D3DConvert.ConvertPixelFormat(descriptor.Format);
+            DXGIFormat = descriptor.Format.ToDirectX();
             if (nativeTexture == null)
             {
             }

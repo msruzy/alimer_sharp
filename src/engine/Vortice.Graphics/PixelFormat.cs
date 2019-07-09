@@ -14,7 +14,6 @@ namespace Vortice.Graphics
         Invalid = 0,
 
         // 8-bit pixel formats
-
         R8UNorm,
         R8SNorm,
         R8UInt,
@@ -32,8 +31,8 @@ namespace Vortice.Graphics
         RG8SInt,
 
         // Packed 16-bit pixel formats
-        R5G6B5UNorm,
-        RGBA4UNorm,
+        B5G6R5UNorm,
+        BGRA4UNorm,
 
         // 32-bit pixel formats
         R32UInt,
@@ -54,9 +53,7 @@ namespace Vortice.Graphics
 
         // Packed 32-Bit Pixel formats
         RGB10A2UNorm,
-        RGB10A2UInt,
         RG11B10Float,
-        RGB9E5Float,
 
         // 64-Bit Pixel Formats
         RG32UInt,
@@ -78,32 +75,31 @@ namespace Vortice.Graphics
         Depth32Float,
         Depth24UNormStencil8,
         Depth32FloatStencil8,
-        Stencil8,
 
         // Compressed BC formats
-        BC1UNorm,       // DXT1
-        BC1UNormSrgb,
-        BC2UNorm,       // DXT3
-        BC2UNormSrgb,
-        BC3UNorm,       // DXT5
-        BC3UNormSrgb,
-        BC4UNorm,   // RGTC Unsigned Red
-        BC4SNorm,   // RGTC Signed Red
-        BC5UNorm,   // RGTC Unsigned RG
-        BC5SNorm,   // RGTC Signed RG
-
-        /// <summary>
-        /// Compressed format with four floating-point components.
-        /// </summary>
-        BC6HS16,
+        BC1RGBAUNorm,
+        BC1RGBAUNormSrgb,
+        BC2RGBAUNorm,
+        BC2RGBAUNormSrgb,
+        BC3RGBAUNorm,
+        BC3RGBAUNormSrgb,
+        BC4RUNorm,  
+        BC4RSNorm,
+        BC5RGUNorm,   
+        BC5RGSNorm,
 
         /// <summary>
         /// Compressed format with four unsigned floating-point components.
         /// </summary>
-        BC6HU16,
+        BC6HRGBUFloat,
 
-        BC7UNorm,
-        BC7UNormSrgb,
+        /// <summary>
+        /// Compressed format with four floating-point components.
+        /// </summary>
+        BC6HRGBSFloat,
+
+        BC7RGBAUNorm,
+        BC7RGBAUNormSrgb,
 
         // Compressed PVRTC Pixel Formats
         PVRTC_RGB2,

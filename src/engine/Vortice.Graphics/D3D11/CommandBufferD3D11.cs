@@ -6,7 +6,7 @@ using System.Drawing;
 using Vortice.DirectX.Direct3D11;
 using Vortice.Mathematics;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Vortice.Graphics.D3D11
 {
     internal class CommandBufferD3D11 : CommandBuffer
     {

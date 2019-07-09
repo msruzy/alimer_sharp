@@ -25,7 +25,7 @@ namespace Vortice.Graphics.D3D12
                     d3dTextureDesc.Height,
                     d3dTextureDesc.MipLevels,
                     d3dTextureDesc.DepthOrArraySize,
-                    D3DConvert.ConvertPixelFormat(d3dTextureDesc.Format),
+                    d3dTextureDesc.Format.FromDirectXPixelFormat(),
                     D3D12Convert.Convert(d3dTextureDesc.Flags),
                     (SampleCount)d3dTextureDesc.SampleDescription.Count);
 

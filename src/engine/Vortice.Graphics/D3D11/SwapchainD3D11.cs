@@ -7,7 +7,7 @@ using Vortice.DirectX;
 using Vortice.DirectX.Direct3D11;
 using Vortice.DirectX.DXGI;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Vortice.Graphics.D3D11
 {
     internal unsafe class SwapchainD3D11 : SwapChain
     {

@@ -4,7 +4,7 @@
 using System;
 using Vortice.DirectX.Direct3D11;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Vortice.Graphics.D3D11
 {
     internal class BufferD3D11 : GraphicsBuffer
     {

@@ -46,7 +46,7 @@ namespace Vortice.Graphics.D3D12
                     inputElements[elementIndex++] = new InputElementDescription(
                         "ATTRIBUTE",
                         vertexAttribute.Location,
-                        D3DConvert.ConvertVertexFormat(vertexAttribute.Format),
+                        vertexAttribute.Format.ToDirectX(),
                         vertexAttribute.Offset != 0 ? vertexAttribute.Offset : currentOffset,
                         slot,
                         inputRate == VertexInputRate.Vertex ? InputClassification.PerVertexData : InputClassification.PerInstanceData,
@@ -68,12 +68,12 @@ namespace Vortice.Graphics.D3D12
                 BlendState = BlendDescription.Opaque,
                 DepthStencilState = DepthStencilDescription.None,
                 RenderTargetFormats = new[] { Format.R8G8B8A8_UNorm },
-                DepthStencilFormat = D3DConvert.ConvertPixelFormat(descriptor.DepthStencilAttachmentFormat),
+                DepthStencilFormat = descriptor.DepthStencilAttachmentFormat.ToDirectX(),
                 SampleDescription = new SampleDescription(sampleCount, 0)
             };
 
             D3D12PipelineState = device.D3D12Device.CreateGraphicsPipelineState(psoDesc);
-            PrimitiveTopology = D3DConvert.Convert(descriptor.PrimitiveTopology, 1);
+            PrimitiveTopology = descriptor.PrimitiveTopology.ToDirectX(1);
         }
 
         /// <inheritdoc/>

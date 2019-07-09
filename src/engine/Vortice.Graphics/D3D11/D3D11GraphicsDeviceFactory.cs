@@ -4,9 +4,9 @@
 using Vortice.DirectX.DXGI;
 using static Vortice.DirectX.DXGI.DXGI;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Vortice.Graphics.D3D11
 {
-    public sealed class D3D11GraphicsDeviceFactory : GraphicsDeviceFactory
+    internal class D3D11GraphicsDeviceFactory : GraphicsDeviceFactory
     {
         public readonly IDXGIFactory1 DXGIFactory;
 

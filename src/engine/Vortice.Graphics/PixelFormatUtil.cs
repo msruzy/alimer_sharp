@@ -61,8 +61,8 @@ namespace Vortice.Graphics
         /// <returns><c>true</c> if is compressed, <c>false</c> otherwise.</returns>
         public static bool IsCompressed(PixelFormat format)
         {
-            return format >= PixelFormat.BC1UNorm 
-                && format <= PixelFormat.BC7UNormSrgb;
+            return format >= PixelFormat.BC1RGBAUNorm 
+                && format <= PixelFormat.BC7RGBAUNormSrgb;
         }
     }
 }
