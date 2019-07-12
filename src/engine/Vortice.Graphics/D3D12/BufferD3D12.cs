@@ -10,17 +10,37 @@ namespace Vortice.Graphics.D3D12
     {
         private ID3D12Resource _resource;
         private readonly ulong _creationFrame;
+        private ResourceStates _resourceState;
 
         public BufferD3D12(DeviceD3D12 device, in BufferDescriptor descriptor, IntPtr initialData)
             : base(device, descriptor)
         {
             _creationFrame = device.CurrentCPUFrame;
+            ulong bufferSize = descriptor.SizeInBytes;
+            if (descriptor.Usage == BufferUsage.Constant)
+            {
+                bufferSize = Utilities.AlignUp(descriptor.SizeInBytes);
+            }
+
+            ResourceFlags resourceFlags = ResourceFlags.None;
+            _resourceState = ResourceStates.Common;
+            HeapType heapType = HeapType.Default;
+            if (descriptor.ResourceUsage == GraphicsResourceUsage.Staging)
+            {
+                heapType = HeapType.Readback;
+                _resourceState = ResourceStates.CopyDestination;
+            }
+            else if (descriptor.ResourceUsage == GraphicsResourceUsage.Dynamic)
+            {
+                heapType = HeapType.Upload;
+                _resourceState = ResourceStates.GenericRead;
+            }
+
             _resource = device.D3D12Device.CreateCommittedResource(
-                new HeapProperties(HeapType.Upload),
+                new HeapProperties(heapType),
                 HeapFlags.None,
-                ResourceDescription.Buffer((ulong)descriptor.SizeInBytes),
-                ResourceStates.GenericRead,
-                null);
+                ResourceDescription.Buffer(bufferSize, resourceFlags, 0),
+                _resourceState);
         }
 
         /// <inheritdoc/>

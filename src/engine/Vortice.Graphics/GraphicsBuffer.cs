@@ -13,12 +13,12 @@ namespace Vortice.Graphics
         /// <summary>
         /// Gets the size in bytes of the buffer.
         /// </summary>
-        public BufferUsage BufferUsage { get; }
+        public uint SizeInBytes { get; }
 
         /// <summary>
         /// Gets the <see cref="BufferUsage"/>.
         /// </summary>
-        public int SizeInBytes { get; }
+        public BufferUsage Usage { get; }
 
         /// <summary>
         /// Create a new instance of <see cref="GraphicsBuffer"/> class.
@@ -26,10 +26,10 @@ namespace Vortice.Graphics
         /// <param name="device">The creation device</param>
         /// <param name="descriptor">The descriptor</param>
         protected GraphicsBuffer(GraphicsDevice device, in BufferDescriptor descriptor)
-            : base(device, GraphicsResourceType.Buffer, descriptor.Usage)
+            : base(device, GraphicsResourceType.Buffer, descriptor.ResourceUsage)
         {
             SizeInBytes = descriptor.SizeInBytes;
-            BufferUsage = descriptor.BufferUsage;
+            Usage = descriptor.Usage;
         }
     }
 }

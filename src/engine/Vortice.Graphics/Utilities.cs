@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Vortice.Graphics
 {
@@ -41,6 +42,13 @@ namespace Vortice.Graphics
             }
 
             return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint AlignUp(uint sizeInBytes)
+        {
+            const uint alignment = 255u;
+            return (sizeInBytes + alignment) & ~alignment;
         }
     }
 

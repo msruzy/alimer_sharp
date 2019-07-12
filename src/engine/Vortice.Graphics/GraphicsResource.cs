@@ -23,24 +23,24 @@ namespace Vortice.Graphics
         /// <summary>
         /// Gets the <see cref="GraphicsResourceUsage"/>.
         /// </summary>
-        public GraphicsResourceUsage Usage { get; }
+        public GraphicsResourceUsage ResourceUsage { get; }
 
         /// <summary>
         /// Create a new instance of <see cref="GraphicsResource"/> class.
         /// </summary>
         /// <param name="device">The creation <see cref="GraphicsDevice"/></param>
         /// <param name="resourceType">The <see cref="GraphicsResourceType"/></param>
-        /// <param name="usage">The <see cref="GraphicsResourceUsage"/></param>
+        /// <param name="resourceUsage">The <see cref="GraphicsResourceUsage"/></param>
         protected GraphicsResource(
             GraphicsDevice device,
             GraphicsResourceType resourceType,
-            GraphicsResourceUsage usage)
+            GraphicsResourceUsage resourceUsage)
         {
             Guard.NotNull(device, nameof(device), $"{nameof(GraphicsDevice)} cannot be null");
 
             Device = device;
             ResourceType = resourceType;
-            Usage = usage;
+            ResourceUsage = resourceUsage;
             device.TrackResource(this);
         }
 

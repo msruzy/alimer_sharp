@@ -28,7 +28,7 @@ namespace Vortice.Graphics.D3D11
 
             var cpuFlags = CpuAccessFlags.None;
             var resourceUsage = Vortice.DirectX.Direct3D11.Usage.Default;
-            var bindFlags = descriptor.TextureUsage.ToDirectX(descriptor.Format);
+            var bindFlags = descriptor.Usage.ToDirectX(descriptor.Format);
             var optionFlags = ResourceOptionFlags.None;
 
             var arraySize = descriptor.ArrayLayers;

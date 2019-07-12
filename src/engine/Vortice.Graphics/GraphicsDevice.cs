@@ -101,10 +101,10 @@ namespace Vortice.Graphics
 
         public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor, IntPtr initialData)
         {
-            Guard.IsTrue(descriptor.BufferUsage != BufferUsage.None, nameof(descriptor.Usage), $"BufferUsage cannot be {nameof(BufferUsage.None)}");
-            Guard.MustBeGreaterThan(descriptor.SizeInBytes, 0, nameof(descriptor.SizeInBytes));
+            Guard.IsTrue(descriptor.Usage != BufferUsage.None, nameof(descriptor.Usage), $"BufferUsage cannot be {nameof(BufferUsage.None)}");
+            Guard.MustBeGreaterThan(descriptor.SizeInBytes, 0u, nameof(descriptor.SizeInBytes));
 
-            if (descriptor.Usage == GraphicsResourceUsage.Immutable
+            if (descriptor.ResourceUsage == GraphicsResourceUsage.Immutable
                 && initialData == IntPtr.Zero)
             {
                 throw new GraphicsException("Immutable buffer needs valid initial data.");
@@ -115,7 +115,7 @@ namespace Vortice.Graphics
 
         public GraphicsBuffer CreateBuffer(in BufferDescriptor descriptor) => CreateBuffer(descriptor, IntPtr.Zero);
 
-        public unsafe GraphicsBuffer CreateBuffer<T>(BufferDescriptor descriptor, T[] initialData) where T : struct
+        public unsafe GraphicsBuffer CreateBuffer<T>(BufferDescriptor descriptor, T[] initialData) where T : unmanaged
         {
             Guard.NotNull(initialData, nameof(initialData));
             Guard.MustBeGreaterThan(initialData.Length, 0, nameof(initialData));
@@ -123,7 +123,7 @@ namespace Vortice.Graphics
             // Calculate size in bytes if not provided.
             if (descriptor.SizeInBytes == 0)
             {
-                descriptor.SizeInBytes = Unsafe.SizeOf<T>() * initialData.Length;
+                descriptor.SizeInBytes = (uint)(sizeof(T) * initialData.Length);
             }
 
             var span = initialData.AsSpan();
@@ -137,11 +137,11 @@ namespace Vortice.Graphics
         /// <param name="bufferUsage">The <see cref="BufferUsage"/></param>
         /// <param name="initialData">Valid iniitial data</param>
         /// <returns>New instance of <see cref="GraphicsBuffer"/></returns>
-        public GraphicsBuffer CreateBuffer<T>(BufferUsage bufferUsage, T[] initialData) where T : struct
+        public unsafe GraphicsBuffer CreateBuffer<T>(BufferUsage bufferUsage, Span<T> initialData) where T : unmanaged
         {
             return CreateBuffer(
-                new BufferDescriptor(Unsafe.SizeOf<T>() * initialData.Length, bufferUsage, GraphicsResourceUsage.Immutable),
-                initialData);
+                new BufferDescriptor((uint)(sizeof(T) * initialData.Length), bufferUsage, GraphicsResourceUsage.Immutable),
+                (IntPtr)Unsafe.AsPointer(ref initialData.GetPinnableReference()));
         }
 
         public Texture CreateTexture(TextureDescriptor descriptor) => CreateTexture(ref descriptor);

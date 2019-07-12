@@ -15,15 +15,15 @@ namespace Vortice.Graphics.D3D11
         {
             var description = new BufferDescription()
             {
-                ByteWidth = descriptor.SizeInBytes,
-                Usage = (Vortice.DirectX.Direct3D11.Usage)descriptor.Usage,
-                BindFlags = descriptor.BufferUsage.ToDirectX(),
-                CpuAccessFlags = descriptor.Usage.ToDirectX(),
+                ByteWidth = (int)descriptor.SizeInBytes,
+                Usage = (Vortice.DirectX.Direct3D11.Usage)descriptor.ResourceUsage,
+                BindFlags = descriptor.Usage.ToDirectX(),
+                CpuAccessFlags = descriptor.ResourceUsage.ToDirectX(),
                 OptionFlags = ResourceOptionFlags.None,
                 StructureByteStride = 0
             };
 
-            if ((descriptor.BufferUsage & BufferUsage.Indirect) != 0)
+            if ((descriptor.Usage & BufferUsage.Indirect) != 0)
             {
                 description.OptionFlags |= ResourceOptionFlags.DrawIndirectArgs;
             }

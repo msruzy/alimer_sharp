@@ -33,12 +33,12 @@ namespace DrawTriangle
                 new VertexPositionColor(new Vector3(0.5f, -0.5f, 0.0f), new Color4(0.0f, 1.0f, 0.0f)),
                 new VertexPositionColor(new Vector3(-0.5f, -0.5f, 0.0f), new Color4(0.0f, 0.0f, 1.0f)),
             };
-            _vertexBuffer = GraphicsDevice.CreateBuffer(BufferUsage.Vertex, vertices);
+            _vertexBuffer = GraphicsDevice.CreateBuffer(BufferUsage.Vertex, vertices.AsSpan());
 
             unsafe
             {
                 var worldViewProjection = Matrix4x4.Identity;
-                _matricesConstantBuffer = GraphicsDevice.CreateBuffer(new BufferDescriptor(Unsafe.SizeOf<Matrix4x4>(), BufferUsage.Constant), (IntPtr)Unsafe.AsPointer(ref worldViewProjection));
+                _matricesConstantBuffer = GraphicsDevice.CreateBuffer(new BufferDescriptor((uint)Unsafe.SizeOf<Matrix4x4>(), BufferUsage.Constant), (IntPtr)Unsafe.AsPointer(ref worldViewProjection));
             }
 
             const string shaderSource = @"struct PSInput {

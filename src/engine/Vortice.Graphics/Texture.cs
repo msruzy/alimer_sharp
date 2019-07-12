@@ -48,7 +48,7 @@ namespace Vortice.Graphics
         /// <summary>
         /// Gets the texture usage.
         /// </summary>
-        public TextureUsage TextureUsage { get; }
+        public TextureUsage Usage { get; }
 
         /// <summary>
 		/// Gets the number of samples.
@@ -75,7 +75,7 @@ namespace Vortice.Graphics
             MipLevels = descriptor.MipLevels;
             ArrayLayers = descriptor.ArrayLayers;
             Format = descriptor.Format;
-            TextureUsage = descriptor.TextureUsage;
+            Usage = descriptor.Usage;
             Samples = descriptor.Samples;
         }
 

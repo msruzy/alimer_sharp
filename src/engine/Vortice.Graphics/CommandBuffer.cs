@@ -74,7 +74,7 @@ namespace Vortice.Graphics
         public void SetVertexBuffer(GraphicsBuffer buffer, int offset, int index)
         {
             Guard.NotNull(buffer, nameof(buffer));
-            Guard.IsTrue((buffer.BufferUsage & BufferUsage.Vertex) != BufferUsage.None, nameof(buffer), $"Buffer must have {BufferUsage.Vertex}");
+            Guard.IsTrue((buffer.Usage & BufferUsage.Vertex) != BufferUsage.None, nameof(buffer), $"Buffer must have {BufferUsage.Vertex}");
 
             SetVertexBufferImpl(buffer, offset, index);
         }
