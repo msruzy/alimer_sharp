@@ -1,11 +1,17 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
-
+  
   <PropertyGroup>
-    <TargetFramework>$(TargetFrameworkTool)</TargetFramework>
-    <UseWpf>true</UseWpf>
-    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+    <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
+    <OutputTypeEx>library</OutputTypeEx>
     <AssemblyName>Vortice.Presentation</AssemblyName>
     <AssemblyTitle>Vortice Presentation</AssemblyTitle>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UseWpf>true</UseWpf>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ExtrasEnableImplicitWpfReferences>true</ExtrasEnableImplicitWpfReferences>
+    <ExtrasEnableImplicitWinFormsReferences>true</ExtrasEnableImplicitWinFormsReferences>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +21,15 @@
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.5.0" />
     <PackageReference Include="Vortice.DirectX.Direct2D" Version="$(VorticeDirectXVersion)" />
     <PackageReference Include="Vortice.DirectX.Direct3D11" Version="$(VorticeDirectXVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Modules\Shell\Views\ShellView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using Vortice;
 using Vortice.Assets.Graphics;
 using Vortice.Graphics;
+using Vortice.Graphics.Direct3D11;
 using Vortice.Mathematics;
 
 namespace DrawTriangle
@@ -21,6 +22,11 @@ namespace DrawTriangle
 
         public DrawTriangleGame()
         {
+        }
+
+        protected override GraphicsDeviceFactory CreateGraphicsFactory(bool validation)
+        {
+            return new D3D11GraphicsDeviceFactory(validation);
         }
 
         protected override void LoadContent()

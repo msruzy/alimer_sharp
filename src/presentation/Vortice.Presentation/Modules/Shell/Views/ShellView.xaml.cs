@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows;
+using MahApps.Metro.Controls;
 using Vortice.Presentation.Modules.Shell.ViewModels;
 
 namespace Vortice.Presentation.Modules.Shell.Views
 {
-	public partial class ShellView
+	public partial class ShellView : MetroWindow
     {
         public ShellView()
 		{

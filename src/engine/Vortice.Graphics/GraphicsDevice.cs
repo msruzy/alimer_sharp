@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace Vortice.Graphics
 {
@@ -23,7 +22,7 @@ namespace Vortice.Graphics
         /// <summary>
         /// Gets the device <see cref="GraphicsBackend"/>.
         /// </summary>
-        public GraphicsBackend Backend { get; }
+        public GraphicsBackend Backend => Info.Backend;
 
         /// <summary>
         /// Gets value indicating gpu validation enable state.
@@ -31,20 +30,20 @@ namespace Vortice.Graphics
         public bool Validation { get; protected set; }
 
         /// <summary>
-        /// Gets the features of this device.
+        /// Gets the information of this device.
         /// </summary>
-        public GraphicsDeviceFeatures Features { get; }
+        public GraphicsDeviceInfo Info { get; } = new GraphicsDeviceInfo();
+
+        /// <summary>
+        /// Gets the capabilities of this device.
+        /// </summary>
+        public GraphicsDeviceCapabilities Capabilities { get; } = new GraphicsDeviceCapabilities();
 
         /// <summary>
         /// Create new instance of <see cref="GraphicsDevice"/> class.
         /// </summary>
-        /// <param name="backend"></param>
-        protected GraphicsDevice(GraphicsBackend backend)
+        protected GraphicsDevice()
         {
-            Guard.IsTrue(backend != GraphicsBackend.Default, nameof(backend), "Invalid backend");
-
-            Backend = backend;
-            Features = new GraphicsDeviceFeatures();
         }
 
         /// <inheritdoc/>

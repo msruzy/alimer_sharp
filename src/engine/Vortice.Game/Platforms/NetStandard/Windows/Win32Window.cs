@@ -3,7 +3,6 @@
 
 using System;
 using System.Drawing;
-using Vortice.DirectX;
 using Vortice.Graphics;
 using static Vortice.Windows.User32;
 
@@ -85,7 +84,7 @@ namespace Vortice.Windows
 
             if (width > 0 && height > 0)
             {
-                var rect = new InteropRect(0, 0, (int)(width * ContentScale), (int)(height * ContentScale));
+                var rect = new Rect(0, 0, (int)(width * ContentScale), (int)(height * ContentScale));
 
                 // Adjust according to window styles
                 AdjustWindowRectEx(

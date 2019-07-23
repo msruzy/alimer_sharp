@@ -6,7 +6,7 @@
     <PackageOutputPath>$(RepositoryRootDirectory)bin\Packages\$(Configuration)</PackageOutputPath>
 
     <DebugType Condition=" '$(Configuration)' == 'Release' ">pdbonly</DebugType>
-    <DebugType Condition=" '$(Configuration)' == 'Debug' ">Full</DebugType>
+    <DebugType Condition=" '$(Configuration)' == 'Debug' ">full</DebugType>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CS1591;CS1701</NoWarn>
@@ -21,8 +21,6 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/amerkoleci/vortice</PackageProjectUrl>
     <PackageTags>3D Engine Graphics gamedev vortice Direct3D DirectX Vulkan OpenGL Metal Core Standard Game</PackageTags>
-
-    <TargetFrameworkTool>net472</TargetFrameworkTool>
   </PropertyGroup>
 
   <PropertyGroup>

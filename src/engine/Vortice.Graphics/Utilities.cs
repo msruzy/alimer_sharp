@@ -9,7 +9,7 @@ namespace Vortice.Graphics
     /// <summary>
     /// Utilities class.
     /// </summary>
-    internal static class Utilities
+    public static class Utilities
     {
         public static bool NullableEquals<T>(T? left, T? right) where T : struct, IEquatable<T>
         {

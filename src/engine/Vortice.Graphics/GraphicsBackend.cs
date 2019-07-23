@@ -9,9 +9,14 @@ namespace Vortice.Graphics
     public enum GraphicsBackend
     {
         /// <summary>
-        /// Best supported device on running platform.
+        /// Invalid backend.
         /// </summary>
-        Default,
+        Invalid,
+
+        /// <summary>
+        /// Null backend.
+        /// </summary>
+        Null,
 
         /// <summary>
 		/// DirectX 11.1+ backend.
@@ -27,15 +32,5 @@ namespace Vortice.Graphics
         /// Vulkan backend
         /// </summary>
         Vulkan,
-
-        /// <summary>
-        /// OpenGL 3.3+ backend.
-        /// </summary>
-        OpenGL,
-
-        /// <summary>
-        /// OpenGLES 2.0+ backend
-        /// </summary>
-        OpenGLES,
     }
 }

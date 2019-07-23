@@ -14,6 +14,11 @@ namespace Vortice.Graphics.Tests
             GraphicsBackend backend = GraphicsBackend.Default,
             bool validation = false)
         {
+            switch (backend)
+            {
+
+            }
+
             if (!GraphicsDeviceFactory.IsSupported(backend))
             {
                 throw new GraphicsException($"Backend {backend} is not supported");

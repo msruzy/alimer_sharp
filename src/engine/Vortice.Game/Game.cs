@@ -405,10 +405,7 @@ namespace Vortice
             _graphicsDevice.Frame();
         }
 
-        protected virtual GraphicsDeviceFactory CreateGraphicsFactory(bool validation)
-        {
-            return GraphicsDeviceFactory.Create(GraphicsBackend.Default, validation);
-        }
+        protected abstract GraphicsDeviceFactory CreateGraphicsFactory(bool validation);
 
         internal void InitializeBeforeRun()
         {
