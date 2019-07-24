@@ -18,7 +18,7 @@ namespace Vortice.Graphics.Direct3D12
         public CommandBufferD3D12(CommandQueueD3D12 queue, CommandListType type)
             : base(queue)
         {
-            var d3d12Device = ((GraphicsDeviceD3D12)queue.Device).D3D12Device;
+            var d3d12Device = ((D3D12GraphicsDevice)queue.Device).D3D12Device;
 
             _commandAllocator = d3d12Device.CreateCommandAllocator(type);
             CommandList = d3d12Device.CreateCommandList(type, _commandAllocator, null);

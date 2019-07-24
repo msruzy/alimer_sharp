@@ -12,7 +12,7 @@ namespace Vortice.Graphics.Direct3D12
         public readonly ID3D12Resource Resource;
 
         public TextureD3D12(
-            GraphicsDeviceD3D12 device,
+            D3D12GraphicsDevice device,
             ref TextureDescriptor descriptor,
             ID3D12Resource nativeTexture)
             : base(device, ref descriptor)

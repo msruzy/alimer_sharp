@@ -41,5 +41,10 @@ namespace Vortice
 		/// Universal Windows platform.
 		/// </summary>
 		UWP,
-	}
+
+        /// <summary>
+		/// Xbox One platform.
+		/// </summary>
+		XboxOne,
+    }
 }

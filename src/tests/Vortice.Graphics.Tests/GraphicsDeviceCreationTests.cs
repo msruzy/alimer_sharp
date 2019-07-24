@@ -17,8 +17,8 @@ namespace Vortice.Graphics.Tests
         [Fact]
         public void FactoryHasDefaultAdapter()
         {
-            Assert.NotNull(_graphicsDevice.Features);
-            Assert.NotEqual(0, _graphicsDevice.Features.VendorId);
+            Assert.NotEqual(GraphicsBackend.Invalid, _graphicsDevice.Backend);
+            Assert.NotEqual(0u, _graphicsDevice.Info.VendorId);
         }
     }
 

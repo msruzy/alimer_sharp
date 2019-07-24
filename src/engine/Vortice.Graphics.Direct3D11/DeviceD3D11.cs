@@ -28,7 +28,7 @@ namespace Vortice.Graphics.Direct3D11
         public readonly IDXGIAdapter1 DXGIAdapter;
 
         public readonly ID3D11Device D3D11Device;
-        public readonly FeatureLevel D3D11FeatureLevel;
+        public readonly FeatureLevel FeatureLevel;
         public readonly ID3D11DeviceContext D3D11DeviceContext;
 
         // Device1
@@ -65,7 +65,7 @@ namespace Vortice.Graphics.Direct3D11
                     creationFlags,
                     s_featureLevels,
                     out D3D11Device,
-                    out D3D11FeatureLevel,
+                    out FeatureLevel,
                     out D3D11DeviceContext).Failure)
                 {
                     // Remove debug flag not being supported.
@@ -73,7 +73,7 @@ namespace Vortice.Graphics.Direct3D11
 
                     if (D3D11CreateDevice(null, DriverType.Hardware,
                         creationFlags, s_featureLevels,
-                        out D3D11Device, out D3D11FeatureLevel, out D3D11DeviceContext).Failure)
+                        out D3D11Device, out FeatureLevel, out D3D11DeviceContext).Failure)
                     {
                         throw new GraphicsException("Cannot create D3D11 Device");
                     }
@@ -87,7 +87,7 @@ namespace Vortice.Graphics.Direct3D11
 
             // Detect multithreading
             FeatureDataThreading featureDataThreading = default;
-            if (D3D11Device.CheckFeatureSupport(Vortice.DirectX.Direct3D11.Feature.Threading, ref featureDataThreading))
+            if (D3D11Device.CheckFeatureSupport(DirectX.Direct3D11.Feature.Threading, ref featureDataThreading))
             {
                 SupportsConcurrentResources = featureDataThreading.DriverConcurrentCreates;
                 SupportsCommandLists = featureDataThreading.DriverCommandLists;
@@ -122,10 +122,12 @@ namespace Vortice.Graphics.Direct3D11
         private void InitializeFeatures()
         {
             var adapterDesc = DXGIAdapter.Description1;
-            //Features.VendorId = adapterDesc.VendorId;
-            //Features.DeviceId = adapterDesc.DeviceId;
-            //Features.DeviceName = adapterDesc.Description;
-            //Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
+
+            Info.Backend = GraphicsBackend.Direct3D11;
+            Info.BackendName = "Direct3D11 - Level " + FeatureLevel.GetFeatureLevelToVersion();
+            Info.DeviceName = adapterDesc.Description;
+            Info.VendorId = (uint)adapterDesc.VendorId;
+            Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
 
             //if (SupportsConcurrentResources
             //    && SupportsCommandLists)

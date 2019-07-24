@@ -10,7 +10,7 @@ namespace Vortice.Graphics.Direct3D12
         public CommandListType CommandListType { get; }
         public ID3D12CommandQueue D3D12CommandQueue { get; }
 
-        public CommandQueueD3D12(GraphicsDeviceD3D12 device, CommandQueueType queueType)
+        public CommandQueueD3D12(D3D12GraphicsDevice device, CommandQueueType queueType)
             : base(device, queueType)
         {
             switch (queueType)

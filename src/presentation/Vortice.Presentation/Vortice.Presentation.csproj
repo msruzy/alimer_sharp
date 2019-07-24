@@ -1,17 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   
   <PropertyGroup>
-    <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
-    <OutputTypeEx>library</OutputTypeEx>
-    <AssemblyName>Vortice.Presentation</AssemblyName>
-    <AssemblyTitle>Vortice Presentation</AssemblyTitle>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <UseWpf>true</UseWpf>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ExtrasEnableImplicitWpfReferences>true</ExtrasEnableImplicitWpfReferences>
-    <ExtrasEnableImplicitWinFormsReferences>true</ExtrasEnableImplicitWinFormsReferences>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,12 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Modules\Shell\Views\ShellView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
+    <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" />
+    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
   </ItemGroup>
 
 </Project>

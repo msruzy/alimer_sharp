@@ -9,7 +9,7 @@ namespace Vortice.Graphics.Direct3D12
     {
         public readonly Vortice.DirectX.Direct3D12.ShaderBytecode D3D12ShaderBytecode;
 
-        public ShaderD3D12(GraphicsDeviceD3D12 device, ShaderBytecode bytecode)
+        public ShaderD3D12(D3D12GraphicsDevice device, ShaderBytecode bytecode)
             : base(device, bytecode)
         {
             D3D12ShaderBytecode = new Vortice.DirectX.Direct3D12.ShaderBytecode(bytecode.Data);

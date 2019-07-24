@@ -17,6 +17,8 @@ build:
 before_package:
 - cmd: msbuild /t:pack /p:Configuration=Release core/Vortice/Vortice.csproj
 - cmd: msbuild /t:pack /p:Configuration=Release engine/Vortice.Graphics/Vortice.Graphics.csproj
+- cmd: msbuild /t:pack /p:Configuration=Release engine/Vortice.Graphics.Direct3D11/Vortice.Graphics.Direct3D11.csproj
+- cmd: msbuild /t:pack /p:Configuration=Release engine/Vortice.Graphics.Direct3D12/Vortice.Graphics.Direct3D12.csproj
 - cmd: msbuild /t:pack /p:Configuration=Release engine/Vortice.Audio/Vortice.Audio.csproj
 - cmd: msbuild /t:pack /p:Configuration=Release engine/Vortice.Game/Vortice.Game.csproj
 

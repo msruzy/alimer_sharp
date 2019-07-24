@@ -1,34 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
-    <AssemblyName>Vortice.Studio</AssemblyName>
-    <AssemblyTitle>Vortice Studio</AssemblyTitle>
-    <!--<StartupObject>Vortice.Studio.Program</StartupObject>-->
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <UseWpf>true</UseWpf>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ExtrasEnableImplicitWpfReferences>true</ExtrasEnableImplicitWpfReferences>
-    <ExtrasEnableImplicitWinFormsReferences>true</ExtrasEnableImplicitWinFormsReferences>
-  </PropertyGroup>
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <StartupObject />
-    <NoWarn>$(NoWarn);SA1652</NoWarn>
-    <ApplicationIcon>Resources\Icons\Logo.ico</ApplicationIcon>
+    <TargetFramework>net472</TargetFramework>
+    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+    <!--<StartupObject>Vortice.Studio.Program</StartupObject>-->
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\presentation\Vortice.Presentation\Vortice.Presentation.csproj" />
+    <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" Exclude="App.xaml" />
+    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
+    <ProjectReference Include="..\..\presentation\Vortice.Presentation\Vortice.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

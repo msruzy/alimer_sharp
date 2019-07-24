@@ -10,7 +10,7 @@ namespace Vortice.Graphics.Direct3D12
         private readonly TextureD3D12[] _backbufferTextures;
 
         public SwapchainD3D12(
-            GraphicsDeviceD3D12 device,
+            D3D12GraphicsDevice device,
             SwapChainDescriptor descriptor,
             int backbufferCount)
             : base(device, descriptor, device.DXGIFactory, device.GraphicsQueue, backbufferCount, backbufferCount)

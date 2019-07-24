@@ -9,11 +9,11 @@ namespace Vortice.Graphics.Direct3D12
 {
     internal class FenceD3D12 : IDisposable
     {
-        public readonly GraphicsDeviceD3D12 Device;
+        public readonly D3D12GraphicsDevice Device;
         private ID3D12Fence _fence;
         private readonly AutoResetEvent _fenceEvent;
 
-        public FenceD3D12(GraphicsDeviceD3D12 device, ulong initialValue)
+        public FenceD3D12(D3D12GraphicsDevice device, ulong initialValue)
         {
             Device = device;
             _fence = device.D3D12Device.CreateFence(initialValue, FenceFlags.None);

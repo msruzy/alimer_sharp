@@ -12,7 +12,7 @@ namespace Vortice.Graphics.Direct3D12
         private readonly ulong _creationFrame;
         private ResourceStates _resourceState;
 
-        public BufferD3D12(GraphicsDeviceD3D12 device, in BufferDescriptor descriptor, IntPtr initialData)
+        public BufferD3D12(D3D12GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
             : base(device, descriptor)
         {
             _creationFrame = device.CurrentCPUFrame;
@@ -46,8 +46,8 @@ namespace Vortice.Graphics.Direct3D12
         /// <inheritdoc/>
         protected override void Destroy()
         {
-            bool forceDeferred = _creationFrame == ((GraphicsDeviceD3D12)Device).CurrentCPUFrame;
-            ((GraphicsDeviceD3D12)Device).DeferredRelease(ref _resource, forceDeferred);
+            bool forceDeferred = _creationFrame == ((D3D12GraphicsDevice)Device).CurrentCPUFrame;
+            ((D3D12GraphicsDevice)Device).DeferredRelease(ref _resource, forceDeferred);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Vortice.Graphics.Direct3D12
     {
         private static readonly int DescriptorsPerHeap = 256;
 
-        public readonly GraphicsDeviceD3D12 Device;
+        public readonly D3D12GraphicsDevice Device;
         public readonly DescriptorHeapType Type;
         public readonly bool IsShaderVisible;
 
@@ -19,7 +19,7 @@ namespace Vortice.Graphics.Direct3D12
         private int _descriptorSize;
         private int _remainingFreeHandles;
 
-        public DescriptorAllocator(GraphicsDeviceD3D12 device, DescriptorHeapType type)
+        public DescriptorAllocator(D3D12GraphicsDevice device, DescriptorHeapType type)
         {
             Device = device;
             Type = type;

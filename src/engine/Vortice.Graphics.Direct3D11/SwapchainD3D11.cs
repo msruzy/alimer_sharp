@@ -54,7 +54,7 @@ namespace Vortice.Graphics.Direct3D11
                                 Stereo = false,
                                 SampleDescription = new SampleDescription(1, 0),
                                 Usage = Vortice.DirectX.Usage.RenderTargetOutput,
-                                BufferCount = BackBufferCount,
+                                BufferCount = 2,
                                 Scaling = Scaling.Stretch,
                                 SwapEffect = allowTearing ? SwapEffect.FlipDiscard : SwapEffect.Discard,
                                 AlphaMode = AlphaMode.Ignore,
@@ -78,7 +78,7 @@ namespace Vortice.Graphics.Direct3D11
                         {
                             SwapChainDescription dxgiSCDesc = new SwapChainDescription
                             {
-                                BufferCount = BackBufferCount,
+                                BufferCount = 2,
                                 IsWindowed = true,
                                 BufferDescription = new ModeDescription(width, height, BackBufferFormat),
                                 OutputWindow = win32Handle.HWnd,
@@ -127,14 +127,18 @@ namespace Vortice.Graphics.Direct3D11
 
             var backBufferTexture = _swapChain.GetBuffer<ID3D11Texture2D>(0);
             var textureDescriptor = backBufferTexture.Description.FromDirectX();
-            BackbufferTexture = new TextureD3D11(device, ref textureDescriptor, backBufferTexture, BackBufferFormat);
+            BackbufferTexture = new TextureD3D11(
+                device, 
+                ref textureDescriptor,
+                backBufferTexture, 
+                BackBufferFormat);
 
             // Configure base.
             Configure(descriptor);
         }
 
         /// <inheritdoc/>
-        public override int BackBufferCount => 2;
+        public override int BackBufferCount => 1;
 
         /// <inheritdoc/>
         public override int CurrentBackBuffer => _currentBackBuffer;

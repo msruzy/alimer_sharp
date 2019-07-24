@@ -12,7 +12,7 @@ namespace Vortice.Graphics.Direct3D12
         public readonly ID3D12PipelineState D3D12PipelineState;
         public readonly Vortice.DirectX.Direct3D.PrimitiveTopology PrimitiveTopology;
 
-        public PipelineStateD3D12(GraphicsDeviceD3D12 device, in RenderPipelineDescriptor descriptor)
+        public PipelineStateD3D12(D3D12GraphicsDevice device, in RenderPipelineDescriptor descriptor)
             : base(device, descriptor)
         {
             var sampleCount = (int)descriptor.Samples;
