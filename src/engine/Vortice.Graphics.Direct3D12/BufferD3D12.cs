@@ -9,14 +9,14 @@ namespace Vortice.Graphics.Direct3D12
     internal class BufferD3D12 : GraphicsBuffer
     {
         private ID3D12Resource _resource;
-        private readonly ulong _creationFrame;
+        private readonly long _creationFrame;
         private ResourceStates _resourceState;
 
         public BufferD3D12(D3D12GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
             : base(device, descriptor)
         {
             _creationFrame = device.CurrentCPUFrame;
-            ulong bufferSize = descriptor.SizeInBytes;
+            long bufferSize = descriptor.SizeInBytes;
             if (descriptor.Usage == BufferUsage.Constant)
             {
                 bufferSize = Utilities.AlignUp(descriptor.SizeInBytes);

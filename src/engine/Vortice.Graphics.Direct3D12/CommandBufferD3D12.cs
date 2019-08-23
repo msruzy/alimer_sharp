@@ -34,7 +34,7 @@ namespace Vortice.Graphics.Direct3D12
 
         public override void SetViewport(ref Viewport viewport)
         {
-            CommandList.RSSetViewport(viewport);
+            CommandList.RSSetViewport(viewport.ToDirectX());
         }
 
         public override void SetScissorRect(ref Rectangle scissorRect)
@@ -49,7 +49,7 @@ namespace Vortice.Graphics.Direct3D12
 
         public override void SetBlendColor(ref Color4 blendColor)
         {
-            CommandList.OMSetBlendFactor(blendColor);
+            CommandList.OMSetBlendFactor(blendColor.ToDirectX());
         }
 
         protected override void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance)

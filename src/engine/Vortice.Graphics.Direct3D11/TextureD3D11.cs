@@ -11,7 +11,7 @@ namespace Vortice.Graphics.Direct3D11
     {
         public readonly ID3D11Resource Resource;
         public readonly Format DXGIFormat;
-        //private readonly Dictionary<TextureViewDescriptor, TextureViewD3D11> _views = new Dictionary<TextureViewDescriptor, TextureViewD3D11>();
+        private readonly Dictionary<TextureViewDescriptor, TextureViewD3D11> _views = new Dictionary<TextureViewDescriptor, TextureViewD3D11>();
 
         public TextureD3D11(DeviceD3D11 device, ref TextureDescriptor descriptor, ID3D11Texture2D nativeTexture, Format dxgiFormat)
            : base(device, ref descriptor)
@@ -66,7 +66,7 @@ namespace Vortice.Graphics.Direct3D11
                             Width = descriptor.Width,
                             Height = descriptor.Height,
                             MipLevels = descriptor.MipLevels,
-                            ArraySize = descriptor.ArrayLayers,
+                            ArraySize = arraySize,
                             Format = DXGIFormat,
                             BindFlags = bindFlags,
                             CpuAccessFlags = cpuFlags,
@@ -106,16 +106,16 @@ namespace Vortice.Graphics.Direct3D11
             Resource.Dispose();
         }
 
-        //public TextureViewD3D11 GetView(int mostDetailedMip = 0, int mipCount = TextureViewDescriptor.MaxPossible, int firstArraySlice = 0, int arraySize = TextureViewDescriptor.MaxPossible)
-        //{
-        //    var key = new TextureViewDescriptor(mostDetailedMip, mipCount, firstArraySlice, arraySize);
-        //    if (!_views.TryGetValue(key, out TextureViewD3D11 view))
-        //    {
-        //        view = new TextureViewD3D11((DeviceD3D11)Device, this, key);
-        //        _views.Add(key, view);
-        //    }
+        public TextureViewD3D11 GetView(int baseMipLevel = 0, int mipLevelCount = 0, int baseArrayLayer = 0, int arrayLayerCount = 0)
+        {
+            var key = new TextureViewDescriptor(baseMipLevel, mipLevelCount, baseArrayLayer, arrayLayerCount);
+            if (!_views.TryGetValue(key, out TextureViewD3D11 view))
+            {
+                view = new TextureViewD3D11((DeviceD3D11)Device, this, key);
+                _views.Add(key, view);
+            }
 
-        //    return view;
-        //}
+            return view;
+        }
     }
 }

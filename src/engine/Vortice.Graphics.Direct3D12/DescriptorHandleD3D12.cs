@@ -7,8 +7,6 @@ namespace Vortice.Graphics.Direct3D12
 {
     internal struct DescriptorHandle
     {
-        public const ulong InvalidAddress = ulong.MaxValue;
-
         public readonly ID3D12DescriptorHeap Heap;
         public readonly int SizeIncrement;
         public readonly CpuDescriptorHandle CpuHandle;
@@ -19,10 +17,7 @@ namespace Vortice.Graphics.Direct3D12
             Heap = heap;
             SizeIncrement = sizeIncrement;
             CpuHandle = cpuHandle;
-            GpuHandle = new GpuDescriptorHandle
-            {
-                Ptr = InvalidAddress
-            };
+            GpuHandle = default;
         }
 
         public DescriptorHandle(ID3D12DescriptorHeap heap, int sizeIncrement, CpuDescriptorHandle cpuHandle, GpuDescriptorHandle gpuHandle)
@@ -44,6 +39,6 @@ namespace Vortice.Graphics.Direct3D12
         //}
 
         public bool IsNull() => CpuHandle.Ptr == 0;
-        public bool IsShaderVisible() => GpuHandle.Ptr != 0 && GpuHandle.Ptr != InvalidAddress;
+        public bool IsShaderVisible() => GpuHandle.Ptr != 0 && GpuHandle.Ptr != 0;
     }
 }

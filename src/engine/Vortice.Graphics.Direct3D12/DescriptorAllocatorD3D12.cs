@@ -55,7 +55,7 @@ namespace Vortice.Graphics.Direct3D12
             if (IsShaderVisible)
             {
                 var gpuHandle = _currentGpuHandle;
-                _currentGpuHandle.Ptr += (ulong)(count * _descriptorSize);
+                _currentGpuHandle.Ptr += (long)(count * _descriptorSize);
                 return new DescriptorHandle(_currentHeap, _descriptorSize, cpuHandle, gpuHandle);
             }
 

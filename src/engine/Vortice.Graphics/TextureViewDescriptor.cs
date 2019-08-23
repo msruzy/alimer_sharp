@@ -5,21 +5,38 @@ using System;
 
 namespace Vortice.Graphics
 {
-    internal readonly struct TextureViewDescriptor : IEquatable<TextureViewDescriptor>
+    public readonly struct TextureViewDescriptor : IEquatable<TextureViewDescriptor>
     {
-        public const int MaxPossible = ~0;
+        /// <summary>
+        /// Base mip level.
+        /// </summary>
+        public readonly int BaseMipLevel;
 
-        public readonly int MostDetailedMip;
-        public readonly int MipCount;
-        public readonly int FirstArraySlice;
-        public readonly int ArraySize;
+        /// <summary>
+        ///  If <see cref="MipLevelCount"/> == 0, the texture view will cover all the mipmap levels starting from <see cref="BaseMipLevel"/>.
+        /// </summary>
+        public readonly int MipLevelCount;
 
-        public TextureViewDescriptor(int mostDetailedMip = 0, int mipCount = MaxPossible, int firstArraySlice = 0, int arraySize = MaxPossible)
+        /// <summary>
+        /// Base view array level.
+        /// </summary>
+        public readonly int BaseArrayLayer;
+
+        /// <summary>
+        /// If <see cref="ArrayLayerCount"/> == 0, the texture view will cover all the array layers starting from <see cref="BaseArrayLayer"/>.
+        /// </summary>
+        public readonly int ArrayLayerCount;
+
+        public TextureViewDescriptor(
+            int baseMipLevel = 0,
+            int mipLevelCount = 0, 
+            int baseArrayLayer = 0,
+            int arrayLayerCount = 0)
         {
-            MostDetailedMip = mostDetailedMip;
-            MipCount = mipCount;
-            FirstArraySlice = firstArraySlice;
-            ArraySize = arraySize;
+            BaseMipLevel = baseMipLevel;
+            MipLevelCount = mipLevelCount;
+            BaseArrayLayer = baseArrayLayer;
+            ArrayLayerCount = arrayLayerCount;
         }
 
         public static bool operator ==(TextureViewDescriptor left, TextureViewDescriptor right) => left.Equals(right);
@@ -27,15 +44,15 @@ namespace Vortice.Graphics
 
         /// <inheritdoc />
         public bool Equals(TextureViewDescriptor other) =>
-            MostDetailedMip == other.MostDetailedMip
-            && MipCount == other.MipCount
-            && FirstArraySlice == other.FirstArraySlice
-            && ArraySize == other.ArraySize;
+            BaseMipLevel == other.BaseMipLevel
+            && MipLevelCount == other.MipLevelCount
+            && BaseArrayLayer == other.BaseArrayLayer
+            && ArrayLayerCount == other.ArrayLayerCount;
 
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return obj is TextureViewDescriptor other && this.Equals(other);
+            return obj is TextureViewDescriptor other && Equals(other);
         }
 
         /// <inheritdoc/>
@@ -43,10 +60,10 @@ namespace Vortice.Graphics
         {
             unchecked
             {
-                int hashCode = MostDetailedMip.GetHashCode();
-                hashCode = (hashCode * 397) ^ MipCount.GetHashCode();
-                hashCode = (hashCode * 397) ^ FirstArraySlice.GetHashCode();
-                hashCode = (hashCode * 397) ^ ArraySize.GetHashCode();
+                int hashCode = BaseMipLevel.GetHashCode();
+                hashCode = (hashCode * 397) ^ MipLevelCount.GetHashCode();
+                hashCode = (hashCode * 397) ^ BaseArrayLayer.GetHashCode();
+                hashCode = (hashCode * 397) ^ ArrayLayerCount.GetHashCode();
                 return hashCode;
             }
         }

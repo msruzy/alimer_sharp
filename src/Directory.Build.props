@@ -25,7 +25,7 @@
 
   <PropertyGroup>
     <VorticeMathematicsVersion>1.0.0-pre023</VorticeMathematicsVersion>
-    <VorticeDirectXVersion>1.0.0-g01752ed17f</VorticeDirectXVersion>
+    <VorticeDirectXVersion>1.0.0-gbcdd7cd78b</VorticeDirectXVersion>
     <SharpSPIRVCrossVersion>1.0.0-pre012</SharpSPIRVCrossVersion>
     <NerdbankGitVersioningVersion>2.3.38</NerdbankGitVersioningVersion>
   </PropertyGroup>

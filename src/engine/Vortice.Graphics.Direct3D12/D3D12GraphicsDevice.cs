@@ -38,16 +38,16 @@ namespace Vortice.Graphics.Direct3D12
 
         private readonly FenceD3D12 _frameFence;
         private long _currentFrameIndex;
-        private ulong _currentCPUFrame;
-        private ulong _currentGPUFrame;
+        private long _currentCPUFrame;
+        private long _currentGPUFrame;
         private bool _shuttingDown;
 
         private readonly DescriptorAllocator[] _descriptorAllocator = new DescriptorAllocator[(int)DescriptorHeapType.Count];
         private readonly object _heapAllocationLock = new object();
         private readonly List<ID3D12DescriptorHeap> _descriptorHeapPool = new List<ID3D12DescriptorHeap>();
 
-        public ulong CurrentCPUFrame => _currentCPUFrame;
-        public ulong CurrentGPUFrame => _currentGPUFrame;
+        public long CurrentCPUFrame => _currentCPUFrame;
+        public long CurrentGPUFrame => _currentGPUFrame;
 
         public D3D12GraphicsDevice(IDXGIFactory4 factory)
         {
@@ -199,7 +199,7 @@ namespace Vortice.Graphics.Direct3D12
             _frameFence.Signal(GraphicsQueue, _currentCPUFrame);
 
             // Wait for the GPU to catch up before we stomp an executing command buffer
-            ulong gpuLag = _currentCPUFrame - _currentGPUFrame;
+            long gpuLag = _currentCPUFrame - _currentGPUFrame;
             Debug.Assert(gpuLag <= RenderLatency);
             if (gpuLag >= RenderLatency)
             {
