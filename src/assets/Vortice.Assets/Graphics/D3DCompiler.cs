@@ -4,9 +4,9 @@
 // https://github.com/Microsoft/DirectXShaderCompiler/blob/master/tools/clang/tools/dotnetc/D3DCompiler.cs
 namespace D3DCompiler
 {
-    using DotNetDxc;
     using System;
     using System.Runtime.InteropServices;
+    using Vortice.Dxc;
 
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct D3D_SHADER_MACRO
@@ -30,7 +30,7 @@ namespace D3DCompiler
             out IDxcBlob code, out IDxcBlob errorMsgs);
 
         [DllImport("d3dcompiler_47.dll", CallingConvention = CallingConvention.Winapi, SetLastError = false, CharSet = CharSet.Ansi, ExactSpelling = true)]
-        public extern static Int32 D3DDisassemble(
+        public extern static int D3DDisassemble(
             IntPtr ptr, uint ptrSize, uint flags,
             [MarshalAs(UnmanagedType.LPStr)] string szComments,
             out IDxcBlob disassembly);

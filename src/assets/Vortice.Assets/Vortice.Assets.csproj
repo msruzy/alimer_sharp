@@ -9,17 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Vortice.Dxc" Version="$(VorticeDirectXVersion)" />
     <PackageReference Include="Vortice.DirectX.ShaderCompiler" Version="$(VorticeDirectXVersion)" />
     <PackageReference Include="SharpSPIRVCross" Version="$(SharpSPIRVCrossVersion)" />
     <ProjectReference Include="..\..\engine\Vortice.Graphics\Vortice.Graphics.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="$(RepositoryRootDirectory)\deps\dxc\win-x64\dxcompiler.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <PackagePath>runtimes/win-x64/native</PackagePath>
-      <Pack>true</Pack>
-    </Content>
   </ItemGroup>
   
 </Project>

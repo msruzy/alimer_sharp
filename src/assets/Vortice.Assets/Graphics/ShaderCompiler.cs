@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using System.Runtime.CompilerServices;
 using Vortice.Graphics;
-using DotNetDxc;
-using Vortice.DirectX.ShaderCompiler;
+using Vortice.Dxc;
 using Vortice.DirectX.ShaderCompiler.D3D12;
+using static Vortice.Dxc.Dxc;
 
 namespace Vortice.Assets.Graphics
 {
@@ -27,36 +26,20 @@ namespace Vortice.Assets.Graphics
             bool isDxil = backend != GraphicsBackend.Direct3D11;
             if (isDxil)
             {
-                RuntimeHelpers.RunClassConstructor(typeof(Dxc).TypeHandle);
-                var shaderProfile = $"{GetShaderProfile(stage)}_6_0";
+                var dxcShaderStage = GetDxcShaderStage(stage);
+                var options = new DxcCompilerOptions
+                { };
 
-                var arguments = new string[]
-                {
-                    "-T", shaderProfile,
-                    "-E", entryPoint,
-                };
-
-                var compiler = Dxc.CreateDxcCompiler();
-                var result = compiler.Compile(
-                    Dxc.CreateBlobForText(source),
-                    fileName,
-                    entryPoint,
-                    shaderProfile,
-                    arguments,
-                    arguments.Length,
-                    null,
-                    0,
-                    Dxc.Library.CreateIncludeHandler()
-                    );
+                var result = DxcCompiler.Compile(dxcShaderStage, source, entryPoint, fileName, options);
 
                 if (result.GetStatus() == 0)
                 {
                     var blob = result.GetResult();
-                    var bytecode = Dxc.GetBytesFromBlob(blob);
+                    var bytecode = GetBytesFromBlob(blob);
 
-                    var containReflection = Dxc.CreateDxcContainerReflection();
+                    var containReflection = CreateDxcContainerReflection();
                     containReflection.Load(blob);
-                    int hr = containReflection.FindFirstPartKind(Dxc.DFCC_DXIL, out uint dxilPartIndex);
+                    int hr = containReflection.FindFirstPartKind(DFCC_DXIL, out uint dxilPartIndex);
                     if (hr < 0)
                     {
                         //MessageBox.Show("Debug information not found in container.");
@@ -71,7 +54,7 @@ namespace Vortice.Assets.Graphics
                         foreach (var parameterDescription in shaderReflection.InputParameters)
                         {
                         }
-
+                        
                         foreach (var resource in shaderReflection.Resources)
                         {
                         }
@@ -85,14 +68,14 @@ namespace Vortice.Assets.Graphics
                     }
 
                     // Disassemble
-                    var disassembleBlob = compiler.Disassemble(blob);
-                    string disassemblyText = Dxc.GetStringFromBlob(disassembleBlob);
+                    //var disassembleBlob = compiler.Disassemble(blob);
+                    //string disassemblyText = Dxc.GetStringFromBlob(disassembleBlob);
 
                     return new Vortice.Graphics.ShaderBytecode(stage, bytecode);
                 }
                 else
                 {
-                    var resultText = Dxc.GetStringFromBlob(result.GetErrors());
+                    //var resultText = GetStringFromBlob(DxcCompiler, result.GetErrors());
                 }
             }
             else
@@ -116,12 +99,12 @@ namespace Vortice.Assets.Graphics
                 {
                     if (errorMsgs != null)
                     {
-                        var errorText = Dxc.GetStringFromBlob(errorMsgs);
+                        //var errorText = GetStringFromBlob(errorMsgs);
                     }
                 }
                 else
                 {
-                    var bytecode = Dxc.GetBytesFromBlob(blob);
+                    var bytecode = GetBytesFromBlob(blob);
                     return new Vortice.Graphics.ShaderBytecode(stage, bytecode);
                 }
             }
@@ -147,6 +130,27 @@ namespace Vortice.Assets.Graphics
                     return "CSMain";
                 default:
                     return string.Empty;
+            }
+        }
+
+        private static DxcShaderStage GetDxcShaderStage(ShaderStages stage)
+        {
+            switch (stage)
+            {
+                case ShaderStages.Vertex:
+                    return DxcShaderStage.VertexShader;
+                case ShaderStages.Hull:
+                    return DxcShaderStage.HullShader;
+                case ShaderStages.Domain:
+                    return DxcShaderStage.DomainShader;
+                case ShaderStages.Geometry:
+                    return DxcShaderStage.GeometryShader;
+                case ShaderStages.Pixel:
+                    return DxcShaderStage.PixelShader;
+                case ShaderStages.Compute:
+                    return DxcShaderStage.ComputeShader;
+                default:
+                    return DxcShaderStage.VertexShader;
             }
         }
 
