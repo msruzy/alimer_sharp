@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using Vortice.DirectX.Direct3D11;
-using Vortice.DirectX.DXGI;
+using Vortice.Direct3D11;
+using Vortice.DXGI;
 
 namespace Vortice.Graphics.Direct3D11
 {
@@ -13,21 +13,21 @@ namespace Vortice.Graphics.Direct3D11
         public readonly Format DXGIFormat;
         private readonly Dictionary<TextureViewDescriptor, TextureViewD3D11> _views = new Dictionary<TextureViewDescriptor, TextureViewD3D11>();
 
-        public TextureD3D11(DeviceD3D11 device, ref TextureDescriptor descriptor, ID3D11Texture2D nativeTexture, Format dxgiFormat)
-           : base(device, ref descriptor)
+        public TextureD3D11(DeviceD3D11 device, in TextureDescriptor descriptor, ID3D11Texture2D nativeTexture, Format dxgiFormat)
+           : base(device, descriptor)
         {
             Resource = nativeTexture;
             DXGIFormat = dxgiFormat;
         }
 
-        public TextureD3D11(DeviceD3D11 device, ref TextureDescriptor descriptor)
-            : base(device, ref descriptor)
+        public TextureD3D11(DeviceD3D11 device, in TextureDescriptor descriptor)
+            : base(device, descriptor)
         {
             // Create new one.
             DXGIFormat = descriptor.Format.ToDirectX();
 
             var cpuFlags = CpuAccessFlags.None;
-            var resourceUsage = Vortice.DirectX.Direct3D11.Usage.Default;
+            var resourceUsage = Vortice.Direct3D11.Usage.Default;
             var bindFlags = descriptor.Usage.ToDirectX(descriptor.Format);
             var optionFlags = ResourceOptionFlags.None;
 

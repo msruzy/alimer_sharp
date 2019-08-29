@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using Vortice.DirectX.Direct3D12;
+using Vortice.Direct3D12;
 
 namespace Vortice.Graphics.Direct3D12
 {
@@ -29,7 +29,7 @@ namespace Vortice.Graphics.Direct3D12
                     D3D12Convert.Convert(d3dTextureDesc.Flags),
                     (SampleCount)d3dTextureDesc.SampleDescription.Count);
 
-                _backbufferTextures[i] = new TextureD3D12(device, ref textureDescriptor, backBufferTexture);
+                _backbufferTextures[i] = new TextureD3D12(device, textureDescriptor, backBufferTexture);
             }
 
             // Configure base.

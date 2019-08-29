@@ -60,7 +60,7 @@ namespace Vortice.Graphics
         /// </summary>
         /// <param name="device">The creation device.</param>
         /// <param name="descriptor">The texture descriptor.</param>
-        protected Texture(GraphicsDevice device, ref TextureDescriptor descriptor)
+        protected Texture(GraphicsDevice device, in TextureDescriptor descriptor)
             : base(device, GraphicsResourceType.Texture, GraphicsResourceUsage.Default)
         {
             Guard.IsTrue(descriptor.TextureType != TextureType.Unknown, nameof(descriptor), $"TextureType cannot be {nameof(TextureType.Unknown)}");

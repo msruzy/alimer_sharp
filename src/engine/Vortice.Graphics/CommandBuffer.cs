@@ -79,19 +79,19 @@ namespace Vortice.Graphics
             SetVertexBufferImpl(buffer, offset, index);
         }
 
-        public void SetViewport(Viewport viewport)
+        public void SetViewport(in Viewport viewport)
         {
-            SetViewport(ref viewport);
+            SetViewportCore(viewport);
         }
 
-        public abstract void SetViewport(ref Viewport viewport);
+        protected abstract void SetViewportCore(in Viewport viewport);
 
-        public void SetScissorRect(Rectangle scissorRect)
+        public void SetScissorRect(in Rectangle scissorRect)
         {
-            SetScissorRect(ref scissorRect);
+            SetScissorRectCore(scissorRect);
         }
 
-        public abstract void SetScissorRect(ref Rectangle scissorRect);
+        protected abstract void SetScissorRectCore(in Rectangle scissorRect);
 
         /// <summary>
         /// Specifies the constant blend color.

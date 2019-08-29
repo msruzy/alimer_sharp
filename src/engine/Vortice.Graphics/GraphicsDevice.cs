@@ -143,21 +143,17 @@ namespace Vortice.Graphics
                 (IntPtr)Unsafe.AsPointer(ref initialData.GetPinnableReference()));
         }
 
-        public Texture CreateTexture(TextureDescriptor descriptor) => CreateTexture(ref descriptor);
-
-        public Texture CreateTexture(ref TextureDescriptor descriptor)
+        public Texture CreateTexture(in TextureDescriptor descriptor)
         {
-            return CreateTextureCore(ref descriptor);
+            return CreateTextureCore(descriptor);
         }
 
-        public Sampler CreateSampler(SamplerDescriptor descriptor) => CreateSampler(ref descriptor);
-
-        public Sampler CreateSampler(ref SamplerDescriptor descriptor)
+        public Sampler CreateSampler(in SamplerDescriptor descriptor)
         {
-            return CreateSamplerCore(ref descriptor);
+            return CreateSamplerCore(descriptor);
         }
 
-        public Shader CreateShader(ShaderBytecode bytecode)
+        public Shader CreateShader(in ShaderBytecode bytecode)
         {
             Guard.NotNullOrEmpty(bytecode.Data, nameof(bytecode), "Invalid bytecode data");
 
@@ -213,11 +209,11 @@ namespace Vortice.Graphics
         protected abstract GraphicsBuffer CreateBufferImpl(in BufferDescriptor descriptor, IntPtr initialData);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected abstract Texture CreateTextureCore(ref TextureDescriptor descriptor);
+        protected abstract Texture CreateTextureCore(in TextureDescriptor descriptor);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected abstract Sampler CreateSamplerCore(ref SamplerDescriptor descriptor);
-        protected abstract Shader CreateShaderImpl(ShaderBytecode bytecode);
+        protected abstract Sampler CreateSamplerCore(in SamplerDescriptor descriptor);
+        protected abstract Shader CreateShaderImpl(in ShaderBytecode bytecode);
         protected abstract PipelineState CreateRenderPipelineStateImpl(in RenderPipelineDescriptor descriptor);
     }
 }

@@ -3,8 +3,7 @@
 
 using System;
 using System.Drawing;
-using Vortice.DirectX.Direct3D11;
-using Vortice.Interop;
+using Vortice.Direct3D11;
 using Vortice.Mathematics;
 
 namespace Vortice.Graphics.Direct3D11
@@ -25,11 +24,11 @@ namespace Vortice.Graphics.Direct3D11
         private VertexBufferView[] _vertexBufferBindings = new VertexBufferView[32];
 
         private ID3D11BlendState _boundBlendState;
-        private RawColor4 _boundBlendColor;
+        private Color4 _boundBlendColor;
         private ID3D11DepthStencilState _boundDepthStencilState;
         private int _boundStencilReference;
         private ID3D11RasterizerState _boundRasterizerState;
-        private Vortice.DirectX.Direct3D.PrimitiveTopology _boundPrimitiveTopology;
+        private DirectX.Direct3D.PrimitiveTopology _boundPrimitiveTopology;
         private ID3D11InputLayout _boundInputLayout;
         private ID3D11VertexShader _boundVertexShader;
         private ID3D11GeometryShader _boundGeometryShader;
@@ -172,7 +171,7 @@ namespace Vortice.Graphics.Direct3D11
                 switch (attachment.LoadAction)
                 {
                     case LoadAction.Clear:
-                        D3D11Context.ClearRenderTargetView(_rtvViews[i], attachment.ClearColor.ToDirectX());
+                        D3D11Context.ClearRenderTargetView(_rtvViews[i], attachment.ClearColor);
                         break;
 
                     default:
@@ -244,7 +243,7 @@ namespace Vortice.Graphics.Direct3D11
         /// <inheritdoc/>
         public override void SetBlendColor(ref Color4 blendColor)
         {
-            _boundBlendColor = blendColor.ToDirectX();
+            _boundBlendColor = blendColor;
         }
 
         /// <inheritdoc/>
@@ -254,12 +253,13 @@ namespace Vortice.Graphics.Direct3D11
         }
 
         /// <inheritdoc/>
-        public override void SetViewport(ref Viewport viewport)
+        protected override void SetViewportCore(in Viewport viewport)
         {
-            D3D11Context.RSSetViewport(viewport.ToDirectX());
+            D3D11Context.RSSetViewport(viewport);
         }
 
-        public override void SetScissorRect(ref Rectangle scissorRect)
+        /// <inheritdoc/>
+        protected override void SetScissorRectCore(in Rectangle scissorRect)
         {
             D3D11Context.RSSetScissorRect(scissorRect);
         }

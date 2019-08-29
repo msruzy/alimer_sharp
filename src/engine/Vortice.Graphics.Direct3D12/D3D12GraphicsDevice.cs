@@ -4,14 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Vortice.DirectX.Direct3D12;
-using Vortice.DirectX.DXGI;
+using Vortice.Direct3D12;
+using Vortice.DXGI;
 using Vortice.DirectX.Direct3D;
 using SharpGen.Runtime;
 using Vortice.Diagnostics;
-using static Vortice.DirectX.DXGI.DXGI;
-using static Vortice.DirectX.Direct3D12.D3D12;
-using Vortice.DirectX.Direct3D12.Debug;
+using static Vortice.DXGI.DXGI;
+using static Vortice.Direct3D12.D3D12;
+using Vortice.Direct3D12.Debug;
 
 namespace Vortice.Graphics.Direct3D12
 {
@@ -93,9 +93,9 @@ namespace Vortice.Graphics.Direct3D12
                     infoQueue.SetBreakOnSeverity(MessageSeverity.Error, true);
 #endif
 
-                    infoQueue.AddStorageFilterEntries(new DirectX.Direct3D12.Debug.InfoQueueFilter
+                    infoQueue.AddStorageFilterEntries(new Vortice.Direct3D12.Debug.InfoQueueFilter
                     {
-                        DenyList = new DirectX.Direct3D12.Debug.InfoQueueFilterDescription
+                        DenyList = new Vortice.Direct3D12.Debug.InfoQueueFilterDescription
                         {
                             Ids = new[]
                             {
@@ -121,7 +121,7 @@ namespace Vortice.Graphics.Direct3D12
 
             // Create main graphics command queue.
             GraphicsQueue = D3D12Device.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
-            GraphicsQueue.SetName("Main GraphicsQueue");
+            GraphicsQueue.Name = "Main GraphicsQueue";
 
             // Create ImmediateContext.
             for (int i = 0; i < RenderLatency; i++)
@@ -254,17 +254,17 @@ namespace Vortice.Graphics.Direct3D12
             return new BufferD3D12(this, descriptor, initialData);
         }
 
-        protected override Texture CreateTextureCore(ref TextureDescriptor descriptor)
+        protected override Texture CreateTextureCore(in TextureDescriptor descriptor)
         {
-            return new TextureD3D12(this, ref descriptor, nativeTexture: null);
+            return new TextureD3D12(this, descriptor, nativeTexture: null);
         }
 
-        protected override Sampler CreateSamplerCore(ref SamplerDescriptor descriptor)
+        protected override Sampler CreateSamplerCore(in SamplerDescriptor descriptor)
         {
             throw new NotImplementedException();
         }
 
-        protected override Shader CreateShaderImpl(ShaderBytecode bytecode)
+        protected override Shader CreateShaderImpl(in ShaderBytecode bytecode)
         {
             return new ShaderD3D12(this, bytecode);
         }

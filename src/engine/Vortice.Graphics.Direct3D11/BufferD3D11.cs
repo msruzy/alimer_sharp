@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using Vortice.DirectX.Direct3D11;
+using Vortice.Direct3D11;
 
 namespace Vortice.Graphics.Direct3D11
 {
@@ -16,7 +16,7 @@ namespace Vortice.Graphics.Direct3D11
             var description = new BufferDescription()
             {
                 ByteWidth = (int)descriptor.SizeInBytes,
-                Usage = (Vortice.DirectX.Direct3D11.Usage)descriptor.ResourceUsage,
+                Usage = (Vortice.Direct3D11.Usage)descriptor.ResourceUsage,
                 BindFlags = descriptor.Usage.ToDirectX(),
                 CpuAccessFlags = descriptor.ResourceUsage.ToDirectX(),
                 OptionFlags = ResourceOptionFlags.None,

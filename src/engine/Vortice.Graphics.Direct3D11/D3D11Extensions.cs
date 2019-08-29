@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using Vortice.DirectX.DXGI;
-using Vortice.DirectX.Direct3D11;
+using Vortice.DXGI;
+using Vortice.Direct3D11;
 using System.Collections;
 using System.Collections.Generic;
 

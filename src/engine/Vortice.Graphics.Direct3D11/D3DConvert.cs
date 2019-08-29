@@ -3,8 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vortice.DirectX.Direct3D;
-using Vortice.DirectX.DXGI;
-using Vortice.Interop;
+using Vortice.DXGI;
 using Vortice.Mathematics;
 namespace Vortice.Graphics
 {
@@ -137,17 +136,8 @@ namespace Vortice.Graphics
             { VertexFormat.Int4,                Format.R32G32B32A32_SInt },
             { VertexFormat.UInt1010102Norm,     Format.R10G10B10A2_UNorm },
         };
+
         #region ToDirectX Methods
-        public static unsafe RawColor4 ToDirectX(this Color4 color)
-        {
-            return *(RawColor4*)&color;
-        }
-
-        public static unsafe RawViewport ToDirectX(this Viewport viewport)
-        {
-            return *(RawViewport*)&viewport;
-        }
-
         public static Format ToDirectX(this PixelFormat format) => _formatsMap[format];
         public static Format ToDirectX(this VertexFormat format) => _vertexFormatsMap[format];
         public static DirectX.Direct3D.PrimitiveTopology ToDirectX(this PrimitiveTopology topology, int patches)

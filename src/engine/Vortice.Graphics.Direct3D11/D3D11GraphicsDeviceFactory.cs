@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using Vortice.DirectX.DXGI;
-using static Vortice.DirectX.DXGI.DXGI;
+using Vortice.DXGI;
+using static Vortice.DXGI.DXGI;
 
 namespace Vortice.Graphics.Direct3D11
 {

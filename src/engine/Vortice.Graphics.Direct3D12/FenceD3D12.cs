@@ -3,7 +3,7 @@
 
 using System;
 using System.Threading;
-using Vortice.DirectX.Direct3D12;
+using Vortice.Direct3D12;
 
 namespace Vortice.Graphics.Direct3D12
 {

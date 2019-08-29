@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using Vortice.DirectX.Direct3D12;
-using Vortice.DirectX.DXGI;
+using Vortice.Direct3D12;
+using Vortice.DXGI;
 
 namespace Vortice.Graphics.Direct3D12
 {
@@ -13,9 +13,9 @@ namespace Vortice.Graphics.Direct3D12
 
         public TextureD3D12(
             D3D12GraphicsDevice device,
-            ref TextureDescriptor descriptor,
+            in TextureDescriptor descriptor,
             ID3D12Resource nativeTexture)
-            : base(device, ref descriptor)
+            : base(device, descriptor)
         {
             DXGIFormat = descriptor.Format.ToDirectX();
             if (nativeTexture == null)

@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Vortice.Dxc" Version="$(VorticeDirectXVersion)" />
-    <PackageReference Include="Vortice.DirectX.ShaderCompiler" Version="$(VorticeDirectXVersion)" />
+    <PackageReference Include="Vortice.D3DCompiler" Version="$(VorticeDirectXVersion)" />
     <PackageReference Include="SharpSPIRVCross" Version="$(SharpSPIRVCrossVersion)" />
     <ProjectReference Include="..\..\engine\Vortice.Graphics\Vortice.Graphics.csproj" />
   </ItemGroup>

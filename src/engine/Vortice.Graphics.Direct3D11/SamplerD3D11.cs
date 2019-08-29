@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using Vortice.DirectX.Direct3D11;
-using Vortice.DirectX.DXGI;
+using Vortice.Direct3D11;
+using Vortice.DXGI;
 
 namespace Vortice.Graphics.Direct3D11
 {
@@ -11,8 +11,8 @@ namespace Vortice.Graphics.Direct3D11
     {
         public readonly ID3D11SamplerState NativeSamplerState;
 
-        public SamplerD3D11(DeviceD3D11 device, ref SamplerDescriptor descriptor)
-           : base(device, ref descriptor)
+        public SamplerD3D11(DeviceD3D11 device, in SamplerDescriptor descriptor)
+           : base(device, descriptor)
         {
         }
 

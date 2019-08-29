@@ -3,9 +3,8 @@
 
 using System;
 using System.Diagnostics;
-using Vortice.DirectX;
-using Vortice.DirectX.Direct3D11;
-using Vortice.DirectX.DXGI;
+using Vortice.Direct3D11;
+using Vortice.DXGI;
 
 namespace Vortice.Graphics.Direct3D11
 {
@@ -53,7 +52,7 @@ namespace Vortice.Graphics.Direct3D11
                                 Format = BackBufferFormat,
                                 Stereo = false,
                                 SampleDescription = new SampleDescription(1, 0),
-                                Usage = Vortice.DirectX.Usage.RenderTargetOutput,
+                                Usage = DXGI.Usage.RenderTargetOutput,
                                 BufferCount = 2,
                                 Scaling = Scaling.Stretch,
                                 SwapEffect = allowTearing ? SwapEffect.FlipDiscard : SwapEffect.Discard,
@@ -84,7 +83,7 @@ namespace Vortice.Graphics.Direct3D11
                                 OutputWindow = win32Handle.HWnd,
                                 SampleDescription = new SampleDescription(1, 0),
                                 SwapEffect = SwapEffect.Discard,
-                                Usage = Vortice.DirectX.Usage.Backbuffer | Vortice.DirectX.Usage.RenderTargetOutput
+                                Usage = DXGI.Usage.Backbuffer | DXGI.Usage.RenderTargetOutput
                             };
 
                             _swapChain = device.DXGIFactory.CreateSwapChain(device.D3D11Device, dxgiSCDesc);
@@ -129,7 +128,7 @@ namespace Vortice.Graphics.Direct3D11
             var textureDescriptor = backBufferTexture.Description.FromDirectX();
             BackbufferTexture = new TextureD3D11(
                 device, 
-                ref textureDescriptor,
+                textureDescriptor,
                 backBufferTexture, 
                 BackBufferFormat);
 

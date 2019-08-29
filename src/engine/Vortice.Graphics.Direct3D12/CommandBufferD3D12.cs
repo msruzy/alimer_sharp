@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System.Drawing;
-using Vortice.DirectX.Direct3D12;
+using Vortice.Direct3D12;
 using Vortice.Mathematics;
 
 namespace Vortice.Graphics.Direct3D12
@@ -32,12 +32,14 @@ namespace Vortice.Graphics.Direct3D12
             CommandList.Dispose();
         }
 
-        public override void SetViewport(ref Viewport viewport)
+        /// <inheritdoc/>
+        protected override void SetViewportCore(in Viewport viewport)
         {
-            CommandList.RSSetViewport(viewport.ToDirectX());
+            CommandList.RSSetViewport(viewport);
         }
 
-        public override void SetScissorRect(ref Rectangle scissorRect)
+        /// <inheritdoc/>
+        protected override void SetScissorRectCore(in Rectangle scissorRect)
         {
             CommandList.RSSetScissorRect(scissorRect);
         }
@@ -49,7 +51,7 @@ namespace Vortice.Graphics.Direct3D12
 
         public override void SetBlendColor(ref Color4 blendColor)
         {
-            CommandList.OMSetBlendFactor(blendColor.ToDirectX());
+            CommandList.OMSetBlendFactor(blendColor);
         }
 
         protected override void DrawImpl(int vertexCount, int instanceCount, int firstVertex, int firstInstance)

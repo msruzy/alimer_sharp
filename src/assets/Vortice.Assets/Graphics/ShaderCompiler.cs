@@ -3,8 +3,8 @@
 
 using Vortice.Graphics;
 using Vortice.Dxc;
-using Vortice.DirectX.ShaderCompiler.D3D12;
 using static Vortice.Dxc.Dxc;
+using Vortice.D3DCompiler;
 
 namespace Vortice.Assets.Graphics
 {
@@ -46,7 +46,7 @@ namespace Vortice.Assets.Graphics
                         //return;
                     }
 
-                    var f = containReflection.GetPartReflection(dxilPartIndex, typeof(ID3D12ShaderReflection).GUID, out var nativePtr);
+                    /*var f = containReflection.GetPartReflection(dxilPartIndex, typeof(ID3D12ShaderReflection).GUID, out var nativePtr);
                     using (var shaderReflection = new ID3D12ShaderReflection(nativePtr))
                     {
                         var shaderReflectionDesc = shaderReflection.Description;
@@ -58,7 +58,7 @@ namespace Vortice.Assets.Graphics
                         foreach (var resource in shaderReflection.Resources)
                         {
                         }
-                    }
+                    }*/
 
                     unsafe
                     {
@@ -80,31 +80,24 @@ namespace Vortice.Assets.Graphics
             }
             else
             {
-                const uint flags = 0;
                 var shaderProfile = $"{GetShaderProfile(stage)}_5_0";
-                int hr = D3DCompiler.D3DCompiler.D3DCompile(
-                    source,
-                    source.Length,
-                    fileName,
-                    null,
-                    0,
+                var result = Compiler.Compile(source,
                     entryPoint,
+                    fileName,
                     shaderProfile,
-                    flags,
-                    0,
                     out var blob,
                     out var errorMsgs);
 
-                if (hr != 0)
+                if (result.Failure)
                 {
                     if (errorMsgs != null)
                     {
-                        //var errorText = GetStringFromBlob(errorMsgs);
+                        var errorText = errorMsgs.ConvertToString();
                     }
                 }
                 else
                 {
-                    var bytecode = GetBytesFromBlob(blob);
+                    var bytecode = blob.GetBytes();
                     return new Vortice.Graphics.ShaderBytecode(stage, bytecode);
                 }
             }

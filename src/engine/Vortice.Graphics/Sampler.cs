@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using System;
-
 namespace Vortice.Graphics
 {
     /// <summary>
@@ -15,7 +13,7 @@ namespace Vortice.Graphics
         /// </summary>
         /// <param name="device">The creation device.</param>
         /// <param name="descriptor">The sampler descriptor.</param>
-        protected Sampler(GraphicsDevice device, ref SamplerDescriptor descriptor)
+        protected Sampler(GraphicsDevice device, in SamplerDescriptor descriptor)
             : base(device, GraphicsResourceType.Sampler, GraphicsResourceUsage.Default)
         {
         }

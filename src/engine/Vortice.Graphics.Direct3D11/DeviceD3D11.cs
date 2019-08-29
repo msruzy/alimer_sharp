@@ -3,12 +3,12 @@
 
 using System;
 using System.Diagnostics;
-using Vortice.DirectX.Direct3D11;
-using Vortice.DirectX.Direct3D11.Debug;
-using Vortice.DirectX.DXGI;
+using Vortice.Direct3D11;
+using Vortice.Direct3D11.Debug;
+using Vortice.DXGI;
 using Vortice.DirectX.Direct3D;
 using Vortice.Diagnostics;
-using static Vortice.DirectX.Direct3D11.D3D11;
+using static Vortice.Direct3D11.D3D11;
 
 namespace Vortice.Graphics.Direct3D11
 {
@@ -87,7 +87,7 @@ namespace Vortice.Graphics.Direct3D11
 
             // Detect multithreading
             FeatureDataThreading featureDataThreading = default;
-            if (D3D11Device.CheckFeatureSupport(DirectX.Direct3D11.Feature.Threading, ref featureDataThreading))
+            if (D3D11Device.CheckFeatureSupport(Vortice.Direct3D11.Feature.Threading, ref featureDataThreading))
             {
                 SupportsConcurrentResources = featureDataThreading.DriverConcurrentCreates;
                 SupportsCommandLists = featureDataThreading.DriverCommandLists;
@@ -156,17 +156,17 @@ namespace Vortice.Graphics.Direct3D11
             return new BufferD3D11(this, descriptor, initialData);
         }
 
-        protected override Texture CreateTextureCore(ref TextureDescriptor descriptor)
+        protected override Texture CreateTextureCore(in TextureDescriptor descriptor)
         {
-            return new TextureD3D11(this, ref descriptor);
+            return new TextureD3D11(this, descriptor);
         }
 
-        protected override Sampler CreateSamplerCore(ref SamplerDescriptor descriptor)
+        protected override Sampler CreateSamplerCore(in SamplerDescriptor descriptor)
         {
-            return new SamplerD3D11(this, ref descriptor);
+            return new SamplerD3D11(this, descriptor);
         }
 
-        protected override Shader CreateShaderImpl(ShaderBytecode bytecode)
+        protected override Shader CreateShaderImpl(in ShaderBytecode bytecode)
         {
             return new ShaderD3D11(this, bytecode);
         }

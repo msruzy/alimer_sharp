@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using System;
-using Vortice.DirectX.Direct3D;
-using Vortice.DirectX.Direct3D12;
+using Vortice.Direct3D12;
 
 namespace Vortice.Graphics.Direct3D12
 {

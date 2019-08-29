@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using Vortice.DirectX.Direct3D11;
+using Vortice.Direct3D11;
 
 namespace Vortice.Graphics.Direct3D11
 {
@@ -10,7 +10,7 @@ namespace Vortice.Graphics.Direct3D11
         public readonly ID3D11DeviceChild D3D11Shader;
         public readonly byte[] Bytecode;
 
-        public ShaderD3D11(DeviceD3D11 device, ShaderBytecode bytecode)
+        public ShaderD3D11(DeviceD3D11 device, in ShaderBytecode bytecode)
             : base(device, bytecode)
         {
             switch (bytecode.Stage)
