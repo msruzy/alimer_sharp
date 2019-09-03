@@ -7,9 +7,7 @@ namespace Vortice.Graphics.Tests
 {
     public abstract class GraphicsDeviceCreationTests : GraphicsDeviceTestBase
     {
-        protected GraphicsDeviceCreationTests(
-            GraphicsBackend backend,
-            bool validation = false)
+        protected GraphicsDeviceCreationTests(GraphicsBackend backend, bool validation = false)
             : base(backend, validation)
         {
         }
@@ -22,24 +20,18 @@ namespace Vortice.Graphics.Tests
         }
     }
 
-#if TEST_D3D11
     public class D3D11GpuFactoryTests : GraphicsDeviceCreationTests
     {
         public D3D11GpuFactoryTests() : base(GraphicsBackend.Direct3D11) { }
     }
-#endif
 
-#if TEST_D3D12
     public class D3D12GpuFactoryTests : GraphicsDeviceCreationTests
     {
         public D3D12GpuFactoryTests() : base(GraphicsBackend.Direct3D12) { }
     }
-#endif
 
-#if TEST_VULKAN
-    public class VulkanGpuFactoryTests : GraphicsDeviceFactoryTests
-    {
-        public VulkanGpuFactoryTests() : base(GraphicsBackend.Vulkan) { }
-    }
-#endif
+    //public class VulkanGpuFactoryTests : GraphicsDeviceCreationTests
+    //{
+    //    public VulkanGpuFactoryTests() : base(GraphicsBackend.Vulkan) { }
+    //}
 }

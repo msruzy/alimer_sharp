@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Graphics.Direct3D12
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Graphics.Direct3D11", "engine\Vortice.Graphics.Direct3D11\Vortice.Graphics.Direct3D11.csproj", "{D0CA4286-A7CA-4719-BFDB-BEBA0E3E7174}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Application", "Vortice.Application\Vortice.Application.csproj", "{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -265,6 +267,22 @@ Global
 		{D0CA4286-A7CA-4719-BFDB-BEBA0E3E7174}.Release|x64.Build.0 = Release|Any CPU
 		{D0CA4286-A7CA-4719-BFDB-BEBA0E3E7174}.Release|x86.ActiveCfg = Release|Any CPU
 		{D0CA4286-A7CA-4719-BFDB-BEBA0E3E7174}.Release|x86.Build.0 = Release|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Debug|ARM.Build.0 = Debug|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Debug|x64.Build.0 = Debug|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Debug|x86.Build.0 = Debug|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Release|ARM.ActiveCfg = Release|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Release|ARM.Build.0 = Release|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Release|x64.ActiveCfg = Release|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Release|x64.Build.0 = Release|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Release|x86.ActiveCfg = Release|Any CPU
+		{6A392F8D-7AE1-4F8B-83ED-342EE150A98F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

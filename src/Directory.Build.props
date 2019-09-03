@@ -4,7 +4,9 @@
     <RepositoryRootDirectory>$(MSBuildThisFileDirectory)..\</RepositoryRootDirectory>
     <BaseOutputPath Condition=" '$(BaseOutputPath)' == '' ">$(RepositoryRootDirectory)bin\$(MSBuildProjectName)\</BaseOutputPath>
     <PackageOutputPath>$(RepositoryRootDirectory)bin\Packages\$(Configuration)</PackageOutputPath>
-
+    <LangVersion>7.3</LangVersion>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    
     <DebugType Condition=" '$(Configuration)' == 'Release' ">pdbonly</DebugType>
     <DebugType Condition=" '$(Configuration)' == 'Debug' ">full</DebugType>
 
@@ -13,7 +15,7 @@
 
     <Authors>Amer Koleci</Authors>
     <Product>Vortice</Product>
-    <Copyright>Copyright © 2018 Amer Koleci and contributors.</Copyright>
+    <Copyright>Copyright © 2018-2019 Amer Koleci and contributors.</Copyright>
     <Summary>Cross platform 2D and 3D game engine with support for .NET Standard 2.0, .NET Core, .NET Framework, Xamarin, and UWP.</Summary>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Title>Vortice</Title>
@@ -21,32 +23,22 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/amerkoleci/vortice</PackageProjectUrl>
     <PackageTags>3D Engine Graphics gamedev vortice Direct3D DirectX Vulkan OpenGL Metal Core Standard Game</PackageTags>
+
+    <!-- Enable SourceLink support -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <PropertyGroup>
     <VorticeMathematicsVersion>1.0.0</VorticeMathematicsVersion>
     <VorticeDirectXVersion>1.2.0</VorticeDirectXVersion>
     <SharpSPIRVCrossVersion>1.0.0-pre012</SharpSPIRVCrossVersion>
-    <NerdbankGitVersioningVersion>2.3.38</NerdbankGitVersioningVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
-    <IsMacOS Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsMacOS>
-    <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
-  </PropertyGroup>
-
-  <!-- Enable sourcelink support -->
-  <PropertyGroup>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Vortice.Mathematics" Version="$(VorticeMathematicsVersion)" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="$(NerdbankGitVersioningVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19367-01" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>

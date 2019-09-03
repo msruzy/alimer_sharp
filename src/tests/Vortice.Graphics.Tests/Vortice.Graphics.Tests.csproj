@@ -5,9 +5,6 @@
     <IsPackable>false</IsPackable>
     <OutputType>exe</OutputType>
     <StartupObject>Vortice.Graphics.Tests.Program</StartupObject>
-    <DefineConstants Condition="'$(IsWindows)' == 'true'">$(DefineConstants);TEST_D3D11;TEST_D3D12</DefineConstants>
-    <DefineConstants Condition="'$(IsLinux)' == 'true'">$(DefineConstants);TEST_VULKAN</DefineConstants>
-    <DefineConstants Condition="'$(IsMacOS)' == 'true'">$(DefineConstants);TEST_METAL</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />

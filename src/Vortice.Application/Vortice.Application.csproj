@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Vortice</RootNamespace>
+    <Description>Vortice.Application library for cross platform application support</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\core\Vortice\Vortice.csproj" />
+  </ItemGroup>
+
+</Project>
