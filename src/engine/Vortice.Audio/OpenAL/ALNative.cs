@@ -16,7 +16,7 @@ namespace Vortice.Audio.OpenAL
         private static IALNativeLibrary LoadOpenAL()
         {
             string[] names;
-            if (Platform.PlatformType == PlatformType.Windows)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 names = new[] {
                     "soft_oal.dll",
@@ -24,7 +24,7 @@ namespace Vortice.Audio.OpenAL
                 };
                 return new Win32ALLibraryLoader(names);
             }
-            else if (Platform.PlatformType == PlatformType.Linux)
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 names = new[]
                 {
@@ -33,7 +33,7 @@ namespace Vortice.Audio.OpenAL
                 };
                 return new UnixALLibraryLoader(names);
             }
-            else if (Platform.PlatformType == PlatformType.macOS)
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 names = new[] { "libopenal.dylib" };
                 return new UnixALLibraryLoader(names);

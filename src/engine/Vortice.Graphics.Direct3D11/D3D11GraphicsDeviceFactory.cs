@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
+using System.Runtime.InteropServices;
 using Vortice.DXGI;
 using static Vortice.DXGI.DXGI;
 
@@ -29,8 +30,7 @@ namespace Vortice.Graphics.Direct3D11
 
         public static bool IsSupported()
         {
-            return Platform.PlatformType == PlatformType.Windows
-                || Platform.PlatformType == PlatformType.UWP;
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         }
     }
 }

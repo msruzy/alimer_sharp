@@ -4,16 +4,19 @@
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;net461;uap10.0.16299</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0;net461</TargetFrameworks>
     <RootNamespace>Vortice</RootNamespace>
-    <Description>Vortice.Application library for cross platform application support</Description>
+    <Description>Vortice.Platform library for platform information and operating system.</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
-    <ProjectReference Include="..\core\Vortice\Vortice.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
+    <Compile Include="Platforms\NetStandard\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461'">
     <Compile Include="Platforms\NetStandard\**\*.cs" />
   </ItemGroup>
 

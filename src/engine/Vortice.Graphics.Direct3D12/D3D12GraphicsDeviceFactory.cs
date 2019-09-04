@@ -7,6 +7,7 @@ using static Vortice.DXGI.DXGI;
 using static Vortice.Direct3D12.D3D12;
 using Vortice.Direct3D12;
 using Vortice.DirectX.Direct3D;
+using System.Runtime.InteropServices;
 
 namespace Vortice.Graphics.Direct3D12
 {
@@ -26,9 +27,7 @@ namespace Vortice.Graphics.Direct3D12
                 return s_isSupported.Value;
             }
 
-            if (Platform.PlatformType != PlatformType.Windows
-                && Platform.PlatformType != PlatformType.UWP
-                && Platform.PlatformType != PlatformType.XboxOne)
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 s_isSupported = false;
                 return false;
