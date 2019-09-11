@@ -51,4 +51,13 @@ Vortice development, contributions and bugfixes by:
 
 - Amer Koleci
 
-See [Credits](https://github.com/amerkoleci/vortice/blob/master/CREDITS.md) for list of libraries, research, inspirations and assets being used.
+Uses the following open-source and third-party libraries:
+
+- [Vortice.Windows](https://github.com/amerkoleci/Vortice.Windows)
+- [Vk](https://github.com/mellinoe/vk)
+
+Additional inspiration, research or code used:
+
+- Vulkan examples from Sascha Willems (<https://github.com/SaschaWillems/Vulkan>)
+- Veldrid (<https://github.com/mellinoe/veldrid>).
+- Granite (<https://github.com/Themaister/Granite>)
