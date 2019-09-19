@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Description>Direct3D11 backend for Vortice.Graphics Direct3D12</Description>
+    <Description>Direct3D11 backend for Vortice.Graphics</Description>
   </PropertyGroup>
 
   <ItemGroup>
