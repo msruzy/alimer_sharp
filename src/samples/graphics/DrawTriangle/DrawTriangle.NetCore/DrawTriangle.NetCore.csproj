@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\assets\Vortice.Assets\Vortice.Assets.csproj" />
-    <ProjectReference Include="..\..\..\..\engine\Vortice.Audio\Vortice.Audio.csproj" />
-    <ProjectReference Include="..\..\..\..\engine\Vortice.Game\Vortice.Game.csproj" />
+    <ProjectReference Include="..\..\..\..\Vortice.Audio\Vortice.Audio.csproj" />
+    <ProjectReference Include="..\..\..\..\Vortice.Game\Vortice.Game.csproj" />
+    <ProjectReference Include="..\..\..\..\Vortice.Graphics\Vortice.Graphics.csproj" />
     <ProjectReference Include="..\DrawTriangle.Game\DrawTriangle.Game.csproj" />
   </ItemGroup>
 

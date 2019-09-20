@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\core\Vortice\Vortice.csproj" />
+    <ProjectReference Include="..\core\Vortice\Vortice.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,12 +4,22 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Description>Vortice.Graphics library for cross platform application support</Description>
+    <DefineConstants Condition="'$(ExcludeDirect3D11)' == 'true'">$(DefineConstants);EXCLUDE_DIRECT3D11</DefineConstants>
+    <DefineConstants Condition="'$(ExcludeDirect3D12)' == 'true'">$(DefineConstants);EXCLUDE_DIRECT3D12</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\core\Vortice\Vortice.csproj" />
     <PackageReference Include="System.Memory" Version="4.5.3" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
-    <ProjectReference Include="..\core\Vortice\Vortice.csproj" />
+    <PackageReference Include="Vortice.DXGI" Version="$(VorticeDirectXVersion)" Condition="'$(ExcludeDirect3D11)' != 'true'" />
+    <PackageReference Include="Vortice.Direct3D11" Version="$(VorticeDirectXVersion)" Condition="'$(ExcludeDirect3D11)' != 'true'" />
+    <PackageReference Include="Vortice.Direct3D12" Version="$(VorticeDirectXVersion)" Condition="'$(ExcludeDirect3D12)' != 'true'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Direct3D11/**/*" Condition="'$(ExcludeDirect3D11)' == 'true'" />
+    <Compile Remove="Direct3D12/**/*" Condition="'$(ExcludeDirect3D12)' == 'true'" />
   </ItemGroup>
 
 </Project>

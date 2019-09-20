@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>DrawTriangle</RootNamespace>
@@ -6,8 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\assets\Vortice.Assets\Vortice.Assets.csproj" />
-    <ProjectReference Include="..\..\..\..\core\Vortice\Vortice.csproj" />
-    <ProjectReference Include="..\..\..\..\engine\Vortice.Game\Vortice.Game.csproj" />
-    <ProjectReference Include="..\..\..\..\engine\Vortice.Graphics.Direct3D11\Vortice.Graphics.Direct3D11.csproj" />
+    <ProjectReference Include="..\..\..\..\Vortice.Game\Vortice.Game.csproj" />
   </ItemGroup>
+  
 </Project>
