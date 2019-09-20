@@ -11,7 +11,7 @@
     <PackageReference Include="Vortice.Dxc" Version="$(VorticeDirectXVersion)" />
     <PackageReference Include="Vortice.D3DCompiler" Version="$(VorticeDirectXVersion)" />
     <PackageReference Include="SharpSPIRVCross" Version="$(SharpSPIRVCrossVersion)" />
-    <ProjectReference Include="..\..\engine\Vortice.Graphics\Vortice.Graphics.csproj" />
+    <ProjectReference Include="..\..\Vortice.Graphics\Vortice.Graphics.csproj" />
   </ItemGroup>
   
 </Project>
