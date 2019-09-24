@@ -10,11 +10,11 @@ install:
 - ps: >-
     cd src
 
-    nuget restore Vortice.sln
+    nuget restore Alimer.sln
 
-    $env:VORTICE_BUILD_NUMBER = ([int]$env:APPVEYOR_BUILD_NUMBER).ToString("000")
+    $env:ALIMER_BUILD_NUMBER = ([int]$env:APPVEYOR_BUILD_NUMBER).ToString("000")
    
-    $env:VORTICE_VERSION_SUFFIX = "pre$env:VORTICE_BUILD_NUMBER"
+    $env:ALIMER_VERSION_SUFFIX = "pre$env:ALIMER_BUILD_NUMBER"
 
     $env:appveyor_nuget_push = 'false'
 
@@ -22,7 +22,7 @@ install:
       if($env:appveyor_repo_tag -eq 'True') {
     	  if($env:appveyor_repo_tag_name -match '^v[0-9]') {
            $env:appveyor_nuget_push = 'true'
-           $env:VORTICE_VERSION_SUFFIX = ""
+           $env:ALIMER_VERSION_SUFFIX = ""
         }
     	  if($env:appveyor_repo_tag_name -eq 'latest') {
            $env:appveyor_nuget_push = 'true'
@@ -31,14 +31,14 @@ install:
     }
 
 build:
-  project: src/Vortice.sln
+  project: src/Alimer.sln
   verbosity: minimal
 
 before_package:
-- cmd: msbuild /t:pack /p:VersionSuffix="%VORTICE_VERSION_SUFFIX%" /p:Configuration=Release core/Vortice/Vortice.csproj
-- cmd: msbuild /t:pack /p:VersionSuffix="%VORTICE_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Graphics/Vortice.Graphics.csproj
-- cmd: msbuild /t:pack /p:VersionSuffix="%VORTICE_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Audio/Vortice.Audio.csproj
-- cmd: msbuild /t:pack /p:VersionSuffix="%VORTICE_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Game/Vortice.Game.csproj
+- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release core/Vortice/Vortice.csproj
+- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Graphics/Vortice.Graphics.csproj
+- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Audio/Vortice.Audio.csproj
+- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Game/Vortice.Game.csproj
 
 artifacts:
 - path: bin\Packages\Release\*.nupkg
