@@ -1,11 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.2;netcoreapp3.0;net461</TargetFrameworks>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-    <IsPackable>False</IsPackable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -22,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Alimer.Platform.Windows\Alimer.Platform.Windows.csproj" />
     <ProjectReference Include="..\DrawTriangle.Game\DrawTriangle.Game.csproj" />
   </ItemGroup>
 
