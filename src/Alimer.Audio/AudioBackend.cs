@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-namespace Vortice.Audio
+namespace Alimer.Audio
 {
     /// <summary>
     /// Defines the type of <see cref="AudioEngine"/>.

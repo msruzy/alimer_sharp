@@ -6,8 +6,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\assets\Vortice.Assets\Vortice.Assets.csproj" />
-    <ProjectReference Include="..\..\..\..\Vortice.Game\Vortice.Game.csproj" />
+    <ProjectReference Include="..\..\..\..\Alimer.Games\Alimer.Games.csproj" />
+    <ProjectReference Include="..\..\..\..\Alimer.Assets\Alimer.Assets.csproj" />
   </ItemGroup>
   
 </Project>

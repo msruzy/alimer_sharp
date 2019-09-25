@@ -2,13 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <RootNamespace>Alimer</RootNamespace>
     <Description>Alimer.Application library for cross platform application support</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Alimer.Core\Alimer.Core.csproj" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0-rc1.19456.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Alimer.Graphics\Alimer.Graphics.csproj" />
   </ItemGroup>
 
 </Project>

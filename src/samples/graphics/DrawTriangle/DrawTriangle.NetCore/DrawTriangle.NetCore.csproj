@@ -1,10 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <TargetFrameworks>netcoreapp2.2;netcoreapp3.0;net461</TargetFrameworks>
+    <OutputType>WinExe</OutputType>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishTrimmed>True</PublishTrimmed>
+    <PublishSingleFile>False</PublishSingleFile>
+    <PublishReadyToRun>True</PublishReadyToRun>
+  </PropertyGroup>
+
 
   <ItemGroup>
     <Content Include="$(RepositoryRootDirectory)\deps\openal\*.*\*.*">
@@ -13,9 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Vortice.Audio\Vortice.Audio.csproj" />
-    <ProjectReference Include="..\..\..\..\Vortice.Game\Vortice.Game.csproj" />
-    <ProjectReference Include="..\..\..\..\Vortice.Graphics\Vortice.Graphics.csproj" />
     <ProjectReference Include="..\DrawTriangle.Game\DrawTriangle.Game.csproj" />
   </ItemGroup>
 

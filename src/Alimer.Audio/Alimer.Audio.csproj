@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\core\Vortice\Vortice.csproj" />
+    <ProjectReference Include="..\Alimer.Core\Alimer.Core.csproj" />
     <PackageReference Include="Vortice.XAudio2" Version="$(VorticeDirectXVersion)" Condition="'$(ExcludeXAudio2)' != 'true'" />
   </ItemGroup>
 

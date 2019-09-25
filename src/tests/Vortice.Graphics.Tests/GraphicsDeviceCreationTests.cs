@@ -3,7 +3,7 @@
 
 using Xunit;
 
-namespace Vortice.Graphics.Tests
+namespace Alimer.Graphics.Tests
 {
     public abstract class GraphicsDeviceCreationTests : GraphicsDeviceTestBase
     {

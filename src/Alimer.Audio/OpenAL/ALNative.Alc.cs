@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Vortice.Audio.OpenAL
+namespace Alimer.Audio.OpenAL
 {
     public static unsafe partial class ALNative
     {

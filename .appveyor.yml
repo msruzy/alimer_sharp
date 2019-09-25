@@ -36,9 +36,9 @@ build:
 
 before_package:
 - cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Alimer.Core/Alimer.Core.csproj
-- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Graphics/Vortice.Graphics.csproj
-- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Audio/Vortice.Audio.csproj
-- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Game/Vortice.Game.csproj
+- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Alimer.Graphics/Alimer.Graphics.csproj
+- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Alimer.Audio/Alimer.Audio.csproj
+- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Alimer.Games/Alimer.Games.csproj
 
 artifacts:
 - path: bin\Packages\Release\*.nupkg

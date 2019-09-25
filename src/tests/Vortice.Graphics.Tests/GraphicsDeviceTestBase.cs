@@ -2,10 +2,10 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using Vortice.Graphics.Direct3D11;
-using Vortice.Graphics.Direct3D12;
+using Alimer.Graphics.Direct3D11;
+using Alimer.Graphics.Direct3D12;
 
-namespace Vortice.Graphics.Tests
+namespace Alimer.Graphics.Tests
 {
     public abstract class GraphicsDeviceTestBase : IDisposable
     {

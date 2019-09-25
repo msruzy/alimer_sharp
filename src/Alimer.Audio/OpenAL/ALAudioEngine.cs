@@ -3,9 +3,9 @@
 
 using System;
 using System.Diagnostics;
-using static Vortice.Audio.OpenAL.ALNative;
+using static Alimer.Audio.OpenAL.ALNative;
 
-namespace Vortice.Audio.OpenAL
+namespace Alimer.Audio.OpenAL
 {
     public class ALAudioEngine : IAudioEngine
     {

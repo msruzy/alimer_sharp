@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Vortice.Graphics.Tests
+namespace Alimer.Graphics.Tests
 {
     public static class Program
     {

@@ -4,10 +4,9 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using Vortice;
-using Vortice.Assets.Graphics;
-using Vortice.Graphics;
-using Vortice.Graphics.Direct3D11;
+using Alimer;
+using Alimer.Assets.Graphics;
+using Alimer.Graphics;
 using Vortice.Mathematics;
 
 namespace DrawTriangle
@@ -20,10 +19,11 @@ namespace DrawTriangle
         private PipelineState _renderPipelineState;
         private GraphicsBuffer _matricesConstantBuffer;
 
-        public DrawTriangleGame()
+        public DrawTriangleGame(GameContext context) : base(context)
         {
         }
 
+#if TODO
         protected override GraphicsDeviceFactory CreateGraphicsFactory(bool validation)
         {
             return new D3D11GraphicsDeviceFactory(validation);
@@ -106,7 +106,8 @@ namespace DrawTriangle
             commandBuffer.Draw(3, 1, 0, 0);
             commandBuffer.EndRenderPass();
             commandBuffer.Commit();
-        }
+        } 
+#endif
 
         private readonly struct VertexPositionColor
         {

@@ -4,7 +4,7 @@
     <RepositoryRootDirectory>$(MSBuildThisFileDirectory)..\</RepositoryRootDirectory>
     <BaseOutputPath Condition=" '$(BaseOutputPath)' == '' ">$(RepositoryRootDirectory)bin\$(MSBuildProjectName)\</BaseOutputPath>
     <PackageOutputPath>$(RepositoryRootDirectory)bin\Packages\$(Configuration)</PackageOutputPath>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <VersionPrefix>0.1.0</VersionPrefix>
     
     <DebugType Condition=" '$(Configuration)' == 'Release' ">pdbonly</DebugType>
