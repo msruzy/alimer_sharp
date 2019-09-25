@@ -11,14 +11,18 @@ namespace Alimer
     /// </summary>
     public class CoreWindowGameContext : GameContext
     {
+        public CoreWindow Control { get; protected set; }
+
         public CoreWindowGameContext(CoreWindow? control = null)
         {
-
+            Control = control ?? CoreWindow.GetForCurrentThread();
         }
 
         public override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
+
+            services.AddSingleton<GameWindow>(new CoreWindowGameWindow(Control));
         }
     }
 }

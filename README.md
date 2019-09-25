@@ -61,3 +61,4 @@ Additional inspiration, research or code used:
 - Vulkan examples from Sascha Willems (<https://github.com/SaschaWillems/Vulkan>)
 - Veldrid (<https://github.com/mellinoe/veldrid>).
 - Granite (<https://github.com/Themaister/Granite>)
+- DirectX12GameEngine (<https://github.com/Aminator/DirectX12GameEngine>)
