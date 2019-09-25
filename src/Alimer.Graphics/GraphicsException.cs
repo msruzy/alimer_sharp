@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Vortice.Graphics
+namespace Alimer.Graphics
 {
 	/// <summary>
 	/// Exception for Graphics logic.

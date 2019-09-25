@@ -4,7 +4,7 @@
 using System;
 using Vortice.Mathematics;
 
-namespace Vortice.Graphics
+namespace Alimer.Graphics
 {
     /// <summary>
     /// A color render target attachment.

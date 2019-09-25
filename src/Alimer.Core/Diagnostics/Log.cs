@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Vortice.Diagnostics
+namespace Alimer.Diagnostics
 {
     /// <summary>
 	/// Interface for logging functionalities.

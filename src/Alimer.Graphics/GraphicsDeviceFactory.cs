@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Vortice.Graphics
+namespace Alimer.Graphics
 {
     /// <summary>
     /// Describes factory for enumerating physical devices and creation of <see cref="GraphicsDevice"/>.

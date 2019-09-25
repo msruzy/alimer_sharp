@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Vortice.Graphics
+namespace Alimer.Graphics
 {
     /// <summary>
     /// A depth-stencil render target attachment.

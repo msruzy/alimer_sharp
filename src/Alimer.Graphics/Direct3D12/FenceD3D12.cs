@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using Vortice.Direct3D12;
 
-namespace Vortice.Graphics.Direct3D12
+namespace Alimer.Graphics.Direct3D12
 {
     internal class FenceD3D12 : IDisposable
     {

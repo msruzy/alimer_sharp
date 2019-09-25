@@ -6,7 +6,7 @@ using Vortice.DXGI;
 using SharpGen.Runtime;
 using Vortice.DirectX;
 
-namespace Vortice.Graphics
+namespace Alimer.Graphics
 {
     internal abstract class SwapChainDXGI : SwapChain
     {

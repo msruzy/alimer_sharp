@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Vortice
+namespace Alimer
 {
 	/// <summary>
 	/// Provides methods to protect against invalid parameters.

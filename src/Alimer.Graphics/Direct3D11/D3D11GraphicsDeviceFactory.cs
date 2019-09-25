@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Vortice.DXGI;
 using static Vortice.DXGI.DXGI;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Alimer.Graphics.Direct3D11
 {
     /// <summary>
     /// Direct3D 11 graphics factory.

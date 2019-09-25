@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Vortice.Graphics
+namespace Alimer.Graphics
 {
     /// <summary>
     /// Describes the usage of <see cref="GraphicsResource"/>.

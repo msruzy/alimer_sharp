@@ -4,7 +4,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Vortice
+namespace Alimer
 {
     public abstract class Application
     {

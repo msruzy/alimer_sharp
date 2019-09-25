@@ -2,10 +2,10 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using Vortice.Direct3D11;
-using Vortice.Diagnostics;
+using Alimer.Diagnostics;
 
 #if TODO
-namespace Vortice.Graphics.Direct3D11
+namespace Alimer.Graphics.Direct3D11
 {
     internal class FramebufferD3D11 : Framebuffer
     {

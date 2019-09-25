@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-using Vortice.Graphics;
+using Alimer.Graphics;
 using Vortice.Dxc;
 using static Vortice.Dxc.Dxc;
 using Vortice.D3DCompiler;
 
-namespace Vortice.Assets.Graphics
+namespace Alimer.Assets.Graphics
 {
     public static class ShaderCompiler
     {
-        public static Vortice.Graphics.ShaderBytecode Compile(
+        public static Alimer.Graphics.ShaderBytecode Compile(
             GraphicsBackend backend,
             string source,
             ShaderStages stage,
@@ -71,7 +71,7 @@ namespace Vortice.Assets.Graphics
                     //var disassembleBlob = compiler.Disassemble(blob);
                     //string disassemblyText = Dxc.GetStringFromBlob(disassembleBlob);
 
-                    return new Vortice.Graphics.ShaderBytecode(stage, bytecode);
+                    return new Alimer.Graphics.ShaderBytecode(stage, bytecode);
                 }
                 else
                 {
@@ -98,7 +98,7 @@ namespace Vortice.Assets.Graphics
                 else
                 {
                     var bytecode = blob.GetBytes();
-                    return new Vortice.Graphics.ShaderBytecode(stage, bytecode);
+                    return new Alimer.Graphics.ShaderBytecode(stage, bytecode);
                 }
             }
 

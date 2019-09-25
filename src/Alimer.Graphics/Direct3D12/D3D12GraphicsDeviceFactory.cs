@@ -9,7 +9,7 @@ using Vortice.Direct3D12;
 using Vortice.DirectX.Direct3D;
 using System.Runtime.InteropServices;
 
-namespace Vortice.Graphics.Direct3D12
+namespace Alimer.Graphics.Direct3D12
 {
     public class D3D12GraphicsDeviceFactory : GraphicsDeviceFactory
     {

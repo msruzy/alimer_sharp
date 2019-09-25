@@ -6,7 +6,7 @@ using System.Diagnostics;
 using Vortice.Direct3D11;
 using Vortice.DXGI;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Alimer.Graphics.Direct3D11
 {
     internal unsafe class SwapchainD3D11 : SwapChain
     {
@@ -52,7 +52,7 @@ namespace Vortice.Graphics.Direct3D11
                                 Format = BackBufferFormat,
                                 Stereo = false,
                                 SampleDescription = new SampleDescription(1, 0),
-                                Usage = DXGI.Usage.RenderTargetOutput,
+                                Usage = Vortice.DXGI.Usage.RenderTargetOutput,
                                 BufferCount = 2,
                                 Scaling = Scaling.Stretch,
                                 SwapEffect = allowTearing ? SwapEffect.FlipDiscard : SwapEffect.Discard,
@@ -83,7 +83,7 @@ namespace Vortice.Graphics.Direct3D11
                                 OutputWindow = win32Handle.HWnd,
                                 SampleDescription = new SampleDescription(1, 0),
                                 SwapEffect = SwapEffect.Discard,
-                                Usage = DXGI.Usage.Backbuffer | DXGI.Usage.RenderTargetOutput
+                                Usage = Vortice.DXGI.Usage.Backbuffer | Vortice.DXGI.Usage.RenderTargetOutput
                             };
 
                             _swapChain = device.DXGIFactory.CreateSwapChain(device.D3D11Device, dxgiSCDesc);

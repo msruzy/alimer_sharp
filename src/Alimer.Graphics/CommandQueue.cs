@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace Vortice.Graphics
+namespace Alimer.Graphics
 {
     /// <summary>
     /// Defines a queue that organizes command buffers to be executed by a GPU.

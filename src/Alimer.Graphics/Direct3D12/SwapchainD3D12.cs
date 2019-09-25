@@ -3,7 +3,7 @@
 
 using Vortice.Direct3D12;
 
-namespace Vortice.Graphics.Direct3D12
+namespace Alimer.Graphics.Direct3D12
 {
     internal unsafe class SwapchainD3D12 : SwapChainDXGI
     {

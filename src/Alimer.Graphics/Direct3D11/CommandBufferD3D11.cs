@@ -6,7 +6,7 @@ using System.Drawing;
 using Vortice.Direct3D11;
 using Vortice.Mathematics;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Alimer.Graphics.Direct3D11
 {
     internal class CommandBufferD3D11 : CommandBuffer
     {
@@ -28,7 +28,7 @@ namespace Vortice.Graphics.Direct3D11
         private ID3D11DepthStencilState _boundDepthStencilState;
         private int _boundStencilReference;
         private ID3D11RasterizerState _boundRasterizerState;
-        private DirectX.Direct3D.PrimitiveTopology _boundPrimitiveTopology;
+        private Vortice.DirectX.Direct3D.PrimitiveTopology _boundPrimitiveTopology;
         private ID3D11InputLayout _boundInputLayout;
         private ID3D11VertexShader _boundVertexShader;
         private ID3D11GeometryShader _boundGeometryShader;

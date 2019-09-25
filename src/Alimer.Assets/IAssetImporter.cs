@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
-namespace Vortice.Assets
+namespace Alimer.Assets
 {
     /// <summary>
     /// Interface for generic asset importer

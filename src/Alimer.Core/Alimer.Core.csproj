@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>Alimer</RootNamespace>
     <Description>Cross platform 2D and 3D game engine with support for .NET Standard 2.0, .NET Core, .NET Framework, Xamarin, and UWP.</Description>
     <PackageTags>3D graphics direct3D vulkan opengl standard game gamedev</PackageTags>
   </PropertyGroup>

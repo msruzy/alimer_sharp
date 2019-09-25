@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Vortice.Direct3D11;
 using Vortice.DXGI;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Alimer.Graphics.Direct3D11
 {
     internal class SamplerD3D11 : Sampler
     {

@@ -2,15 +2,14 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
-using System.Diagnostics;
 using Vortice.Direct3D11;
 using Vortice.Direct3D11.Debug;
 using Vortice.DXGI;
 using Vortice.DirectX.Direct3D;
-using Vortice.Diagnostics;
+using Alimer.Diagnostics;
 using static Vortice.Direct3D11.D3D11;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Alimer.Graphics.Direct3D11
 {
     internal unsafe class DeviceD3D11 : GraphicsDevice
     {

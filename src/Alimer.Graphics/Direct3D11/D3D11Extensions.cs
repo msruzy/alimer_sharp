@@ -6,7 +6,7 @@ using Vortice.Direct3D11;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Alimer.Graphics.Direct3D11
 {
     public static class D3D11Extensions
     {

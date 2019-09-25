@@ -4,7 +4,7 @@
 using Vortice.Direct3D12;
 using Vortice.DXGI;
 
-namespace Vortice.Graphics.Direct3D12
+namespace Alimer.Graphics.Direct3D12
 {
     internal class TextureD3D12 : Texture
     {

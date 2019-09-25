@@ -5,7 +5,7 @@ using System;
 using System.Drawing;
 using Vortice.Mathematics;
 
-namespace Vortice.Graphics
+namespace Alimer.Graphics
 {
     /// <summary>
     /// Defines a command buffer for storing recorded graphics commands.

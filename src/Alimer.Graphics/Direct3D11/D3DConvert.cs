@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using Vortice.DirectX.Direct3D;
 using Vortice.DXGI;
 using Vortice.Mathematics;
-namespace Vortice.Graphics
+
+namespace Alimer.Graphics
 {
     internal static class D3DConvert
     {
@@ -140,24 +141,24 @@ namespace Vortice.Graphics
         #region ToDirectX Methods
         public static Format ToDirectX(this PixelFormat format) => _formatsMap[format];
         public static Format ToDirectX(this VertexFormat format) => _vertexFormatsMap[format];
-        public static DirectX.Direct3D.PrimitiveTopology ToDirectX(this PrimitiveTopology topology, int patches)
+        public static Vortice.DirectX.Direct3D.PrimitiveTopology ToDirectX(this PrimitiveTopology topology, int patches)
         {
             switch (topology)
             {
                 case PrimitiveTopology.PointList:
-                    return DirectX.Direct3D.PrimitiveTopology.PointList;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.PointList;
                 case PrimitiveTopology.LineList:
-                    return DirectX.Direct3D.PrimitiveTopology.LineList;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.LineList;
                 case PrimitiveTopology.LineStrip:
-                    return DirectX.Direct3D.PrimitiveTopology.LineStrip;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.LineStrip;
                 case PrimitiveTopology.TriangeList:
-                    return DirectX.Direct3D.PrimitiveTopology.TriangleList;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.TriangleList;
                 case PrimitiveTopology.TriangleStrip:
-                    return DirectX.Direct3D.PrimitiveTopology.TriangleStrip;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.TriangleStrip;
                 case PrimitiveTopology.PatchList:
-                    return (DirectX.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints) + patches - 1;
+                    return (Vortice.DirectX.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints) + patches - 1;
                 default:
-                    return DirectX.Direct3D.PrimitiveTopology.Undefined;
+                    return Vortice.DirectX.Direct3D.PrimitiveTopology.Undefined;
             }
         }
         #endregion ToDirectX Methods

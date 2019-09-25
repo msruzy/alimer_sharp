@@ -5,7 +5,7 @@ using System.Drawing;
 using Vortice.Direct3D12;
 using Vortice.Mathematics;
 
-namespace Vortice.Graphics.Direct3D12
+namespace Alimer.Graphics.Direct3D12
 {
     internal class CommandBufferD3D12 : CommandBuffer
     {

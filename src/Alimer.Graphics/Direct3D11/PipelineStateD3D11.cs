@@ -3,7 +3,7 @@
 
 using Vortice.Direct3D11;
 
-namespace Vortice.Graphics.Direct3D11
+namespace Alimer.Graphics.Direct3D11
 {
     internal class PipelineStateD3D11 : PipelineState
     {

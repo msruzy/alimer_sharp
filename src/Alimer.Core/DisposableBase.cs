@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Vortice
+namespace Alimer
 {
     /// <summary>
     /// Base class for objects that implement <see cref="IDisposable"/>.

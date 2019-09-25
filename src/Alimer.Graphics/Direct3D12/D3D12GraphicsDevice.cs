@@ -8,12 +8,12 @@ using Vortice.Direct3D12;
 using Vortice.DXGI;
 using Vortice.DirectX.Direct3D;
 using SharpGen.Runtime;
-using Vortice.Diagnostics;
+using Alimer.Diagnostics;
 using static Vortice.DXGI.DXGI;
 using static Vortice.Direct3D12.D3D12;
 using Vortice.Direct3D12.Debug;
 
-namespace Vortice.Graphics.Direct3D12
+namespace Alimer.Graphics.Direct3D12
 {
     internal class D3D12GraphicsDevice : GraphicsDevice
     {
