@@ -35,7 +35,7 @@ build:
   verbosity: minimal
 
 before_package:
-- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release core/Vortice/Vortice.csproj
+- cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Alimer.Core/Alimer.Core.csproj
 - cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Graphics/Vortice.Graphics.csproj
 - cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Audio/Vortice.Audio.csproj
 - cmd: msbuild /t:pack /p:VersionSuffix="%ALIMER_VERSION_SUFFIX%" /p:Configuration=Release Vortice.Game/Vortice.Game.csproj

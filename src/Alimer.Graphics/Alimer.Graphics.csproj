@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Description>Vortice.Graphics library for cross platform application support</Description>
+    <Description>Graphics library for cross platform rendering support</Description>
     <DefineConstants Condition="'$(ExcludeDirect3D11)' == 'true'">$(DefineConstants);EXCLUDE_DIRECT3D11</DefineConstants>
     <DefineConstants Condition="'$(ExcludeDirect3D12)' == 'true'">$(DefineConstants);EXCLUDE_DIRECT3D12</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\core\Vortice\Vortice.csproj" />
+    <ProjectReference Include="Alimer.Core\Alimer.Core.csproj" />
     <PackageReference Include="System.Memory" Version="4.5.3" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
     <PackageReference Include="Vortice.DXGI" Version="$(VorticeDirectXVersion)" Condition="'$(ExcludeDirect3D11)' != 'true'" />

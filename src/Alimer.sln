@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice", "core\Vortice\Vortice.csproj", "{8DB6EBC7-7705-489D-B43C-9FAABD9C9F07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alimer.Core", "Alimer.Core\Alimer.Core.csproj", "{8DB6EBC7-7705-489D-B43C-9FAABD9C9F07}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{0A79A306-7763-4A7D-BBA9-AF24AF43EC79}"
 EndProject
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{73A421A6-7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Game", "Vortice.Game\Vortice.Game.csproj", "{84735234-E7BF-40E3-82D4-D54104943EFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Graphics", "Vortice.Graphics\Vortice.Graphics.csproj", "{D8645B0C-1C12-44A3-BEA6-3A929BDF9BE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alimer.Graphics", "Alimer.Graphics\Vortice.Graphics.csproj", "{D8645B0C-1C12-44A3-BEA6-3A929BDF9BE5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{238FB1CA-C31E-4DD4-A041-732CBB6719B4}"
 EndProject
