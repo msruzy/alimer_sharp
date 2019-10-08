@@ -4,7 +4,6 @@
 using System;
 using Vortice.DXGI;
 using SharpGen.Runtime;
-using Vortice.DirectX;
 
 namespace Alimer.Graphics
 {

@@ -10,7 +10,7 @@ namespace Alimer.Graphics.Direct3D12
     {
         private readonly ID3D12RootSignature _rootSignature;
         public readonly ID3D12PipelineState D3D12PipelineState;
-        public readonly Vortice.DirectX.Direct3D.PrimitiveTopology PrimitiveTopology;
+        public readonly Vortice.Direct3D.PrimitiveTopology PrimitiveTopology;
 
         public PipelineStateD3D12(D3D12GraphicsDevice device, in RenderPipelineDescriptor descriptor)
             : base(device, descriptor)

@@ -6,7 +6,7 @@ using Vortice.DXGI;
 using static Vortice.DXGI.DXGI;
 using static Vortice.Direct3D12.D3D12;
 using Vortice.Direct3D12;
-using Vortice.DirectX.Direct3D;
+using Vortice.Direct3D;
 using System.Runtime.InteropServices;
 
 namespace Alimer.Graphics.Direct3D12
@@ -51,7 +51,7 @@ namespace Alimer.Graphics.Direct3D12
                     continue;
                 }
 
-                if (ID3D12Device.IsSupported(adapter, FeatureLevel.Level_11_0))
+                if (D3D12.IsSupported(adapter, FeatureLevel.Level_11_0))
                 {
                     s_isSupported = true;
                     return true;

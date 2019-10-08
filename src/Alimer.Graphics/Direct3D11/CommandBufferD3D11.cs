@@ -28,7 +28,7 @@ namespace Alimer.Graphics.Direct3D11
         private ID3D11DepthStencilState _boundDepthStencilState;
         private int _boundStencilReference;
         private ID3D11RasterizerState _boundRasterizerState;
-        private Vortice.DirectX.Direct3D.PrimitiveTopology _boundPrimitiveTopology;
+        private Vortice.Direct3D.PrimitiveTopology _boundPrimitiveTopology;
         private ID3D11InputLayout _boundInputLayout;
         private ID3D11VertexShader _boundVertexShader;
         private ID3D11GeometryShader _boundGeometryShader;
@@ -304,7 +304,7 @@ namespace Alimer.Graphics.Direct3D11
             _boundDepthStencilState = null;
             _boundStencilReference = 0;
             _boundRasterizerState = null;
-            _boundPrimitiveTopology = Vortice.DirectX.Direct3D.PrimitiveTopology.Undefined;
+            _boundPrimitiveTopology = Vortice.Direct3D.PrimitiveTopology.Undefined;
             _boundInputLayout = null;
             _boundVertexShader = null;
             _boundGeometryShader = null;

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Vortice.Direct3D12;
 using Vortice.DXGI;
-using Vortice.DirectX.Direct3D;
+using Vortice.Direct3D;
 using SharpGen.Runtime;
 using Alimer.Diagnostics;
 using static Vortice.DXGI.DXGI;
@@ -17,14 +17,6 @@ namespace Alimer.Graphics.Direct3D12
 {
     internal class D3D12GraphicsDevice : GraphicsDevice
     {
-        private static readonly FeatureLevel[] s_featureLevels = new FeatureLevel[]
-        {
-            FeatureLevel.Level_12_1,
-            FeatureLevel.Level_12_0,
-            FeatureLevel.Level_11_1,
-            FeatureLevel.Level_11_0,
-        };
-
         public const int RenderLatency = 2;
         public readonly IDXGIFactory4 DXGIFactory;
         public readonly IDXGIAdapter1 DXGIAdapter;
@@ -173,8 +165,7 @@ namespace Alimer.Graphics.Direct3D12
 
         private void InitializeFeatures()
         {
-            D3D12Device.CheckMaxSupportedFeatureLevel(s_featureLevels, out var maxSupportedFeatureLevel);
-            FeatureLevel = maxSupportedFeatureLevel;
+            FeatureLevel = D3D12Device.CheckMaxSupportedFeatureLevel();
 
             var adapterDesc = DXGIAdapter.Description1;
             Info.Backend = GraphicsBackend.Direct3D12;

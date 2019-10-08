@@ -5,7 +5,7 @@ using System;
 using Vortice.Direct3D11;
 using Vortice.Direct3D11.Debug;
 using Vortice.DXGI;
-using Vortice.DirectX.Direct3D;
+using Vortice.Direct3D;
 using Alimer.Diagnostics;
 using static Vortice.Direct3D11.D3D11;
 

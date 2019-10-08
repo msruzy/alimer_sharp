@@ -16,7 +16,7 @@ namespace Alimer.Graphics.Direct3D11
         public readonly ID3D11RasterizerState RasterizerState;
         public readonly ID3D11DepthStencilState DepthStencilState;
         public readonly ID3D11BlendState BlendState;
-        public readonly Vortice.DirectX.Direct3D.PrimitiveTopology PrimitiveTopology;
+        public readonly Vortice.Direct3D.PrimitiveTopology PrimitiveTopology;
 
         public readonly ID3D11ComputeShader ComputeShader;
 
