@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Vortice.Dxc" Version="$(VorticeDirectXVersion)" />
     <PackageReference Include="Vortice.D3DCompiler" Version="$(VorticeDirectXVersion)" />
     <PackageReference Include="SharpSPIRVCross" Version="$(SharpSPIRVCrossVersion)" />
