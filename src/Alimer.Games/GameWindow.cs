@@ -3,6 +3,7 @@
 
 using System;
 using System.Drawing;
+using Alimer.Graphics;
 
 namespace Alimer
 {
@@ -11,8 +12,10 @@ namespace Alimer
     /// </summary>
     public abstract class GameWindow : IDisposable
     {
-        public event EventHandler SizeChanged;
-        public event EventHandler Tick;
+        private GraphicsDevice? _device;
+        private SwapChainHandle? _handle;
+
+        public event EventHandler? SizeChanged;
 
         public bool IsExiting { get; private set; }
 
@@ -26,11 +29,30 @@ namespace Alimer
         /// </summary>
         public abstract string Title { get; set; }
 
+        /// <summary>
+        /// Gets or Sets device used to create graphics objects.
+        /// </summary>
+        public GraphicsDevice? Device
+        {
+            get => _device;
+            set
+            {
+                _device = value;
+                if (_handle != null)
+                {
+                    CreateSwapChain();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the configured <see cref="Graphics.SwapChain"/>.
+        /// </summary>
+        public SwapChain? SwapChain { get; set; }
+
         public virtual void Dispose()
         {
         }
-
-        public abstract void Run();
 
         public void Exit()
         {
@@ -46,9 +68,29 @@ namespace Alimer
             SizeChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        protected void OnTick()
+        protected void ConfigureSwapChain(SwapChainHandle handle)
         {
-            Tick?.Invoke(this, EventArgs.Empty);
+            SwapChain?.Dispose();
+
+            // Store handle for later creation.
+            _handle = handle;
+
+            if (Device != null)
+            {
+                CreateSwapChain();
+            }
+        }
+
+        private void CreateSwapChain()
+        {
+            SwapChain = Device?.CreateSwapChain(new SwapChainDescriptor
+            {
+                Width = (int)ClientBounds.Width,
+                Height = (int)ClientBounds.Height,
+                PreferredColorFormat = PixelFormat.BGRA8UNorm,
+                PreferredDepthStencilFormat = PixelFormat.Depth32Float,
+                Handle = _handle,
+            });
         }
     }
 }

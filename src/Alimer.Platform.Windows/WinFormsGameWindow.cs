@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Media;
+using Alimer.Graphics;
 
 namespace Alimer
 {
@@ -31,26 +32,14 @@ namespace Alimer
 
             _control = control;
             _control.ClientSizeChanged += Control_ClientSizeChanged;
+
+            var hInstance = Win32Native.GetModuleHandle(null);
+            ConfigureSwapChain(SwapChainHandle.CreateWin32(hInstance, _control.Handle));
         }
 
-        public override void Run()
-        {
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
-        }
-
-        public override void Dispose()
-        {
-            CompositionTarget.Rendering -= CompositionTarget_Rendering;
-        }
-
-        private void Control_ClientSizeChanged(object? sender, EventArgs e)
+        private void Control_ClientSizeChanged(object sender, EventArgs e)
         {
             OnSizeChanged();
-        }
-
-        private void CompositionTarget_Rendering(object? sender, EventArgs e)
-        {
-            OnTick();
         }
     }
 }

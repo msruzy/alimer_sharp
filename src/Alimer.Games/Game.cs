@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Alimer.Content;
 using Alimer.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +17,7 @@ namespace Alimer
 
         private bool _isExiting;
         private readonly Stopwatch _stopwatch = new Stopwatch();
-        private static Game s_current;
+        private bool _endRunRequired;
 
         /// <summary>
         /// Gets the current instance of the <see cref="Game"/> class.
@@ -24,14 +25,11 @@ namespace Alimer
         /// <value>
         /// The current instance of the <see cref="Game"/> class.
         /// </value>
-        public static Game Current
-        {
-            get => s_current;
-        }
+        public static Game? Current { get; private set; }
 
         public GameContext Context { get; }
 
-        public GameWindow? Window { get; private set; }
+        public GameWindow Window { get; private set; }
 
         public IServiceProvider Services { get; }
 
@@ -40,7 +38,13 @@ namespace Alimer
         /// </summary>
         public bool IsRunning { get; private set; }
 
+        /// <summary>
+        /// Get the <see cref="IContentManager"/> for runtime asset loading.
+        /// </summary>
+        public IContentManager Content { get; }
+
         public GraphicsDevice? GraphicsDevice { get; set; }
+
         public IList<GameSystem> GameSystems { get; } = new List<GameSystem>();
         public GameTime Time { get; } = new GameTime();
 
@@ -60,16 +64,16 @@ namespace Alimer
             Services = services.BuildServiceProvider();
 
             // Resolve GameWindow from context.
-            Window = Services.GetService<GameWindow>();
-            if (Window != null)
-            {
-                Window.Tick += (s, e) => Tick();
-            }
+            Window = context.GameWindow;
 
+            Content = Services.GetRequiredService<IContentManager>();
             GraphicsDevice = Services.GetService<GraphicsDevice>();
 
+            // Assign graphics device.
+            Window.Device = GraphicsDevice;
+
             // Set as current application.
-            s_current = this;
+            Current = this;
         }
 
         public virtual void Dispose()
@@ -79,8 +83,7 @@ namespace Alimer
                 gameSystem.Dispose();
             }
 
-            Window?.Exit();
-            Window = null;
+            Window.Exit();
         }
 
         protected virtual void ConfigureServices(IServiceCollection services)
@@ -88,7 +91,7 @@ namespace Alimer
             Context.ConfigureServices(services);
 
             services.AddSingleton(this);
-            //services.AddSingleton<IContentManager, ContentManager>();
+            services.AddSingleton<IContentManager, ContentManager>();
         }
 
         public void Run()
@@ -98,17 +101,29 @@ namespace Alimer
                 throw new InvalidOperationException("This game is already running.");
             }
 
-            IsRunning = true;
+            try
+            {
+                // Enter main loop.
+                var blocking = Context.Run(InitializeBeforeRun, Tick);
 
-            Initialize();
-            LoadContentAsync();
-
-            _stopwatch.Start();
-            Time.Update(_stopwatch.Elapsed, TimeSpan.Zero);
-
-            BeginRun();
-
-            Window?.Run();
+                if (blocking)
+                {
+                    // If the previous call was blocking, then we can call EndRun
+                    EndRun();
+                }
+                else
+                {
+                    // EndRun will be executed on Exit
+                    _endRunRequired = true;
+                }
+            }
+            finally
+            {
+                if (!_endRunRequired)
+                {
+                    IsRunning = false;
+                }
+            }
         }
 
         public void Tick()
@@ -135,6 +150,9 @@ namespace Alimer
             finally
             {
                 EndDraw();
+
+                // Present SwapChain on screen.
+                Window.SwapChain?.Present();
 
                 CheckEndRun();
             }
@@ -198,6 +216,19 @@ namespace Alimer
 
         protected virtual void EndRun()
         {
+        }
+
+        private void InitializeBeforeRun()
+        {
+            IsRunning = true;
+
+            Initialize();
+            LoadContentAsync();
+
+            _stopwatch.Start();
+            Time.Update(_stopwatch.Elapsed, TimeSpan.Zero);
+
+            BeginRun();
         }
 
         private void CheckEndRun()

@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <RootNamespace>Alimer</RootNamespace>
     <Description>Windows WinForms and WPF support for Alimer</Description>
     <UseWindowsForms>true</UseWindowsForms>

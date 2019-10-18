@@ -41,14 +41,6 @@ namespace Alimer
             UpdateClientBounds();
         }
 
-        public override void Run()
-        {
-            while (!IsExiting)
-            {
-                _coreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
-                OnTick();
-            }
-        }
 
         private void UpdateClientBounds()
         {
