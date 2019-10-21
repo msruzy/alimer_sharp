@@ -10,6 +10,8 @@ namespace Alimer.Graphics
     /// </summary>
     public abstract class Texture : GraphicsResource
     {
+        private TextureView _defaultView;
+
         /// <summary>
         /// Gets the texture type.
         /// </summary>
@@ -55,6 +57,11 @@ namespace Alimer.Graphics
 		/// </summary>
         public SampleCount Samples { get; }
 
+        public TextureView DefaultView
+        {
+            get => _defaultView ?? (_defaultView = CreateView());
+        }
+
         /// <summary>
         /// Create a new instance of <see cref="Texture"/> class.
         /// </summary>
@@ -82,5 +89,17 @@ namespace Alimer.Graphics
         public int GetLevelWidth(int mipLevel = 0) => Math.Max(1, Width >> mipLevel);
         public int GetLevelHeight(int mipLevel = 0) => Math.Max(1, Height >> mipLevel);
         public int GetLevelDepth(int mipLevel = 0) => Math.Max(1, Depth >> mipLevel);
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Texture"/> to <see cref="TextureView"/>.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator TextureView(Texture value)
+        {
+            return value.DefaultView;
+        }
+
+        protected abstract TextureView CreateView();
     }
 }

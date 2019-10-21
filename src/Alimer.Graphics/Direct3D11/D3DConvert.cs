@@ -12,7 +12,7 @@ namespace Alimer.Graphics
     {
         private static readonly FormatMap<PixelFormat, Format> _formatsMap = new FormatMap<PixelFormat, Format>
         {
-            { PixelFormat.Invalid,          Format.Unknown },
+            { PixelFormat.Undefined,        Format.Unknown },
             // 8-bit pixel formats
             { PixelFormat.R8UNorm,          Format.R8_UNorm },
             { PixelFormat.R8SNorm,          Format.R8_UNorm },

@@ -58,5 +58,10 @@ namespace Alimer.Graphics.Direct3D12
         {
             Resource.Dispose();
         }
+
+        protected override TextureView CreateView()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

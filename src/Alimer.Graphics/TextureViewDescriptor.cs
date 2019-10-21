@@ -7,6 +7,8 @@ namespace Alimer.Graphics
 {
     public readonly struct TextureViewDescriptor : IEquatable<TextureViewDescriptor>
     {
+        public readonly PixelFormat Format;
+
         /// <summary>
         /// Base mip level.
         /// </summary>
@@ -28,11 +30,13 @@ namespace Alimer.Graphics
         public readonly int ArrayLayerCount;
 
         public TextureViewDescriptor(
+            PixelFormat format = PixelFormat.Undefined,
             int baseMipLevel = 0,
-            int mipLevelCount = 0, 
+            int mipLevelCount = 0,
             int baseArrayLayer = 0,
             int arrayLayerCount = 0)
         {
+            Format = format;
             BaseMipLevel = baseMipLevel;
             MipLevelCount = mipLevelCount;
             BaseArrayLayer = baseArrayLayer;
@@ -43,11 +47,14 @@ namespace Alimer.Graphics
         public static bool operator !=(TextureViewDescriptor left, TextureViewDescriptor right) => !left.Equals(right);
 
         /// <inheritdoc />
-        public bool Equals(TextureViewDescriptor other) =>
-            BaseMipLevel == other.BaseMipLevel
-            && MipLevelCount == other.MipLevelCount
-            && BaseArrayLayer == other.BaseArrayLayer
-            && ArrayLayerCount == other.ArrayLayerCount;
+        public bool Equals(TextureViewDescriptor other)
+        {
+            return Format.Equals(other.Format)
+                && BaseMipLevel == other.BaseMipLevel
+                && MipLevelCount == other.MipLevelCount
+                && BaseArrayLayer == other.BaseArrayLayer
+                && ArrayLayerCount == other.ArrayLayerCount;
+        }
 
         /// <inheritdoc/>
         public override bool Equals(object obj)
@@ -60,7 +67,8 @@ namespace Alimer.Graphics
         {
             unchecked
             {
-                int hashCode = BaseMipLevel.GetHashCode();
+                int hashCode = Format.GetHashCode();
+                hashCode = (hashCode * 397) ^ BaseMipLevel.GetHashCode();
                 hashCode = (hashCode * 397) ^ MipLevelCount.GetHashCode();
                 hashCode = (hashCode * 397) ^ BaseArrayLayer.GetHashCode();
                 hashCode = (hashCode * 397) ^ ArrayLayerCount.GetHashCode();

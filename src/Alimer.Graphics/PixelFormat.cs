@@ -9,9 +9,9 @@ namespace Alimer.Graphics
     public enum PixelFormat
     {
         /// <summary>
-        /// Invalid pixel format.
+        /// Undefined pixel format.
         /// </summary>
-        Invalid = 0,
+        Undefined = 0,
 
         // 8-bit pixel formats
         R8UNorm,

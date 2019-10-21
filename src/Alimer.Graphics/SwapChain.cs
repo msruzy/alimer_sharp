@@ -39,7 +39,7 @@ namespace Alimer.Graphics
                 _textures[i] = GetBackBufferTexture(i);
             }
 
-            bool hasDepthStencil = descriptor.PreferredDepthStencilFormat != PixelFormat.Invalid;
+            bool hasDepthStencil = descriptor.PreferredDepthStencilFormat != PixelFormat.Undefined;
             if (hasDepthStencil)
             {
                 _depthStencilTexture = Device.CreateTexture(
