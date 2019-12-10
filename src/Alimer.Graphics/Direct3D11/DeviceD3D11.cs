@@ -125,7 +125,7 @@ namespace Alimer.Graphics.Direct3D11
             Info.Backend = GraphicsBackend.Direct3D11;
             Info.BackendName = "Direct3D11 - Level " + FeatureLevel.GetFeatureLevelToVersion();
             Info.DeviceName = adapterDesc.Description;
-            Info.VendorId = (uint)adapterDesc.VendorId;
+            Info.VendorId = adapterDesc.VendorId;
             Log.Debug($"Direct3D Adapter: VID:{adapterDesc.VendorId}, PID:{adapterDesc.DeviceId} - {adapterDesc.Description}");
 
             //if (SupportsConcurrentResources

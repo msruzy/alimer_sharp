@@ -4,7 +4,7 @@
 namespace Alimer.Graphics
 {
     /// <summary>
-    /// Describes information of <see cref="GraphicsDevice"/>.
+    /// Describes <see cref="GraphicsDevice"/> information.
     /// </summary>
     public sealed class GraphicsDeviceInfo
     {
@@ -51,7 +51,7 @@ namespace Alimer.Graphics
         /// <summary>
         /// Gets or sets the hardware gpu device vendor id.
         /// </summary>
-        public uint VendorId { get; set; }
+        public int VendorId { get; set; }
 
         /// <summary>
         /// Gets or sets the hardware gpu device name.

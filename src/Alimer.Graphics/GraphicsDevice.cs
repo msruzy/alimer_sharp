@@ -35,9 +35,14 @@ namespace Alimer.Graphics
         public GraphicsDeviceInfo Info { get; } = new GraphicsDeviceInfo();
 
         /// <summary>
-        /// Gets the capabilities of this device.
+        /// Gets the features of this device.
         /// </summary>
-        public GraphicsDeviceCapabilities Capabilities { get; } = new GraphicsDeviceCapabilities();
+        public GraphicsDeviceFeatures Features { get; } = new GraphicsDeviceFeatures();
+
+        /// <summary>
+        /// Gets the limits of this device.
+        /// </summary>
+        public GraphicsDeviceLimits Limits { get; } = new GraphicsDeviceLimits();
 
         /// <summary>
         /// Create new instance of <see cref="GraphicsDevice"/> class.

@@ -4,7 +4,7 @@
 namespace Alimer.Graphics
 {
     /// <summary>
-    /// Describes limits of <see cref="GraphicsDevice"/>.
+    /// Describes <see cref="GraphicsDevice"/> limits.
     /// </summary>
     public sealed class GraphicsDeviceLimits
     {

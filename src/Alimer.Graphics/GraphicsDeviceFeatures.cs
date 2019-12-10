@@ -4,7 +4,7 @@
 namespace Alimer.Graphics
 {
     /// <summary>
-    /// Describes features supported by given instance of <see cref="GraphicsDevice"/>.
+    /// Describes <see cref="GraphicsDevice"/> features.
     /// </summary>
     public sealed class GraphicsDeviceFeatures
     {
