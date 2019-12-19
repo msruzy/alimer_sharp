@@ -14,7 +14,7 @@ namespace Alimer.Graphics.Direct3D11
             : base(device, CommandQueueType.Graphics)
         {
             _context = context;
-            _isImmediate = context.GetContextType() == DeviceContextType.Immediate;
+            _isImmediate = context.ContextType == DeviceContextType.Immediate;
         }
 
         public CommandQueueD3D11(DeviceD3D11 device, CommandQueueType queueType)

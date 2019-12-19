@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System;
+using System.Runtime.CompilerServices;
 using Vortice.Direct3D11;
 
 namespace Alimer.Graphics.Direct3D11
@@ -15,7 +16,7 @@ namespace Alimer.Graphics.Direct3D11
         {
             var description = new BufferDescription()
             {
-                ByteWidth = (int)descriptor.SizeInBytes,
+                SizeInBytes = (int)descriptor.SizeInBytes,
                 Usage = (Vortice.Direct3D11.Usage)descriptor.ResourceUsage,
                 BindFlags = descriptor.Usage.ToDirectX(),
                 CpuAccessFlags = descriptor.ResourceUsage.ToDirectX(),

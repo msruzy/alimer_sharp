@@ -31,8 +31,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VorticeMathematicsVersion>1.0.0</VorticeMathematicsVersion>
-    <VorticeDirectXVersion>1.4.0-pre092</VorticeDirectXVersion>
+    <VorticeMathematicsVersion>1.1.0</VorticeMathematicsVersion>
+    <VorticeDirectXVersion>1.4.0</VorticeDirectXVersion>
     <SharpSPIRVCrossVersion>1.0.0-pre012</SharpSPIRVCrossVersion>
   </PropertyGroup>
 

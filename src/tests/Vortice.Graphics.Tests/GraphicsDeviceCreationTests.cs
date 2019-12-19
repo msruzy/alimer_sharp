@@ -16,7 +16,7 @@ namespace Alimer.Graphics.Tests
         public void FactoryHasDefaultAdapter()
         {
             Assert.NotEqual(GraphicsBackend.Invalid, _graphicsDevice.Backend);
-            Assert.NotEqual(0u, _graphicsDevice.Info.VendorId);
+            Assert.NotEqual(0, _graphicsDevice.Info.VendorId);
         }
     }
 

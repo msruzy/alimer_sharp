@@ -44,7 +44,7 @@ namespace Alimer.Graphics.Direct3D11
             D3D11Context = context;
             _context1 = context.QueryInterfaceOrNull<ID3D11DeviceContext1>();
             _annotation = context.QueryInterfaceOrNull<ID3DUserDefinedAnnotation>();
-            _isImmediate = context.GetContextType() == DeviceContextType.Immediate;
+            _isImmediate = context.ContextType == DeviceContextType.Immediate;
 
             if (!_isImmediate)
             {
